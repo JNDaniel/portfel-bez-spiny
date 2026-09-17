@@ -1,6 +1,6 @@
 ---
 project: "Portfel Bez Spiny"
-version: 1
+version: 2
 status: draft
 created: 2026-09-17
 context_type: brownfield
@@ -10,7 +10,7 @@ target_scale:
   qps: unknown
   data_volume: unknown
 timeline_budget:
-  delivery_weeks: 3
+  delivery_weeks: 6
   hard_deadline: 2026-11-04
   after_hours_only: true
 ---
@@ -135,9 +135,24 @@ Obecna makieta nie ma produkcyjnego uwierzytelniania ani rozdzielenia danych mi�
 
 Wszyscy zalogowani użytkownicy mają jedną płaską rolę i mogą zarządzać wyłącznie własnymi danymi. Niezalogowana osoba próbująca wejść do chronionej części aplikacji jest przekierowywana do logowania.
 
+Izolacja danych musi być egzekwowana po stronie bazy danych. Kontrola dostępu wyłącznie w aplikacji klienckiej nie spełnia FR-002.
+
+## Approved Implementation Decisions
+
+- **Backend platform:** Supabase for the MVP.
+- **Authentication:** Supabase Auth with email and password.
+- **Persistence:** Supabase Postgres with versioned SQL migrations committed to the repository.
+- **Client integration:** dedicated Supabase implementations of the Angular repository contracts. Components do not call the Supabase client directly.
+- **Authorization:** Row Level Security on every user-owned table, based on `auth.uid()`. Every read and write policy is covered by a two-user isolation test.
+- **Secrets boundary:** the web and Capacitor clients use only the Supabase URL and publishable key. A secret or service-role key must never be bundled into either client.
+- **Server-side code:** Edge Functions are outside the initial MVP unless a use case requires a trusted server-side secret or privileged operation.
+- **Mock compatibility:** mock repositories remain available for demos and isolated tests; production mode uses Supabase repositories.
+- **Domain alignment:** before persistence is implemented, the project must reconcile the user-facing `Transaction`/`BudgetStateService` model with the separate placeholder `ExpenseRepository` model and select one canonical consumer-finance contract.
+- **Money representation:** persisted monetary values use integer minor units and an explicit currency code. Floating-point values are not authoritative storage.
+
 ## Non-Goals
 
-- Ta zmiana nie dostarcza realnego nasłuchiwania powiadomień bankowych ani automatycznego importu wydatków; te integracje pozostają poza trzytygodniowym zakresem.
+- Ta zmiana nie dostarcza realnego nasłuchiwania powiadomień bankowych ani automatycznego importu wydatków; te integracje pozostają poza sześciotygodniowym zakresem.
 - Ta zmiana nie dostarcza produkcyjnego OCR paragonów, wprowadzania głosowego ani automatycznej analizy AI; istniejące demonstracje nie są zobowiązaniem MVP.
 - Ta zmiana nie wprowadza kont rodzinnych, współdzielonych budżetów ani roli administratora; MVP ma jedną płaską rolę i prywatne dane indywidualnego użytkownika.
 - Radar zachcianek, subskrypcje i podsumowania nie są warunkiem ukończenia podstawowego MVP; radar pozostaje funkcją nice-to-have.

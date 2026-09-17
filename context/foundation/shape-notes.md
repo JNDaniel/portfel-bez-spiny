@@ -2,14 +2,14 @@
 project: "Portfel Bez Spiny"
 context_type: brownfield
 created: 2026-09-16
-updated: 2026-09-16
+updated: 2026-09-17
 product_type: hybrid-web-mobile
 target_scale:
   users: medium
   qps: unknown
   data_volume: unknown
 timeline_budget:
-  delivery_weeks: 3
+  delivery_weeks: 6
   hard_deadline: 2026-11-04
   after_hours_only: true
 checkpoint:
@@ -45,9 +45,11 @@ checkpoint:
     - topic: target scale
       decision: Od dziesiątek do około stu użytkowników; przy 100x większej skali reguła domenowa pozostaje taka sama, ale rośnie znaczenie izolacji i poprawności danych.
     - topic: delivery timing
-      decision: Trzy tygodnie pracy po godzinach, około 5–10 godzin tygodniowo, z twardym terminem 2026-11-04.
+      decision: Do sześciu tygodni pracy po godzinach, około 5–10 godzin tygodniowo, z twardym terminem 2026-11-04. Zakres obejmuje stabilizację istniejącego projektu i backend Supabase.
     - topic: excluded scope
       decision: Bez realnego importu z powiadomień, produkcyjnego OCR/głosu/AI, kont współdzielonych i administratorów; radar, subskrypcje i podsumowania nie warunkują ukończenia podstawowego MVP.
+    - topic: backend platform
+      decision: Produkcyjne MVP użyje Supabase bezpośrednio z warstwy repozytoriów Angulara; Supabase Auth obsłuży email i hasło, Postgres trwałość danych, a Row Level Security wymusi izolację danych. Edge Functions pozostają poza MVP, chyba że pojawi się operacja wymagająca zaufanego sekretu serwerowego.
   frs_drafted: 8
   quality_check_status: accepted
 ---
@@ -61,6 +63,8 @@ kontynuacja tego projektu gdzie sie znajdujemy wlasnie - byl zaczety w ostatnim 
 Portfel Bez Spiny istnieje dziś jako interaktywna makieta aplikacji do zarządzania wydatkami. Działa lokalnie w przeglądarce i przechowuje dane w LocalStorage. Obecne widoki obejmują dashboard budżetowy, rejestr transakcji, ręczne dodawanie i tagowanie, izolowanie wydatków okazjonalnych oraz demonstracyjne przepływy automatycznego wprowadzania danych.
 
 Istniejący stos obejmuje Angular, Ionic i Capacitor, a projekt ma przygotowaną powierzchnię webową i mobilną. Produkcyjny backend, konta użytkowników i rzeczywiste integracje Android nie są jeszcze gotowe.
+
+Wybranym backendem dla MVP jest Supabase. Aplikacja będzie korzystać z Supabase Auth oraz Postgresa przez dedykowane implementacje istniejących kontraktów repozytoriów. Dostęp do danych będzie egzekwowany w bazie przez Row Level Security, nie tylko przez filtrowanie w interfejsie.
 
 ## Vision & Problem Statement
 
@@ -173,7 +177,7 @@ Ta zmiana nie modyfikuje reguły domenowej. Uruchamia istniejącą regułę na p
 
 ## Non-Goals
 
-- Ta zmiana nie dostarcza realnego nasłuchiwania powiadomień bankowych ani automatycznego importu wydatków; te integracje pozostają poza trzytygodniowym zakresem.
+- Ta zmiana nie dostarcza realnego nasłuchiwania powiadomień bankowych ani automatycznego importu wydatków; te integracje pozostają poza sześciotygodniowym zakresem.
 - Ta zmiana nie dostarcza produkcyjnego OCR paragonów, wprowadzania głosowego ani automatycznej analizy AI; istniejące demonstracje nie są zobowiązaniem MVP.
 - Ta zmiana nie wprowadza kont rodzinnych, współdzielonych budżetów ani roli administratora; MVP ma jedną płaską rolę i prywatne dane indywidualnego użytkownika.
 - Radar zachcianek, subskrypcje i podsumowania nie są warunkiem ukończenia podstawowego MVP; radar pozostaje funkcją nice-to-have.
@@ -183,6 +187,6 @@ Ta zmiana nie modyfikuje reguły domenowej. Uruchamia istniejącą regułę na p
 - Access Control: present.
 - Business Logic: present as a one-sentence domain rule.
 - Project artifacts: present with a valid checkpoint.
-- Timeline-cost acknowledgment: present through a three-week delivery budget.
+- Timeline-cost acknowledgment: present through a six-week delivery budget.
 - Non-Goals: present.
 - Preserved behavior: present.
