@@ -18,7 +18,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   companyName: "Acme Technologies Inc.",
   fiscalYearStartMonth: 1,
   isMockBackend: true,
-  apiUrl: "https://api.costflow.internal/v1",
+  apiUrl: "https://api.example.com/v1",
   simulateNetworkLatencyMs: 300
 };
 

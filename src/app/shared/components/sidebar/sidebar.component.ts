@@ -19,8 +19,8 @@ import { ExpenseService } from "../../../core/services/expense.service";
           </svg>
         </div>
         <div>
-          <span class="font-bold text-lg text-slate-900 dark:text-white tracking-tight">Cost<span class="text-brand-500">Flow</span></span>
-          <span class="block text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500 tracking-wider">Expense Studio</span>
+          <span class="font-bold text-lg text-slate-900 dark:text-white tracking-tight">Portfel <span class="text-brand-500">Bez Spiny</span></span>
+          <span class="block text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500 tracking-wider">Osobiste finanse</span>
         </div>
       </div>
 

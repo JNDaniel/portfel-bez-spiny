@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">CostFlow</string>
-    <string name="title_activity_main">CostFlow</string>
+    <string name="app_name">Portfel Bez Spiny</string>
+    <string name="title_activity_main">Portfel Bez Spiny</string>
     <string name="package_name">io.costflow.app</string>
     <string name="custom_url_scheme">io.costflow.app</string>
 </resources>

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('BudżetApp — E2E UI & Gesture Flow', () => {
+test.describe('Portfel Bez Spiny — E2E UI & Gesture Flow', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/');

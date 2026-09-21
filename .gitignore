@@ -30,6 +30,13 @@ key.properties
 /blob-report/
 /playwright/.cache/
 
+# Local AI tool profiles and downloaded skills
+/.agents/
+/.claude/
+/agent/
+/generic/
+/skills-lock.json
+
 # IDEs and editors
 .idea/
 .project

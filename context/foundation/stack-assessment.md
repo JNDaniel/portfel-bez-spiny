@@ -27,11 +27,11 @@ gates_failed: 1
 
 **Angular CLI 19.2.** Budowanie i uruchamianie korzysta ze standardowych builderów Angulara. Konfiguracja produkcyjna zawiera budżety rozmiaru i hashowanie wyników. Źródła: `package.json`, `angular.json`.
 
-**Karma/Jasmine i Playwright.** Testy jednostkowe są skonfigurowane przez builder Angulara, a testy E2E obejmują widok desktopowy i mobilny. Źródła: `angular.json`, `tsconfig.spec.json`, `playwright.config.ts`, `e2e/budzet-app.spec.ts`.
+**Karma/Jasmine i Playwright.** Testy jednostkowe są skonfigurowane przez builder Angulara, a testy E2E obejmują widok desktopowy i mobilny. Źródła: `angular.json`, `tsconfig.spec.json`, `playwright.config.ts`, `e2e/budget-dashboard.spec.ts`.
 
 **Narzędzia projektu.** npm jest potwierdzony przez `package-lock.json`. `.editorconfig` definiuje podstawowe formatowanie. Nie wykryto konfiguracji lintera, CI/CD ani celu wdrożenia.
 
-Backend nie jest obecnie komponentem stosu. Ma powstać później, ale nie został jeszcze zaplanowany, więc nie jest oceniany ani wybierany w tym dokumencie.
+Backend nie jest jeszcze zaimplementowanym komponentem stosu, dlatego nie podlega tej ocenie. Dla MVP wybrano Supabase; decyzję i granice integracji opisują `context/foundation/prd.md` oraz `context/changes/stabilize-and-supabase-mvp/change.md`.
 
 ## Quality Gate Assessment
 
@@ -95,4 +95,4 @@ Poniższy blok jest gotowy do wklejenia do `AGENTS.md`:
 
 Stos jest gotowy do pracy z agentami po doprecyzowaniu granicy web/native. Jego mocne strony to rygorystyczny TypeScript, silne konwencje Angulara, popularny ekosystem, wersjonowane zależności oraz obecne testy E2E. Główna kompensacja dotyczy Capacitorowego procesu synchronizacji i walidacji aplikacji mobilnej.
 
-Następny krok powinien sprawdzić faktyczny stan zależności, testów, lintera, CI/CD i pokrycia krytycznych przepływów. Wybór backendu pozostaje osobną przyszłą decyzją, ponieważ obecnie nie jest częścią istniejącego stosu.
+Następny krok powinien sprawdzić faktyczny stan zależności, testów, lintera, CI/CD i pokrycia krytycznych przepływów. Implementacja wybranego backendu Supabase pozostaje przyszłym etapem planu, ponieważ obecnie nie jest częścią istniejącego stosu.

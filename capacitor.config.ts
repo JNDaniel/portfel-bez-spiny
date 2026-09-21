@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.costflow.app',
-  appName: 'CostFlow',
+  appName: 'Portfel Bez Spiny',
   webDir: 'dist/cost-management-app/browser',
   bundledWebRuntime: false,
   server: {

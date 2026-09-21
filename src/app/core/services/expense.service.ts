@@ -323,7 +323,7 @@ export class ExpenseService {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "costflow-expenses-" + new Date().toISOString().substring(0, 10) + ".csv");
+    link.setAttribute("download", "portfel-bez-spiny-expenses-" + new Date().toISOString().substring(0, 10) + ".csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -335,7 +335,7 @@ export class ExpenseService {
     const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
     const link = document.createElement("a");
     link.setAttribute("href", jsonStr);
-    link.setAttribute("download", "costflow-backup-" + new Date().toISOString().substring(0, 10) + ".json");
+    link.setAttribute("download", "portfel-bez-spiny-backup-" + new Date().toISOString().substring(0, 10) + ".json");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
