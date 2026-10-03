@@ -20,6 +20,8 @@ Turn the current local prototype into a reliable base for the production MVP des
 
 Infrastructure deployment and CI remain later work, but the commands they will automate must be reliable before backend implementation begins.
 
+The Supabase foundation is set up early, together with the first web deployment, as described in `context/deployment/deploy-plan.md`: staging and prod projects, Auth URL configuration, the `supabase/` directory with a baseline migration, the client provider, build-time configuration, the `DATA_BACKEND` switch, and a repository boundary under the main dashboard flow with an active LocalStorage adapter. Phases 4–8 build on that foundation; switching to Supabase means adding schema, adapters and Auth UI, then changing `DATA_BACKEND`.
+
 ## Decisions
 
 - Use Supabase Auth, Postgres and Row Level Security.

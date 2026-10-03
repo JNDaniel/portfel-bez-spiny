@@ -1,28 +1,44 @@
-# Plan pierwszego wdrożenia webowego
+# Plan pierwszego wdrożenia: Cloudflare Pages + fundament Supabase
 
 ## Cel i zakres
 
-Wdrożyć obecną aplikację webową jako publiczne demo na Cloudflare Pages, z repozytorium GitHub jako źródłem wdrożeń. To wdrożenie obejmuje wyłącznie frontend Angulara. Aplikacja pozostaje makietą z danymi przechowywanymi lokalnie w przeglądarce.
+Wdrożyć obecną aplikację webową jako publiczne demo na Cloudflare Pages, z repozytorium GitHub jako źródłem wdrożeń. **Od pierwszego wdrożenia uruchamiamy też Supabase i podpinamy go do projektu**: projekty staging i prod, Auth, wersjonowane migracje, klient w aplikacji, konfigurację buildu i przełącznik źródła danych.
 
-Ten dokument rozwija rekomendację z [oceny infrastruktury](../foundation/infrastructure.md), dopasowując ją do aktualnego stosu i stanu repozytorium opisanego w [ocenie stacku](../foundation/stack-assessment.md). Nie ma osobnego `tech-stack.md`; źródłem informacji o technologiach jest `stack-assessment.md`, a wersje zależności i komendy należy sprawdzać w `package.json` oraz `package-lock.json`.
+Aplikacja nadal zapisuje dane w LocalStorage, dopóki przełącznik `DATA_BACKEND` ma wartość `local`. Fizyczne przejście na Supabase polega później na dodaniu schematu i adapterów repozytoriów, a następnie zmianie przełącznika na `supabase`. Nie wymaga przebudowy infrastruktury, buildu ani komponentów.
 
-Nie obejmuje to jeszcze Supabase, logowania, domeny własnej, aplikacji mobilnej ani CI. Połączenie GitHub–Cloudflare uruchomi automatyczne wdrożenia, ale samo w sobie nie uruchomi testów jednostkowych ani E2E.
+Ten dokument rozwija rekomendację z [oceny infrastruktury](../foundation/infrastructure.md) i opiera się na stosie opisanym w [ocenie stacku](../foundation/stack-assessment.md). Nie ma osobnego `tech-stack.md`; wersje zależności i komendy należy sprawdzać w `package.json` oraz `package-lock.json`. Fazy implementacyjne odnoszą się do planu [stabilize-and-supabase-mvp](../changes/stabilize-and-supabase-mvp/change.md). Termin MVP to 2026-11-04, dlatego problemy z konfiguracją, środowiskami i przekierowaniami Auth mają wyjść na jaw teraz, a nie w ostatnim tygodniu.
+
+Plan nie obejmuje własnej domeny, wydania aplikacji mobilnej ani CI. Połączenie GitHub–Cloudflare uruchamia automatyczne wdrożenia, ale nie uruchamia testów.
+
+## Co znaczy „przygotowane”, a co „przełączone”
+
+| Element | Od pierwszego wdrożenia | Przy przełączeniu na Supabase |
+|---|---|---|
+| Projekty `portfel-staging` i `portfel-prod` | Utworzone, Auth URL Configuration ustawione | Bez zmian |
+| Katalog `supabase/` w repo, lokalny Supabase | `supabase init`, `config.toml`, lokalny stack do developmentu | Bez zmian |
+| Migracje | Migracja bazowa bez tabel użytkownika, wdrożona na staging i prod przez CLI | Migracje tabel, constraintów i RLS dla docelowego kontraktu |
+| Klient `@supabase/supabase-js` | Zależność, provider klienta w `src/app/core/`, konfiguracja z buildu | Bez zmian |
+| Konfiguracja buildu | Skrypt generujący konfigurację z `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `DATA_BACKEND` | Bez zmian |
+| Repozytoria | Kontrakty w `src/app/core/repositories/`, aktywny adapter LocalStorage, testy kontraktowe | Adapter Supabase przechodzi te same testy kontraktowe |
+| `DATA_BACKEND` | `local` w Production i Preview | Najpierw `supabase` w Preview (staging), potem w Production |
+| Auth w UI | Brak ekranów logowania | Rejestracja, logowanie, ochrona tras |
 
 ## Ocena i korekty rekomendacji infrastruktury
 
 Zachowujemy Cloudflare Pages, integrację z GitHubem, jawny katalog wynikowy `dist/cost-management-app/browser`, podglądy branchy, ograniczone uprawnienia i osobny proces cofania zmian webowych.
 
-Przedstawiony pierwotnie plan wymaga następujących doprecyzowań:
+Pierwotny plan wymagał następujących doprecyzowań:
 
-- **Wybór sposobu wdrażania:** używamy Git integration. Wybór trybu projektu Pages jest istotny, ponieważ projektu Git-integrated nie można później przełączyć na Direct Upload. Nie dodajemy Wranglera do zależności projektu dla tego przepływu. Opcjonalny lokalny podgląd może użyć `npx wrangler pages dev`, ale nie jest bramką wdrożenia.
-- **Katalog buildu:** Angular application builder tworzy stronę w `dist/cost-management-app/browser`. Tę ścieżkę należy wpisać jawnie w ustawieniach Cloudflare, zamiast polegać na automatycznym wykrywaniu.
-- **Stan backendu:** Supabase jest planowany, ale nie został jeszcze zaimplementowany. Nie konfigurujemy teraz kluczy, Auth, callback URLs ani dostępu do danych Supabase.
-- **Dostępność i indeksowanie:** demo ma być publiczne, ale oznaczone jako `noindex`. To ogranicza indeksowanie przez wyszukiwarki, lecz nie chroni strony ani jej treści. Nie umieszczamy w aplikacji danych osobowych ani sekretów.
-- **Testy i bezpieczeństwo zależności:** ostatni zapisany health check wskazywał test jednostkowy, który nie kompiluje się, nieudany test dodawania wydatku na Mobile Pixel oraz podatne zależności. Przed wydaniem trzeba ponownie sprawdzić bieżący stan, naprawić oba testy i uzgodnić obsługę aktualnych wyników audytu. Dawny raport audytu nie jest dowodem bieżącego stanu.
-- **Brak CI:** Cloudflare zbuduje aplikację, ale nie uruchomi automatycznie testów z obecnego repozytorium, bo nie ma workflow CI. Dopóki CI nie powstanie, lokalne testy są obowiązkową bramką przed połączeniem `master` z Pages i przed każdym późniejszym pushem na branch produkcyjny.
-- **Konfiguracja npm:** `.npmrc` zawiera `strict-ssl=false`. Należy usunąć to ustawienie przed buildem w CI albo wyjaśnić je i zastąpić bezpieczną konfiguracją zaufanego certyfikatu. Nie należy utrwalać wyłączenia weryfikacji TLS jako rozwiązania problemu.
-- **Wersja Node:** lokalnie używano Node 22, ale repozytorium nie przypina wersji. Przed konfiguracją buildu Pages należy sprawdzić zgodność Node 22 z używanym Angular CLI i ustawić tę samą główną wersję lokalnie oraz w środowisku Cloudflare, na przykład przez `.nvmrc` i ustawienie `NODE_VERSION`. Nie zakładać, że ustawienie jest skuteczne bez sprawdzenia logu buildu.
-- **SPA i nagłówki:** sprawdzamy odświeżanie bezpośrednich adresów Angulara na Pages. Jeśli fallback platformy nie obsłuży ich poprawnie, dodajemy i testujemy regułę `/* /index.html 200` w `public/_redirects`. Ustawienia `noindex` i pozostałe nagłówki wdrażamy przez `public/_headers` tylko po sprawdzeniu, że plik trafia do katalogu przeglądarkowego i wartości są widoczne w odpowiedzi HTTP.
+- **Sposób wdrażania:** Git integration. Projektu Git-integrated nie można później przełączyć na Direct Upload. Nie dodajemy Wranglera do zależności; opcjonalny lokalny podgląd może użyć `npx wrangler pages dev`.
+- **Katalog buildu:** `dist/cost-management-app/browser` wpisany jawnie w Cloudflare, bez polegania na automatycznym wykrywaniu.
+- **Backend:** Supabase jest uruchamiany i podpinany od początku, ale dane aplikacji pozostają w LocalStorage do czasu przełączenia. Supabase jest wybranym backendem MVP według PRD.
+- **Warstwa danych:** główny ekran z Safe-to-Spend korzysta z `BudgetStateService`, który dziś czyta i zapisuje `localStorage` bezpośrednio, bez repozytorium. Istniejące `ExpenseRepository` i `BudgetRepository` obsługują starszy, prototypowy model. Bez repozytorium pod głównym przepływem płynne przełączenie nie jest możliwe, dlatego plan obejmuje je od razu (Etap 4).
+- **Dostępność:** publiczne demo z `noindex`. `noindex` ogranicza indeksowanie, nie dostęp.
+- **Testy i zależności:** health check wskazywał niekompilujący się test jednostkowy, nieudany test Mobile Pixel i podatne zależności. Przed wydaniem trzeba sprawdzić bieżący stan, naprawić oba testy i podjąć decyzję o wynikach audytu.
+- **Brak CI:** do czasu dodania CI lokalne testy są obowiązkową bramką przed każdym pushem na `master`.
+- **Konfiguracja npm:** `.npmrc` zawiera `strict-ssl=false`. Usunąć albo zastąpić udokumentowaną konfiguracją zaufanego certyfikatu.
+- **Wersja Node:** repozytorium nie przypina wersji. Ustalić wspieraną wersję (lokalnie Node 22), zapisać ją w `.nvmrc` i ustawić `NODE_VERSION` w Cloudflare. Potwierdzić w logu buildu.
+- **SPA i nagłówki:** sprawdzić odświeżanie bezpośrednich tras na Pages. Regułę `/* /index.html 200` w `public/_redirects` dodać tylko wtedy, gdy domyślny fallback nie wystarczy. Nagłówki ustawić przez `public/_headers`.
 
 Docelowe nagłówki dla publicznego demo:
 
@@ -34,45 +50,48 @@ Docelowe nagłówki dla publicznego demo:
   X-Frame-Options: DENY
 ```
 
-`X-Robots-Tag: noindex` ma ograniczyć indeksowanie, a nie ograniczać dostęp. Przed wdrożeniem sprawdzić te nagłówki przez HTTP; nie dodawać Content Security Policy bez osobnego sprawdzenia używanych zasobów aplikacji.
+Nie dodawać Content Security Policy bez osobnego sprawdzenia zasobów aplikacji. Po włączeniu Supabase CSP musiałaby dopuszczać domeny projektów Supabase w `connect-src`.
 
 ## Wymagania wstępne
 
-### Potrzebne do pierwszego publicznego demo
+### Konta i dostęp
 
-- **Konto GitHub** z dostępem administracyjnym lub wystarczającym do autoryzacji aplikacji Cloudflare GitHub App dla repozytorium `JNDaniel/portfel-bez-spiny`. Repozytorium istnieje i obecny branch `master` śledzi `origin/master`.
-- **Konto Cloudflare** z dostępem do Workers & Pages. Włączenie GitHub App musi ograniczyć dostęp do tego repozytorium, o ile Cloudflare pozwala wybrać repozytoria indywidualnie.
-- Dostęp do ustawień i logów projektu Pages oraz możliwość wybrania branchu produkcyjnego i ustawienia build command/output directory.
-- Lokalnie działające narzędzia zgodne z projektem: Node.js w wybranej wspólnej wersji, npm i zależności instalowane z lockfile przez `npm ci`.
-- Naprawiony lokalny zestaw testów: build produkcyjny, testy jednostkowe i wymagane scenariusze E2E, w tym Mobile Pixel.
-- Decyzja, że `master` jest branchem produkcyjnym i że jego pierwszy push po podłączeniu Pages może opublikować publiczny serwis. Przed aktywacją integracji należy zaakceptować zawartość aktualnego commita na `master`.
-- Potwierdzenie, że demo nie zawiera sekretów, prywatnych danych ani treści, które nie powinny być publiczne. `noindex` nie zastępuje kontroli dostępu.
-- Uzgodniony sposób usunięcia lub bezpiecznego zastąpienia `strict-ssl=false` z `.npmrc`.
+- **GitHub:** dostęp pozwalający autoryzować Cloudflare GitHub App dla `JNDaniel/portfel-bez-spiny`. Repozytorium istnieje, a `master` śledzi `origin/master`.
+- **Cloudflare:** konto z dostępem do Workers & Pages. GitHub App ograniczona do tego repozytorium, jeśli panel na to pozwala.
+- **Supabase:** konto i organizacja z ustalonym właścicielem rozliczeń i odzyskiwania dostępu. Dwa projekty: `portfel-staging` dla preview i developmentu oraz `portfel-prod`. Wspólny region wybrany przed utworzeniem projektów.
+- **Plan Supabase:** wybrany po sprawdzeniu limitów, kosztów, pauzowania nieaktywnych projektów i kopii zapasowych. Projekt prod bez ruchu do czasu przełączenia może zostać wstrzymany w planie Free; przed przełączeniem trzeba go wznowić albo zmienić plan. Plan Free nie daje kopii zapasowych odpowiednich dla danych produkcyjnych.
+- **Menedżer haseł:** hasła do kont, hasła baz danych, recovery codes i ewentualny access token Supabase CLI. Nic z tego nie trafia do repozytorium.
 
-### Nie jest potrzebne do pierwszego demo
+### Narzędzia lokalne
 
-- Konto Supabase, projekt Supabase, klucze Supabase ani ustawienia Auth. Kod aplikacji nie używa obecnie Supabase, a dane demonstracyjne pozostają w LocalStorage.
-- GitHub CLI (`gh`) ani lokalny Wrangler jako zależności projektu. GitHub repo jest już dostępne, a Cloudflare Git integration wykonuje build i deploy.
-- Własna domena, Cloudflare API token, Pages Functions, Worker, baza danych albo migracja danych z przeglądarki.
+- Node.js w przypiętej wersji, npm i instalacja z lockfile przez `npm ci`.
+- Supabase CLI jako zależność deweloperska projektu (`npx supabase ...`), żeby lokalnie i w przyszłym CI używać tej samej wersji.
+- Docker do uruchamiania lokalnego Supabase (`supabase start`).
+- Naprawiony lokalny zestaw testów: build, testy jednostkowe i E2E, w tym Mobile Pixel.
 
-### Wymagane przed późniejszym wdrożeniem Supabase
+### Decyzje przed startem
 
-- Konto i osobne projekty Supabase dla stagingu/testów oraz produkcji, z ustalonym właścicielem, regionem i planem kopii zapasowych.
-- Wersjonowane migracje bazy, polityki RLS i automatyczne testy izolacji danych użytkowników.
-- Osobna konfiguracja kliencka dla preview/staging i produkcji. Do publicznego bundla mogą trafić wyłącznie Supabase URL i publishable key.
-- Ograniczone adresy redirect/callback dla produkcyjnej domeny i konkretnych hostów preview. Nie używać szerokich wildcardów jako obejścia.
-- Osobny plan wdrożenia i odtworzenia bazy. Rollback Cloudflare cofa frontend, nie migracje, dane ani ustawienia Supabase.
+- `master` jest branchem produkcyjnym, a jego pierwszy build po podłączeniu Pages publikuje publiczny serwis.
+- Demo nie zawiera sekretów, prywatnych danych ani treści, które nie powinny być publiczne.
+- Sposób usunięcia lub zastąpienia `strict-ssl=false`.
+- Docelowy kontrakt domenowy dla głównego przepływu (faza 4) jest uzgodniony przed tworzeniem tabel użytkownika.
+
+### Poza zakresem pierwszego wdrożenia
+
+- GitHub CLI (`gh`), lokalny Wrangler jako zależność, własna domena, Cloudflare API token, Pages Functions i Workers.
+- Migracja danych demonstracyjnych z LocalStorage do Supabase; PRD jej nie wymaga.
+- Ekrany logowania i fizyczne zapisywanie danych użytkownika w Supabase.
 
 ## Etap 0: przygotować i zweryfikować repozytorium
 
 Nie podłączać jeszcze repozytorium do Pages. Najpierw:
 
-1. Sprawdzić aktualny `git status`, branch produkcyjny i zawartość commita, który Cloudflare miałby wdrożyć.
+1. Sprawdzić `git status`, branch produkcyjny i zawartość commita, który Cloudflare miałby wdrożyć.
 2. Naprawić nieaktualne asercje testu jednostkowego oraz przyczynę niepowodzenia mobilnego testu dodawania wydatku.
-3. Sprawdzić aktualny `npm audit` i zaktualizować podatne zależności zgodnie z osobnym planem migracji Angulara. Nie używać `npm audit fix --force`; jeśli jakieś ryzyko zostanie zaakceptowane na czas demo, zapisać zakres, uzasadnienie i termin ponownej oceny.
-4. Usunąć `strict-ssl=false` albo zastąpić go udokumentowaną konfiguracją zaufanego certyfikatu. Zweryfikować `npm ci` z normalną weryfikacją TLS.
-5. Ustalić i przypiąć wspieraną wersję Node (docelowo sprawdzić lokalną Node 22), na przykład w `.nvmrc`. Ustawić analogiczną wersję w Cloudflare.
-6. Dodać regułę SPA tylko wtedy, gdy test potwierdzi, że domyślny fallback Pages nie obsługuje bezpośrednich tras. Dodać `noindex` i nagłówki przez `public/_headers`, a potem sprawdzić ich obecność w zbudowanych plikach i odpowiedziach HTTP.
+3. Sprawdzić aktualny `npm audit`. Nie używać `npm audit fix --force`. Zaakceptowane na czas demo ryzyka zapisać z zakresem, uzasadnieniem i terminem ponownej oceny.
+4. Usunąć `strict-ssl=false` albo zastąpić go konfiguracją zaufanego certyfikatu. Zweryfikować `npm ci` z normalną weryfikacją TLS.
+5. Przypiąć wersję Node w `.nvmrc`.
+6. Dodać `public/_headers`, a `public/_redirects` tylko jeśli będzie potrzebny. Sprawdzić, że oba pliki trafiają do `dist/cost-management-app/browser`.
 7. Uruchomić z czystej instalacji:
 
    ```bash
@@ -82,85 +101,207 @@ Nie podłączać jeszcze repozytorium do Pages. Najpierw:
    npm run test:e2e
    ```
 
-8. Sprawdzić, że statyczny serwis jest w `dist/cost-management-app/browser`. W razie potrzeby uruchomić lokalny podgląd:
+8. Opcjonalnie sprawdzić statyczny serwis lokalnie:
 
    ```bash
    npx wrangler pages dev dist/cost-management-app/browser
    ```
 
-9. Jeżeli wprowadzono zmiany UI, pluginów Capacitor lub konfiguracji natywnej, wykonać również `npm run cap:build:apk` zgodnie z `AGENTS.md`. Samo webowe wdrożenie nie zastępuje walidacji Androida.
-10. Zatwierdzić wynik audytu bezpieczeństwa i zaakceptować produkcyjne wdrożenie publicznego demo.
+9. Przy zmianach UI, pluginów Capacitor lub konfiguracji natywnej uruchomić `npm run cap:build:apk` zgodnie z `AGENTS.md`.
 
-**Bramka:** nie podłączać `master` do automatycznego wdrażania, dopóki build, testy jednostkowe, wymagane E2E i decyzja o podatnościach nie są zakończone.
+**Bramka:** nie podłączać `master` do automatycznego wdrażania, dopóki build, testy i decyzja o podatnościach nie są zakończone.
 
 ## Etap 1: utworzyć projekt Cloudflare Pages
 
-Ten krok wymaga działania właściciela konta w panelu Cloudflare:
+Wykonuje właściciel konta w panelu Cloudflare:
 
-1. Otworzyć **Workers & Pages → Create application → Pages → Connect to Git** (nazwy pozycji mogą się zmienić w panelu).
-2. Autoryzować GitHub App wyłącznie do potrzebnego repozytorium, jeśli dostępna jest taka opcja.
-3. Wybrać `JNDaniel/portfel-bez-spiny`.
-4. Wybrać `master` jako production branch. Pozostałe branche mogą tworzyć preview deployments; dostęp do preview traktować jako publiczny, dopóki nie włączono i nie zweryfikowano ochrony dostępu.
-5. Ustawić build:
-   - Framework preset: `None` lub równoważne ustawienie bez automatycznego presetowania.
+1. **Workers & Pages → Create application → Pages → Connect to Git** (nazwy w panelu mogą się zmienić).
+2. Autoryzować GitHub App tylko dla potrzebnego repozytorium i wybrać `JNDaniel/portfel-bez-spiny`.
+3. Production branch: `master`. Pozostałe branche tworzą preview; traktować je jako publiczne, dopóki nie włączono ochrony dostępu.
+4. Build:
+   - Framework preset: `None`.
    - Build command: `npm run build`.
    - Build output directory: `dist/cost-management-app/browser`.
-   - Node: ta sama przypięta wersja co w repozytorium.
-6. Nie konfigurować sekretów ani Supabase variables. W obecnej aplikacji nie są potrzebne.
-7. Przed potwierdzeniem utworzenia sprawdzić, czy branch, katalog wyjściowy i ustawienia publicznego dostępu są prawidłowe. Pierwszy udany build `master` będzie wdrożeniem produkcyjnym.
+   - `NODE_VERSION` zgodne z `.nvmrc`.
+5. Ustawić `DATA_BACKEND=local` dla Production i Preview. Zmienne Supabase dodajemy w Etapie 2.
+6. Przed potwierdzeniem sprawdzić branch, katalog wyjściowy i ustawienia dostępu. Pierwszy udany build `master` jest wdrożeniem produkcyjnym.
 
-Cloudflare Git integration uruchamia build po pushu. Do czasu dodania CI nie należy utożsamiać udanego buildu Cloudflare z przejściem testów.
+## Etap 2: uruchomić projekty Supabase i Auth
 
-## Etap 2: smoke test pierwszego wdrożenia
+Wykonać po utworzeniu projektu Pages, gdy znany jest host produkcyjny. Dla stagingu wybrać stabilny host preview, czyli branch alias, np. gałęzi `staging`.
 
-Po udanym buildzie sprawdzić adres `*.pages.dev`:
+1. Utworzyć projekty `portfel-staging` i `portfel-prod` w tym samym regionie. Hasła baz danych zapisać w menedżerze haseł.
+2. Zanotować Project URL, project ref i publishable key każdego projektu. Publishable key jest przeznaczony dla klienta i nie jest sekretem. Klucze `secret` i legacy `service_role` nigdy nie trafiają do przeglądarki, repozytorium, zmiennych buildu ani artefaktów.
+3. Auth → URL Configuration:
+   - **prod:** Site URL `https://<projekt>.pages.dev`. Redirect allow list tylko dla tego hosta i potrzebnych ścieżek.
+   - **staging:** Site URL na stabilny host preview. Redirect allow list obejmuje ten host oraz `http://localhost:4200/**` do lokalnego developmentu.
+   - Jeśli logowanie na hash-based preview URL-ach będzie potrzebne, dodać wzorzec ograniczony do subdomen tego projektu Pages, wyłącznie w stagingu. Składnię potwierdzić w dokumentacji Supabase. Nigdy nie dodawać wildcardu w prod.
+4. Auth → Providers: zostawić email i hasło zgodnie z PRD. Pozostałych providerów nie włączać.
+5. W Cloudflare Pages dodać zmienne:
+   - **Production:** `SUPABASE_URL` i `SUPABASE_PUBLISHABLE_KEY` z `portfel-prod`.
+   - **Preview:** te same nazwy z `portfel-staging`.
+
+   To wartości publiczne przeznaczone dla klienta. Sprawdzić, że żadna zmienna Preview nie wskazuje na prod.
+
+6. Nie tworzyć tabel ani polityk ręcznie w panelu. Każda zmiana schematu przechodzi przez migracje w repozytorium.
+
+## Etap 3: Supabase w repozytorium
+
+1. Dodać Supabase CLI jako zależność deweloperską i zainicjować projekt:
+
+   ```bash
+   npm install --save-dev supabase
+   npx supabase init
+   ```
+
+   Commitować `supabase/config.toml` i `supabase/migrations/`. Pliki lokalne i tymczasowe CLI dopisać do `.gitignore`.
+
+2. Uruchomić lokalny stack i sprawdzić, że działa:
+
+   ```bash
+   npx supabase start
+   npx supabase status
+   ```
+
+   Lokalny URL i publishable key służą tylko do developmentu i testów; nie są konfiguracją żadnego środowiska zdalnego.
+
+3. Utworzyć migrację bazową bez tabel użytkownika, np. wspólną funkcję `set_updated_at()` do przyszłych triggerów. Jej celem jest sprawdzenie całej ścieżki migracji, a nie model danych:
+
+   ```bash
+   npx supabase migration new baseline
+   npx supabase db reset
+   ```
+
+4. Wdrożyć migrację bazową najpierw na staging, potem na prod:
+
+   ```bash
+   npx supabase link --project-ref <staging-ref>
+   npx supabase db push
+   npx supabase link --project-ref <prod-ref>
+   npx supabase db push
+   ```
+
+   Push na prod wymaga akceptacji człowieka. Agent nie dostaje stałego dostępu do bazy produkcyjnej.
+
+5. `supabase/seed.sql` może zawierać wyłącznie lokalne dane testowe. Nigdy dane osobowe ani poświadczenia.
+6. Tabele `monthly_budgets`, `expense_folders`, `expenses`, constrainty i RLS dodajemy w fazie 5, po zamrożeniu kontraktu w fazie 4. Od tego momentu każda tabela użytkownika ma włączone RLS w tej samej migracji, w której powstaje.
+
+## Etap 4: podpiąć Supabase w aplikacji
+
+Ten etap wprowadza kod, ale nie zmienia zachowania aplikacji, dopóki `DATA_BACKEND=local`.
+
+### Konfiguracja buildu
+
+- Skrypt `prebuild` generuje plik konfiguracyjny ignorowany przez Git, np. `src/environments/runtime-config.generated.ts`, z `DATA_BACKEND`, `SUPABASE_URL` i `SUPABASE_PUBLISHABLE_KEY`.
+- Brak `DATA_BACKEND` oznacza `local`. Przy `DATA_BACKEND=supabase` brak URL lub klucza przerywa build z czytelnym błędem; build nie może po cichu użyć innego projektu.
+- Lokalnie wartości pochodzą z `.env` (ignorowany przez Git) z szablonem `.env.example` bez prawdziwych wartości.
+- Po buildzie skrypt sprawdza bundle pod kątem `sb_secret_`, `service_role` i innych uprzywilejowanych kluczy. Wykrycie przerywa build.
+
+```mermaid
+flowchart LR
+  CFProd[Cloudflare Production vars] --> BuildProd[prebuild + ng build] --> ProdBundle[Bundle: prod URL, publishable key, DATA_BACKEND] --> SupaProd[Supabase prod]
+  CFPrev[Cloudflare Preview vars] --> BuildPrev[prebuild + ng build] --> PreviewBundle[Bundle: staging URL, publishable key, DATA_BACKEND] --> SupaStaging[Supabase staging]
+```
+
+### Klient i granica repozytoriów
+
+- Dodać `@supabase/supabase-js`.
+- W `src/app/core/` dodać provider klienta Supabase (np. `InjectionToken`), tworzący klienta leniwie i tylko przy `DATA_BACKEND=supabase`. Przy `local` aplikacja nie wysyła żadnych żądań do Supabase.
+- Komponenty nie importują klienta Supabase ani nie używają `localStorage` do danych użytkownika. Dostęp mają tylko implementacje repozytoriów, zgodnie z `AGENTS.md`.
+
+### Repozytorium pod głównym przepływem
+
+- Zdefiniować kontrakt repozytorium dla docelowego modelu z fazy 4: budżet miesięczny, wydatki z klasyfikacją `everyday | occasional | want`, foldery, kwoty w groszach z walutą.
+- API repozytorium jest asynchroniczne (Observable lub Promise) już przy adapterze LocalStorage. Dzięki temu przejście na sieć nie zmienia komponentów.
+- Pierwszą implementacją jest adapter LocalStorage. `BudgetStateService` przestaje odczytywać i zapisywać `localStorage` bezpośrednio i korzysta wyłącznie z repozytorium.
+- Wybór implementacji odbywa się w jednym miejscu, w providerach `app.config.ts`, na podstawie `DATA_BACKEND`. Zastępuje to przełączanie implementacji wewnątrz poszczególnych serwisów.
+- Testy kontraktowe uruchamiane na każdej implementacji repozytorium. Adapter Supabase w fazie 7 musi przejść te same testy.
+- Obliczenia Safe-to-Spend pozostają w jednej przetestowanej warstwie domenowej i nie zależą od źródła danych. Wydatki `occasional` nigdy nie wpływają na stan ostrzeżenia dziennego budżetu.
+- `SettingsService` i `ThemeService` mogą dalej używać `localStorage`, bo przechowują preferencje urządzenia, a nie dane użytkownika.
+
+Walidacja tego etapu: build, testy jednostkowe (w tym kontraktowe), pełne E2E desktop i Mobile Pixel, `npm run cap:build:apk` oraz skan bundla. Zachowanie aplikacji ma być identyczne jak przed zmianą.
+
+## Etap 5: smoke test pierwszego wdrożenia
+
+Na adresie `*.pages.dev`:
 
 - Strona główna przekierowuje do `/dashboard`.
-- `/dashboard`, `/expenses`, `/budgets`, `/analytics` i `/settings` otwierają się bezpośrednio.
-- Odświeżenie bezpośredniej trasy, w szczególności `/expenses` i `/settings`, nie zwraca 404.
-- Kluczowy widok jest czytelny na desktopie oraz profilu Pixel 7. Safe-to-Spend i jego ostrzeżenie pozostają widoczne bez przewijania.
-- Demonstracyjne dane pozostają lokalne dla przeglądarki i nie są przedstawiane jako prywatne, synchronizowane konto.
-- Odpowiedź HTTP zawiera oczekiwany nagłówek `X-Robots-Tag: noindex` oraz skonfigurowane nagłówki bezpieczeństwa. Sprawdzić także `robots`/metadane, jeśli dodano je w HTML.
-- Pliki `_headers` i `_redirects` są w katalogu wynikowym, jeśli zostały skonfigurowane.
-- Build log w Cloudflare pokazuje oczekiwaną wersję Node i output directory.
+- `/dashboard`, `/expenses`, `/budgets`, `/analytics` i `/settings` otwierają się bezpośrednio i po odświeżeniu nie zwracają 404.
+- Na desktopie i Pixel 7 Safe-to-Spend i jego ostrzeżenie są widoczne bez przewijania.
+- Dane demonstracyjne są lokalne dla przeglądarki i nie są przedstawiane jako prywatne konto.
+- Odpowiedź HTTP zawiera `X-Robots-Tag: noindex` i pozostałe nagłówki.
+- Log buildu pokazuje oczekiwaną wersję Node, katalog wyjściowy, uruchomiony `prebuild` i udany skan bundla.
+- W narzędziach deweloperskich przeglądarki brak żądań do Supabase przy `DATA_BACKEND=local`.
+- Bundle Production zawiera wyłącznie URL i publishable key projektu prod, a bundle Preview wyłącznie dane stagingu.
+- Migracja bazowa jest widoczna w historii migracji obu projektów (`npx supabase migration list`).
+- Auth URL Configuration obu projektów wskazuje właściwe hosty.
 
-Połączenie branchu niebędącego produkcyjnym powinno utworzyć preview. Zweryfikować jego URL i upewnić się, że nie zakłada on ochrony dostępu, jeśli jej nie włączono. Nie wpisywać do formularzy testowych rzeczywistych danych finansowych ani danych osobowych.
+Testu logowania jeszcze nie wykonujemy, bo aplikacja nie ma ekranów Auth.
+
+## Etap 6: przełączenie na Supabase (później, fazy 5–8)
+
+Infrastruktura i podpięcie z Etapów 2–4 pozostają bez zmian. Przełączenie obejmuje:
+
+1. Migracje tabel użytkownika, constraintów i RLS z politykami `auth.uid() = user_id` oraz testy izolacji dwóch użytkowników. Kolejność: lokalnie, staging, prod po akceptacji.
+2. Rejestrację, logowanie, przywracanie sesji i ochronę tras.
+3. Adapter Supabase repozytorium, który przechodzi testy kontraktowe.
+4. `DATA_BACKEND=supabase` najpierw w Preview (staging) i E2E na stabilnym hoście preview, w tym test logowania i przekierowań.
+5. Wznowienie projektu prod, jeśli był wstrzymany, oraz decyzja o kopiach zapasowych przed zapisem prawdziwych danych.
+6. `DATA_BACKEND=supabase` w Production, nowe wdrożenie i smoke test logowania na produkcji.
+
+Powrót do `local` jest możliwy przez zmianę zmiennej i ponowne wdrożenie, ale dane zapisane w Supabase nie wrócą do LocalStorage. To awaryjne wyłączenie, a nie migracja danych.
 
 ## Kolejne wdrożenia i bramki
 
-- Przed każdym pushem do `master` uruchomić lokalnie build, testy jednostkowe i E2E. Rozważyć ochronę `master` przez pull request, jeśli sposób pracy repozytorium na to pozwala.
-- Dodać GitHub Actions lub inny CI w osobnym zakresie. Po jego skonfigurowaniu wymagane status checks powinny przechodzić przed merge do `master`.
-- Ocenę braku CI i brak testów w workflow zapisać jawnie. Cloudflare Pages nie wykonuje obecnie tych kontroli.
-- Przy zmianie output directory, Angular buildera albo głównej wersji Wrangler ponownie sprawdzić publikowane pliki i deep links.
-- Nie dodawać Pages Functions/Workers bez nowej oceny kosztów, logowania, sekretów i odpowiedzialności serwerowej.
+- Przed każdym pushem do `master` uruchomić lokalnie build, testy jednostkowe i E2E. Rozważyć ochronę `master` przez pull request.
+- Dodać CI w osobnym zakresie. Po jego skonfigurowaniu wymagane status checks muszą przechodzić przed merge do `master`, a CI może też sprawdzać `supabase db reset` na lokalnym stacku.
+- Przy zmianie output directory, buildera Angulara albo wersji narzędzi ponownie sprawdzić publikowane pliki i deep links.
+- Nie dodawać Pages Functions, Workers ani Edge Functions bez nowej oceny kosztów, logowania, sekretów i odpowiedzialności serwerowej.
 
 ## Rollback, logi i odpowiedzialność
 
-- Cloudflare Pages przywraca frontend, ale nie bazę, ustawienia Auth ani aplikacje Capacitor.
-- Przy pierwszym wdrożeniu może nie być wcześniejszej stabilnej wersji do przywrócenia. W takim przypadku poprawić build lub wdrożyć naprawczy commit. Gdy istnieje poprzedni sprawdzony deployment, można go przywrócić z panelu Pages.
-- Użyć build/deployment logs i listy deploymentów w panelu Pages do diagnozy. Aplikacja statyczna nie ma logów działającego serwera; przyszłe błędy klienta i Supabase wymagają osobnej obserwowalności.
-- Właściciel projektu zatwierdza pierwsze publiczne wdrożenie, zmiany domeny/DNS, uprawnień GitHub App i ustawień konta. Nie tworzyć szerokiego tokenu API dla agenta, jeśli Git integration wystarcza.
-- Nie committować sekretów. Ponieważ klient Angulara jest publiczny, każda wartość w bundlu jest jawna.
+- Rollback Cloudflare Pages przywraca frontend, ale nie cofa migracji, danych, ustawień Auth ani wydań Capacitor.
+- Migracje są zgodne wstecz z poprzednią wersją frontendu. Zmiany niszczące (usuwanie kolumn, zmiana typów) wdrażać w kilku krokach.
+- Przy pierwszym wdrożeniu może nie być wcześniejszej wersji do przywrócenia; wtedy wdrożyć commit naprawczy.
+- Diagnostyka: build i deployment logs w panelu Pages oraz logi projektu w panelu Supabase. Statyczna aplikacja nie ma logów serwera; błędy klienta wymagają osobnej obserwowalności.
+- Właściciel projektu zatwierdza pierwsze publiczne wdrożenie, migracje na prod, zmianę `DATA_BACKEND` w Production, zmiany domeny/DNS, uprawnień GitHub App i ustawień kont.
+- Każda wartość w bundlu Angulara jest publiczna. Do klienta trafiają wyłącznie Project URL i publishable key.
 
 ## Ryzyka
 
 | Ryzyko | Ograniczenie |
 |---|---|
-| Cloudflare publikuje zły katalog mimo udanego buildu | Ustawić `dist/cost-management-app/browser` jawnie i sprawdzić zawartość wdrożenia. |
-| Push do `master` publikuje niezatwierdzony lub nieprzetestowany stan | Naprawić testy przed integracją, zatwierdzać zawartość produkcyjnego commita i uruchamiać lokalne bramki przed push. |
-| Demo jest publiczne mimo `noindex` | Nie umieszczać danych prywatnych; `noindex` nie jest autoryzacją. |
-| Zmiana hosta preview powoduje błąd przyszłego logowania | Supabase nie jest częścią tego wdrożenia; przy jego dodaniu jawnie ustawić callback URLs i użyć środowiska stagingowego. |
-| Brak CI pozwala wdrożyć kod bez testów | Do czasu dodania CI wymagać lokalnego uruchomienia testów przed `master`; później dodać wymagane status checks. |
-| Wyłączenie weryfikacji TLS osłabia pobieranie zależności | Usunąć `strict-ssl=false` albo zastosować zatwierdzony certyfikat CA i potwierdzić `npm ci`. |
-| Stare podatności pozostały w zależnościach | Ponowić audyt przed wdrożeniem; zaakceptować każde nierozwiązane ryzyko jawnie i czasowo. |
-| Rollback frontendu nie pasuje do zmian backendu | W tym etapie nie ma backendu; przyszłe migracje Supabase wdrażać oddzielnie, kompatybilnie i z planem odtworzenia. |
+| Cloudflare publikuje zły katalog mimo udanego buildu | Jawny `dist/cost-management-app/browser` i sprawdzenie zawartości wdrożenia. |
+| Push do `master` publikuje nieprzetestowany stan | Lokalne bramki przed pushem; później wymagane status checks w CI. |
+| Demo jest publiczne mimo `noindex` | Brak danych prywatnych; `noindex` nie jest autoryzacją. |
+| Preview zapisuje dane w projekcie prod | Zmienne Preview wskazują staging, Production wskazuje prod; weryfikacja w smoke teście i skanie bundla. |
+| Szeroki wildcard w redirect URLs | Stabilne hosty; wildcard tylko w stagingu i tylko dla subdomen tego projektu Pages. |
+| Projekt Free zostaje wstrzymany lub brak kopii zapasowych | Wznowienie i decyzja o planie przed przełączeniem prod; brak prawdziwych danych na planie bez backupu bez świadomej akceptacji. |
+| Uprzywilejowany klucz trafia do frontendu | Tylko URL i publishable key w konfiguracji buildu; skan bundla przerywa build. |
+| Klient Supabase wysyła żądania przy `DATA_BACKEND=local` | Leniwe tworzenie klienta tylko przy `supabase`; sprawdzenie w smoke teście. |
+| Tabele powstają przed zamrożeniem kontraktu | Etap 3 tworzy tylko migrację bazową; tabele dopiero po fazie 4. |
+| Ręczne zmiany schematu w panelu rozjeżdżają środowiska | Wszystkie zmiany przez migracje; `supabase migration list` w smoke teście. |
+| Refaktor `BudgetStateService` zmienia zachowanie Safe-to-Spend | Testy kontraktowe, testy domenowe i pełne E2E desktop/mobile przed wdrożeniem. |
+| Wyłączona weryfikacja TLS w npm | Usunięcie `strict-ssl=false` lub zatwierdzony certyfikat CA. |
+| Stare podatności w zależnościach | Ponowny audyt przed wdrożeniem i jawna akceptacja ryzyk. |
 
 ## Kryteria zakończenia
 
-- Projekt Pages jest połączony z właściwym repozytorium, a `master` jest jawnie oznaczony jako branch produkcyjny.
-- Cloudflare wykonuje produkcyjny build z `npm run build` i publikuje `dist/cost-management-app/browser`.
-- Build, testy jednostkowe i wymagane testy desktop/mobile przechodzą lokalnie przed wydaniem.
-- Główna trasa, bezpośrednie wejścia i odświeżenia tras działają na `*.pages.dev`.
-- Demo wysyła `noindex`, nie zawiera sekretów ani danych prywatnych i jest opisane jako lokalna makieta.
-- Uprawnienia GitHub App są ograniczone do potrzebnego repozytorium, jeśli to możliwe.
-- Brak CI, brak backendu Supabase i znane ryzyka zależności są jawnie odnotowane; udany Cloudflare build nie jest przedstawiany jako dowód przejścia testów.
+- Projekt Pages jest połączony z repozytorium, `master` jest branchem produkcyjnym, a build publikuje `dist/cost-management-app/browser`.
+- Build, testy jednostkowe i E2E desktop/mobile przechodzą lokalnie przed wydaniem.
+- Trasy, odświeżenia i nagłówki działają na `*.pages.dev`.
+- Projekty `portfel-staging` i `portfel-prod` działają, a Auth URL Configuration wskazuje właściwe hosty.
+- Repozytorium zawiera `supabase/` z migracją bazową wdrożoną na staging i prod.
+- Aplikacja zawiera klienta Supabase, generowaną konfigurację buildu, przełącznik `DATA_BACKEND` i skan bundla.
+- Główny przepływ korzysta z repozytorium z aktywnym adapterem LocalStorage i testami kontraktowymi; komponenty i `BudgetStateService` nie używają `localStorage` do danych użytkownika.
+- Przy `DATA_BACKEND=local` aplikacja działa jak wcześniej i nie wysyła żądań do Supabase.
+- Brak CI i znane ryzyka zależności są jawnie odnotowane.
+
+## Źródła do weryfikacji ustawień
+
+- [Supabase Auth redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls)
+- [Supabase API keys](https://supabase.com/docs/guides/getting-started/api-keys)
+- [Supabase Free project pausing](https://supabase.com/docs/guides/platform/free-project-pausing)
+- [Supabase database backups](https://supabase.com/docs/guides/platform/backups)
+- [Cloudflare Pages preview deployments](https://developers.cloudflare.com/pages/configuration/preview-deployments/)
+- [Cloudflare Pages build configuration](https://developers.cloudflare.com/pages/configuration/build-configuration/)
