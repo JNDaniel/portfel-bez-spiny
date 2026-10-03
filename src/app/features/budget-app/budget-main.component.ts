@@ -189,8 +189,8 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
 
       <!-- Mobile Floating Add Button -->
       <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="sm:hidden mb-6 mr-3">
-        <ion-fab-button (click)="openAddModal()" class="shadow-2xl">
-          <ion-icon name="add"></ion-icon>
+        <ion-fab-button (click)="openAddModal()" aria-label="Dodaj wydatek" class="shadow-2xl">
+          <ion-icon name="add" aria-hidden="true"></ion-icon>
         </ion-fab-button>
       </ion-fab>
 

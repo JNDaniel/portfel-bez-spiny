@@ -34,7 +34,10 @@ test.describe('Portfel Bez Spiny — E2E UI & Gesture Flow', () => {
     await page.getByPlaceholder('np. „głodny po treningu”, „farba do salonu”').fill('Kawa i ciastko');
 
     // Submit
-    await page.getByRole('button', { name: 'Dodaj wydatek' }).last().click();
+    await page
+      .getByRole('dialog', { name: 'Dodaj nowy wydatek' })
+      .getByRole('button', { name: 'Dodaj wydatek' })
+      .click();
 
     // Check if new transaction is in the list
     await expect(page.getByText('Kawiarnia Costa')).toBeVisible();

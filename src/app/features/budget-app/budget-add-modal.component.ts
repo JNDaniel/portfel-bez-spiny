@@ -15,10 +15,15 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
   template: `
     @if (state.isAddModalOpen()) {
       <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
-        <div class="relative w-full max-w-lg rounded-3xl bg-[#111827] border border-slate-800 p-6 shadow-2xl space-y-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="budget-add-modal-title"
+          class="relative w-full max-w-lg rounded-3xl bg-[#111827] border border-slate-800 p-6 shadow-2xl space-y-4"
+        >
           <!-- Modal Header -->
           <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 class="text-base font-bold text-white">Dodaj nowy wydatek</h3>
+            <h3 id="budget-add-modal-title" class="text-base font-bold text-white">Dodaj nowy wydatek</h3>
             <button 
               type="button" 
               (click)="state.isAddModalOpen.set(false)"
