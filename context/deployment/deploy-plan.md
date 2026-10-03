@@ -200,7 +200,7 @@ Wykonać po utworzeniu projektu Workers, gdy znany jest host produkcyjny. Dla st
    Push na prod wymaga akceptacji człowieka. Agent nie dostaje stałego dostępu do bazy produkcyjnej.
 
 5. `supabase/seed.sql` może zawierać wyłącznie lokalne dane testowe. Nigdy dane osobowe ani poświadczenia.
-**Stan (2026-10-03):** kroki 1–3 wykonane lokalnie (Supabase CLI 2.119.0, migracja `20261003202153_baseline.sql` z `public.set_updated_at()`, `db reset` OK). Krok 4 czeka na `npx supabase login` właściciela.
+**Stan (2026-10-03):** kroki 1–4 wykonane. Supabase CLI 2.119.0, migracja `20261003202153_baseline.sql` (`public.set_updated_at()`) zastosowana lokalnie, na stagingu (`zkiopvcinvhzsqemypev`) i na prod (`ziscthkrauzpadcznuaq`, push wykonał właściciel). Lokalny `link` wskazuje domyślnie staging.
 
 6. Tabele `monthly_budgets`, `expense_folders`, `expenses`, constrainty i RLS dodajemy w fazie 5, po zamrożeniu kontraktu w fazie 4. Od tego momentu każda tabela użytkownika ma włączone RLS w tej samej migracji, w której powstaje.
 
@@ -217,9 +217,12 @@ Ten etap wprowadza kod, ale nie zmienia zachowania aplikacji, dopóki `DATA_BACK
 
 ```mermaid
 flowchart LR
-  CFProd[Cloudflare Production vars] --> BuildProd[prebuild + ng build] --> ProdBundle[Bundle: prod URL, publishable key, DATA_BACKEND] --> SupaProd[Supabase prod]
-  CFPrev[Cloudflare Preview vars] --> BuildPrev[prebuild + ng build] --> PreviewBundle[Bundle: staging URL, publishable key, DATA_BACKEND] --> SupaStaging[Supabase staging]
+  Vars[Workers Builds vars: *_PROD i *_STAGING] --> Prebuild[prebuild: WORKERS_CI_BRANCH]
+  Prebuild -- master --> ProdBundle[Bundle: prod URL + publishable key] --> SupaProd[Supabase prod]
+  Prebuild -- inna gałąź / lokalnie --> PreviewBundle[Bundle: staging URL + publishable key] --> SupaStaging[Supabase staging]
 ```
+
+**Stan (2026-10-03):** konfiguracja buildu i klient wykonane. `scripts/generate-runtime-config.mjs` (hooki `prebuild`, `prestart`, `pretest`, `prewatch`) generuje `src/environments/runtime-config.generated.ts`; odrzuca nieznany `DATA_BACKEND`, klucz inny niż `sb_publishable_` i brak wartości przy `supabase`. `scripts/scan-bundle-secrets.mjs` (`postbuild`) przerywa build przy `sb_secret_`, `service_role` lub JWT z rolą `service_role`. `SupabaseClientService` ładuje `@supabase/supabase-js` dynamicznym importem tylko przy `DATA_BACKEND=supabase`. Repozytorium pod głównym przepływem czeka na decyzję o kontrakcie.
 
 ### Klient i granica repozytoriów
 
