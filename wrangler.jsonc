@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "portfel-bez-spiny",
+  "compatibility_date": "2026-10-03",
+  // Static Angular SPA only: no Worker script, so no server runtime or per-request billing.
+  "assets": {
+    // Set explicitly; Wrangler's Angular auto-detection has picked the wrong output directory.
+    "directory": "./dist/cost-management-app/browser",
+    "not_found_handling": "single-page-application"
+  }
+}

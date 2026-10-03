@@ -1,8 +1,10 @@
-# Plan pierwszego wdrożenia: Cloudflare Pages + fundament Supabase
+# Plan pierwszego wdrożenia: Cloudflare Workers (static assets) + fundament Supabase
+
+> **Zmiana platformy (2026-10-03):** panel Cloudflare kieruje nowe projekty do Workers, a nie do Pages. Wdrażamy więc statyczną aplikację jako **Cloudflare Workers z static assets i Workers Builds** połączonym z GitHubem. Konfiguracja jest w repozytorium (`wrangler.jsonc`), a nie w formularzu. Nie ma skryptu Workera, więc nie ma też runtime serwerowego. Miejsca, w których dalej w tym dokumencie pojawia się „Pages”, odnoszą się teraz do tego projektu Workers. Rozdzielenie zmiennych Production i Preview (Etap 2) trzeba potwierdzić w ustawieniach Workers Builds.
 
 ## Cel i zakres
 
-Wdrożyć obecną aplikację webową jako publiczne demo na Cloudflare Pages, z repozytorium GitHub jako źródłem wdrożeń. **Od pierwszego wdrożenia uruchamiamy też Supabase i podpinamy go do projektu**: projekty staging i prod, Auth, wersjonowane migracje, klient w aplikacji, konfigurację buildu i przełącznik źródła danych.
+Wdrożyć obecną aplikację webową jako publiczne demo na Cloudflare Workers (static assets), z repozytorium GitHub jako źródłem wdrożeń. **Od pierwszego wdrożenia uruchamiamy też Supabase i podpinamy go do projektu**: projekty staging i prod, Auth, wersjonowane migracje, klient w aplikacji, konfigurację buildu i przełącznik źródła danych.
 
 Aplikacja nadal zapisuje dane w LocalStorage, dopóki przełącznik `DATA_BACKEND` ma wartość `local`. Fizyczne przejście na Supabase polega później na dodaniu schematu i adapterów repozytoriów, a następnie zmianie przełącznika na `supabase`. Nie wymaga przebudowy infrastruktury, buildu ani komponentów.
 
@@ -29,8 +31,9 @@ Zachowujemy Cloudflare Pages, integrację z GitHubem, jawny katalog wynikowy `di
 
 Pierwotny plan wymagał następujących doprecyzowań:
 
-- **Sposób wdrażania:** Git integration. Projektu Git-integrated nie można później przełączyć na Direct Upload. Nie dodajemy Wranglera do zależności; opcjonalny lokalny podgląd może użyć `npx wrangler pages dev`.
-- **Katalog buildu:** `dist/cost-management-app/browser` wpisany jawnie w Cloudflare, bez polegania na automatycznym wykrywaniu.
+- **Sposób wdrażania:** Workers Builds połączony z GitHubem. Build `npm run build`, deploy `npx wrangler deploy`. Wrangler jest przypięty w `devDependencies`, więc lokalnie i w Cloudflare działa ta sama wersja. Lokalny podgląd: `npx wrangler dev`.
+- **Katalog buildu i SPA:** `wrangler.jsonc` jawnie ustawia `assets.directory` na `./dist/cost-management-app/browser` oraz `not_found_handling: "single-page-application"`, więc bezpośrednie trasy Angulara zwracają `index.html`. Bez automatycznego wykrywania.
+- **Token API:** Workers Builds tworzy token, którym wdraża projekt. Nazwać go jednoznacznie (np. `workers-builds-portfel-bez-spiny`) i nie używać go nigdzie indziej. Nie tworzyć osobnych tokenów dla agentów.
 - **Backend:** Supabase jest uruchamiany i podpinany od początku, ale dane aplikacji pozostają w LocalStorage do czasu przełączenia. Supabase jest wybranym backendem MVP według PRD.
 - **Warstwa danych:** główny ekran z Safe-to-Spend korzysta z `BudgetStateService`, który dziś czyta i zapisuje `localStorage` bezpośrednio, bez repozytorium. Istniejące `ExpenseRepository` i `BudgetRepository` obsługują starszy, prototypowy model. Bez repozytorium pod głównym przepływem płynne przełączenie nie jest możliwe, dlatego plan obejmuje je od razu (Etap 4).
 - **Dostępność:** publiczne demo z `noindex`. `noindex` ogranicza indeksowanie, nie dostęp.
@@ -104,7 +107,7 @@ Nie podłączać jeszcze repozytorium do Pages. Najpierw:
 8. Opcjonalnie sprawdzić statyczny serwis lokalnie:
 
    ```bash
-   npx wrangler pages dev dist/cost-management-app/browser
+   npx wrangler dev
    ```
 
 9. Przy zmianach UI, pluginów Capacitor lub konfiguracji natywnej uruchomić `npm run cap:build:apk` zgodnie z `AGENTS.md`.
@@ -119,20 +122,23 @@ Nie podłączać jeszcze repozytorium do Pages. Najpierw:
 - **Decyzja właściciela projektu:** akceptujemy to ryzyko dla publicznego, statycznego demo bez danych użytkowników. Aplikacja nie używa SSR, `HttpTransferCache` ani i18n, których dotyczą zgłoszone podatności runtime.
 - **Termin ponownej oceny:** przed przełączeniem `DATA_BACKEND=supabase` w Production. Upgrade Angulara musi zostać zakończony przed zapisem prawdziwych danych użytkowników.
 
-## Etap 1: utworzyć projekt Cloudflare Pages
+## Etap 1: utworzyć projekt Cloudflare Workers połączony z GitHubem
 
-Wykonuje właściciel konta w panelu Cloudflare:
+Przed tym etapem wszystkie commity muszą być na `origin/master`, bo Cloudflare buduje kod z GitHuba. Wykonuje właściciel konta w panelu Cloudflare:
 
-1. **Workers & Pages → Create application → Pages → Connect to Git** (nazwy w panelu mogą się zmienić).
+1. **Compute → Workers & Pages → Create application → Import a repository** (nazwy w panelu mogą się zmienić).
 2. Autoryzować GitHub App tylko dla potrzebnego repozytorium i wybrać `JNDaniel/portfel-bez-spiny`.
-3. Production branch: `master`. Pozostałe branche tworzą preview; traktować je jako publiczne, dopóki nie włączono ochrony dostępu.
-4. Build:
-   - Framework preset: `None`.
+3. Ustawienia:
+   - Project name: `portfel-bez-spiny`; musi być zgodny z `name` w `wrangler.jsonc`.
    - Build command: `npm run build`.
-   - Build output directory: `dist/cost-management-app/browser`.
-   - `NODE_VERSION` zgodne z `.nvmrc`.
-5. Ustawić `DATA_BACKEND=local` dla Production i Preview. Zmienne Supabase dodajemy w Etapie 2.
-6. Przed potwierdzeniem sprawdzić branch, katalog wyjściowy i ustawienia dostępu. Pierwszy udany build `master` jest wdrożeniem produkcyjnym.
+   - Deploy command: `npx wrangler deploy`.
+   - Preview command: `npx wrangler versions upload`; tworzy wersję podglądową bez publikacji na produkcji.
+   - Enable Preview builds: włączone. Protect with Cloudflare Access: na razie wyłączone, bo demo jest publiczne.
+   - Path: `/`.
+   - API token: utworzyć nowy, nazwany jednoznacznie, np. `workers-builds-portfel-bez-spiny`.
+   - Build variables: `NODE_VERSION=22` i `DATA_BACKEND=local`. Zmienne Supabase dodajemy w Etapie 2.
+4. Branch produkcyjny ustawia się po utworzeniu projektu: **Settings → Build → Branch control**. Ustawić `master`.
+5. Pierwszy udany build `master` jest wdrożeniem produkcyjnym pod adresem `https://portfel-bez-spiny.<subdomena-konta>.workers.dev`.
 
 ## Etap 2: uruchomić projekty Supabase i Auth
 
@@ -141,7 +147,7 @@ Wykonać po utworzeniu projektu Pages, gdy znany jest host produkcyjny. Dla stag
 1. Utworzyć projekty `portfel-staging` i `portfel-prod` w tym samym regionie. Hasła baz danych zapisać w menedżerze haseł.
 2. Zanotować Project URL, project ref i publishable key każdego projektu. Publishable key jest przeznaczony dla klienta i nie jest sekretem. Klucze `secret` i legacy `service_role` nigdy nie trafiają do przeglądarki, repozytorium, zmiennych buildu ani artefaktów.
 3. Auth → URL Configuration:
-   - **prod:** Site URL `https://<projekt>.pages.dev`. Redirect allow list tylko dla tego hosta i potrzebnych ścieżek.
+   - **prod:** Site URL `https://portfel-bez-spiny.<subdomena-konta>.workers.dev`. Redirect allow list tylko dla tego hosta i potrzebnych ścieżek.
    - **staging:** Site URL na stabilny host preview. Redirect allow list obejmuje ten host oraz `http://localhost:4200/**` do lokalnego developmentu.
    - Jeśli logowanie na hash-based preview URL-ach będzie potrzebne, dodać wzorzec ograniczony do subdomen tego projektu Pages, wyłącznie w stagingu. Składnię potwierdzić w dokumentacji Supabase. Nigdy nie dodawać wildcardu w prod.
 4. Auth → Providers: zostawić email i hasło zgodnie z PRD. Pozostałych providerów nie włączać.
@@ -231,7 +237,7 @@ Walidacja tego etapu: build, testy jednostkowe (w tym kontraktowe), pełne E2E d
 
 ## Etap 5: smoke test pierwszego wdrożenia
 
-Na adresie `*.pages.dev`:
+Na adresie `*.workers.dev`:
 
 - Strona główna przekierowuje do `/dashboard`.
 - `/dashboard`, `/expenses`, `/budgets`, `/analytics` i `/settings` otwierają się bezpośrednio i po odświeżeniu nie zwracają 404.
@@ -271,7 +277,7 @@ Powrót do `local` jest możliwy przez zmianę zmiennej i ponowne wdrożenie, al
 - Rollback Cloudflare Pages przywraca frontend, ale nie cofa migracji, danych, ustawień Auth ani wydań Capacitor.
 - Migracje są zgodne wstecz z poprzednią wersją frontendu. Zmiany niszczące (usuwanie kolumn, zmiana typów) wdrażać w kilku krokach.
 - Przy pierwszym wdrożeniu może nie być wcześniejszej wersji do przywrócenia; wtedy wdrożyć commit naprawczy.
-- Diagnostyka: build i deployment logs w panelu Pages oraz logi projektu w panelu Supabase. Statyczna aplikacja nie ma logów serwera; błędy klienta wymagają osobnej obserwowalności.
+- Diagnostyka: build i deployment logs projektu Workers (zakładki Deployments i Builds) oraz logi projektu w panelu Supabase. Statyczna aplikacja nie ma logów serwera; błędy klienta wymagają osobnej obserwowalności.
 - Właściciel projektu zatwierdza pierwsze publiczne wdrożenie, migracje na prod, zmianę `DATA_BACKEND` w Production, zmiany domeny/DNS, uprawnień GitHub App i ustawień kont.
 - Każda wartość w bundlu Angulara jest publiczna. Do klienta trafiają wyłącznie Project URL i publishable key.
 
@@ -297,7 +303,7 @@ Powrót do `local` jest możliwy przez zmianę zmiennej i ponowne wdrożenie, al
 
 - Projekt Pages jest połączony z repozytorium, `master` jest branchem produkcyjnym, a build publikuje `dist/cost-management-app/browser`.
 - Build, testy jednostkowe i E2E desktop/mobile przechodzą lokalnie przed wydaniem.
-- Trasy, odświeżenia i nagłówki działają na `*.pages.dev`.
+- Trasy, odświeżenia i nagłówki działają na `*.workers.dev`.
 - Projekty `portfel-staging` i `portfel-prod` działają, a Auth URL Configuration wskazuje właściwe hosty.
 - Repozytorium zawiera `supabase/` z migracją bazową wdrożoną na staging i prod.
 - Aplikacja zawiera klienta Supabase, generowaną konfigurację buildu, przełącznik `DATA_BACKEND` i skan bundla.
