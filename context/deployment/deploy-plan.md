@@ -222,7 +222,7 @@ flowchart LR
   Prebuild -- inna gałąź / lokalnie --> PreviewBundle[Bundle: staging URL + publishable key] --> SupaStaging[Supabase staging]
 ```
 
-**Stan (2026-10-03):** konfiguracja buildu i klient wykonane. `scripts/generate-runtime-config.mjs` (hooki `prebuild`, `prestart`, `pretest`, `prewatch`) generuje `src/environments/runtime-config.generated.ts`; odrzuca nieznany `DATA_BACKEND`, klucz inny niż `sb_publishable_` i brak wartości przy `supabase`. `scripts/scan-bundle-secrets.mjs` (`postbuild`) przerywa build przy `sb_secret_`, `service_role` lub JWT z rolą `service_role`. `SupabaseClientService` ładuje `@supabase/supabase-js` dynamicznym importem tylko przy `DATA_BACKEND=supabase`. Repozytorium pod głównym przepływem czeka na decyzję o kontrakcie.
+**Stan (2026-10-03):** konfiguracja buildu i klient wykonane. `scripts/generate-runtime-config.mjs` (hooki `prebuild`, `prestart`, `pretest`, `prewatch`) generuje `src/environments/runtime-config.generated.ts`; odrzuca nieznany `DATA_BACKEND`, klucz inny niż `sb_publishable_` i brak wartości przy `supabase`. `scripts/scan-bundle-secrets.mjs` (`postbuild`) przerywa build przy `sb_secret_`, `service_role` lub JWT z rolą `service_role`. `SupabaseClientService` ładuje `@supabase/supabase-js` dynamicznym importem tylko przy `DATA_BACKEND=supabase`. Repozytorium pod głównym przepływem (sekcja niżej) przeniesione do fazy 4 zmiany `stabilize-and-supabase-mvp`: powstanie razem z kanonicznym kontraktem, po fazach 2–3. Plan wdrożenia kończy się na konfiguracji buildu i kliencie.
 
 ### Klient i granica repozytoriów
 
