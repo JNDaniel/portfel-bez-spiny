@@ -111,6 +111,14 @@ Nie podłączać jeszcze repozytorium do Pages. Najpierw:
 
 **Bramka:** nie podłączać `master` do automatycznego wdrażania, dopóki build, testy i decyzja o podatnościach nie są zakończone.
 
+### Decyzja o podatnościach dla pierwszego wdrożenia (2026-10-03)
+
+- `npm audit` z 2026-10-03: 59 wyników (2 critical, 40 high, 15 moderate, 2 low). W zależnościach runtime (`--omit=dev`) jest 7 wyników, wszystkie w pakietach `@angular/*` 19.2.
+- Pozostałe wyniki dotyczą narzędzi buildu i testów (Angular CLI/devkit, Karma, Capacitor CLI), które nie trafiają do przeglądarki.
+- Wszystkie poprawki wymagają przejścia na Angular 21, czyli fazy 2 planu `stabilize-and-supabase-mvp`.
+- **Decyzja właściciela projektu:** akceptujemy to ryzyko dla publicznego, statycznego demo bez danych użytkowników. Aplikacja nie używa SSR, `HttpTransferCache` ani i18n, których dotyczą zgłoszone podatności runtime.
+- **Termin ponownej oceny:** przed przełączeniem `DATA_BACKEND=supabase` w Production. Upgrade Angulara musi zostać zakończony przed zapisem prawdziwych danych użytkowników.
+
 ## Etap 1: utworzyć projekt Cloudflare Pages
 
 Wykonuje właściciel konta w panelu Cloudflare:
