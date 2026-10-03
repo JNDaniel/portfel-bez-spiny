@@ -140,9 +140,11 @@ Przed tym etapem wszystkie commity muszą być na `origin/master`, bo Cloudflare
 4. Branch produkcyjny ustawia się po utworzeniu projektu: **Settings → Build → Branch control**. Ustawić `master`.
 5. Pierwszy udany build `master` jest wdrożeniem produkcyjnym pod adresem `https://portfel-bez-spiny.<subdomena-konta>.workers.dev`.
 
+**Stan (2026-10-03):** wykonane. Produkcja: `https://portfel-bez-spiny.themantax.workers.dev`. Smoke test: `/`, `/dashboard`, `/expenses`, `/settings` i nieznana ścieżka zwracają 200 z aplikacją; nagłówki `X-Robots-Tag: noindex`, `nosniff`, `Referrer-Policy` i `X-Frame-Options: DENY` są obecne.
+
 ## Etap 2: uruchomić projekty Supabase i Auth
 
-Wykonać po utworzeniu projektu Pages, gdy znany jest host produkcyjny. Dla stagingu wybrać stabilny host preview, czyli branch alias, np. gałęzi `staging`.
+Wykonać po utworzeniu projektu Workers, gdy znany jest host produkcyjny. Dla stagingu wybrać stabilny host preview, czyli alias gałęzi `staging`: `https://staging-portfel-bez-spiny.themantax.workers.dev` (wymaga włączonych Preview URLs w Settings → Domains & Routes).
 
 1. Utworzyć projekty `portfel-staging` i `portfel-prod` w tym samym regionie. Hasła baz danych zapisać w menedżerze haseł.
 2. Zanotować Project URL, project ref i publishable key każdego projektu. Publishable key jest przeznaczony dla klienta i nie jest sekretem. Klucze `secret` i legacy `service_role` nigdy nie trafiają do przeglądarki, repozytorium, zmiennych buildu ani artefaktów.
@@ -151,11 +153,11 @@ Wykonać po utworzeniu projektu Pages, gdy znany jest host produkcyjny. Dla stag
    - **staging:** Site URL na stabilny host preview. Redirect allow list obejmuje ten host oraz `http://localhost:4200/**` do lokalnego developmentu.
    - Jeśli logowanie na hash-based preview URL-ach będzie potrzebne, dodać wzorzec ograniczony do subdomen tego projektu Pages, wyłącznie w stagingu. Składnię potwierdzić w dokumentacji Supabase. Nigdy nie dodawać wildcardu w prod.
 4. Auth → Providers: zostawić email i hasło zgodnie z PRD. Pozostałych providerów nie włączać.
-5. W Cloudflare Pages dodać zmienne:
-   - **Production:** `SUPABASE_URL` i `SUPABASE_PUBLISHABLE_KEY` z `portfel-prod`.
-   - **Preview:** te same nazwy z `portfel-staging`.
+5. Workers Builds ma jeden zestaw zmiennych buildu dla wszystkich gałęzi, bez podziału Production/Preview. Dlatego w **Settings → Build → Variables and secrets** dodać cztery zmienne:
+   - `SUPABASE_URL_PROD`, `SUPABASE_PUBLISHABLE_KEY_PROD` z `portfel-prod`;
+   - `SUPABASE_URL_STAGING`, `SUPABASE_PUBLISHABLE_KEY_STAGING` z `portfel-staging`.
 
-   To wartości publiczne przeznaczone dla klienta. Sprawdzić, że żadna zmienna Preview nie wskazuje na prod.
+   Skrypt prebuild (Etap 4) wybiera zestaw prod tylko gdy `WORKERS_CI_BRANCH=master`; każda inna gałąź i build lokalny dostają staging. To wartości publiczne przeznaczone dla klienta. Test w Etapie 4 sprawdza, że build gałęzi innej niż `master` nie zawiera hosta prod.
 
 6. Nie tworzyć tabel ani polityk ręcznie w panelu. Każda zmiana schematu przechodzi przez migracje w repozytorium.
 
