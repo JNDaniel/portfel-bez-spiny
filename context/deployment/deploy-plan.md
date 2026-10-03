@@ -200,6 +200,8 @@ Wykonać po utworzeniu projektu Workers, gdy znany jest host produkcyjny. Dla st
    Push na prod wymaga akceptacji człowieka. Agent nie dostaje stałego dostępu do bazy produkcyjnej.
 
 5. `supabase/seed.sql` może zawierać wyłącznie lokalne dane testowe. Nigdy dane osobowe ani poświadczenia.
+**Stan (2026-10-03):** kroki 1–3 wykonane lokalnie (Supabase CLI 2.119.0, migracja `20261003202153_baseline.sql` z `public.set_updated_at()`, `db reset` OK). Krok 4 czeka na `npx supabase login` właściciela.
+
 6. Tabele `monthly_budgets`, `expense_folders`, `expenses`, constrainty i RLS dodajemy w fazie 5, po zamrożeniu kontraktu w fazie 4. Od tego momentu każda tabela użytkownika ma włączone RLS w tej samej migracji, w której powstaje.
 
 ## Etap 4: podpiąć Supabase w aplikacji
