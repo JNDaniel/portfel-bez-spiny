@@ -15,6 +15,7 @@ import {
   Transaction, 
   TransactionTag 
 } from '../../core/models/budget-app.model';
+import { DEMO_FEATURES_ENABLED } from '../../core/config/demo-features';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 import { BudgetAiSummaryComponent } from './budget-ai-summary.component';
 import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
@@ -293,29 +294,31 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
                       </select>
                     </div>
 
-                    <!-- Receipt Upload Box & AI Comment Generator -->
-                    <div>
-                      <label class="block cursor-pointer">
-                        <div class="p-3 rounded-2xl border border-dashed border-slate-700 hover:border-purple-500/60 bg-slate-900/40 hover:bg-slate-900/80 transition flex items-center justify-center gap-2 text-xs text-slate-400 hover:text-purple-300">
-                          <span>⬆</span>
-                          <span>{{ tx.receiptFileName ? ('Załączono: ' + tx.receiptFileName + ' (Zmień)') : 'Wgraj paragon lub fakturę → komentarz AI' }}</span>
-                        </div>
-                        <input 
-                          type="file" 
-                          accept="image/*,.pdf" 
-                          (change)="onFileSelected(tx.id, $event)" 
-                          class="hidden" 
-                        />
-                      </label>
+                    @if (demoFeaturesEnabled) {
+                      <!-- Receipt Upload Box & AI Comment Generator -->
+                      <div>
+                        <label class="block cursor-pointer">
+                          <div class="p-3 rounded-2xl border border-dashed border-slate-700 hover:border-purple-500/60 bg-slate-900/40 hover:bg-slate-900/80 transition flex items-center justify-center gap-2 text-xs text-slate-400 hover:text-purple-300">
+                            <span>⬆</span>
+                            <span>{{ tx.receiptFileName ? ('Załączono: ' + tx.receiptFileName + ' (Zmień)') : 'Wgraj paragon lub fakturę → komentarz AI' }}</span>
+                          </div>
+                          <input 
+                            type="file" 
+                            accept="image/*,.pdf" 
+                            (change)="onFileSelected(tx.id, $event)" 
+                            class="hidden" 
+                          />
+                        </label>
 
-                      <!-- AI Contextual Comment Display -->
-                      @if (tx.aiComment) {
-                        <div class="mt-2.5 p-3 rounded-xl bg-purple-950/20 border border-purple-800/30 text-xs text-purple-200 flex items-start gap-2 animate-in fade-in">
-                          <span class="text-purple-400 shrink-0">✨</span>
-                          <p class="leading-relaxed"><strong class="text-purple-400 font-semibold">AI:</strong> {{ tx.aiComment }}</p>
-                        </div>
-                      }
-                    </div>
+                        <!-- AI Contextual Comment Display -->
+                        @if (tx.aiComment) {
+                          <div class="mt-2.5 p-3 rounded-xl bg-purple-950/20 border border-purple-800/30 text-xs text-purple-200 flex items-start gap-2 animate-in fade-in">
+                            <span class="text-purple-400 shrink-0">✨</span>
+                            <p class="leading-relaxed"><strong class="text-purple-400 font-semibold">AI:</strong> {{ tx.aiComment }}</p>
+                          </div>
+                        }
+                      </div>
+                    }
                   </div>
                 }
               </div>
@@ -340,36 +343,44 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
       </ion-list>
 
       <!-- Pagination & AI Summary Trigger Button (Bottom of list) -->
-      <div class="pt-3 border-t border-slate-800/80 flex flex-col items-center gap-3">
-        @if (state.filteredTransactions().length > 5 && !state.selectedFolderId()) {
-          <button 
-            type="button" 
-            (click)="state.toggleShowAll()"
-            class="text-xs font-semibold text-slate-400 hover:text-white transition py-1"
-          >
-            {{ state.showAllTransactions() ? 'Zwiń listę' : '+ Pokaż wszystkie (' + (state.filteredTransactions().length - 5) + ' więcej)' }}
-          </button>
-        }
+      @let showPagination = state.filteredTransactions().length > 5 && !state.selectedFolderId();
+      @if (showPagination || demoFeaturesEnabled) {
+        <div class="pt-3 border-t border-slate-800/80 flex flex-col items-center gap-3">
+          @if (showPagination) {
+            <button 
+              type="button" 
+              (click)="state.toggleShowAll()"
+              class="text-xs font-semibold text-slate-400 hover:text-white transition py-1"
+            >
+              {{ state.showAllTransactions() ? 'Zwiń listę' : '+ Pokaż wszystkie (' + (state.filteredTransactions().length - 5) + ' więcej)' }}
+            </button>
+          }
 
-        <!-- AI Summary Trigger Button -->
-        <button 
-          type="button" 
-          (click)="state.toggleAiSummary()"
-          class="w-full py-2.5 rounded-2xl bg-slate-900/80 hover:bg-purple-950/40 border border-slate-800 hover:border-purple-500/50 text-xs font-semibold text-slate-300 hover:text-purple-300 flex items-center justify-center gap-2 shadow-lg transition"
-        >
-          <span>📊</span>
-          <span>Analizuj cały {{ state.currentMonth().label.split(' ')[0] }} — podsumowanie AI</span>
-        </button>
-      </div>
+          @if (demoFeaturesEnabled) {
+            <!-- AI Summary Trigger Button -->
+            <button 
+              type="button" 
+              (click)="state.toggleAiSummary()"
+              class="w-full py-2.5 rounded-2xl bg-slate-900/80 hover:bg-purple-950/40 border border-slate-800 hover:border-purple-500/50 text-xs font-semibold text-slate-300 hover:text-purple-300 flex items-center justify-center gap-2 shadow-lg transition"
+            >
+              <span>📊</span>
+              <span>Analizuj cały {{ state.currentMonth().label.split(' ')[0] }} — podsumowanie AI</span>
+            </button>
+          }
+        </div>
+      }
     </div>
 
     <!-- AI Summary Bottom Card -->
-    <app-budget-ai-summary class="block mt-4"></app-budget-ai-summary>
+    @if (demoFeaturesEnabled) {
+      <app-budget-ai-summary class="block mt-4"></app-budget-ai-summary>
+    }
   `
 })
 export class BudgetTransactionsComponent {
   readonly state = inject(BudgetStateService);
   readonly availableTags = AVAILABLE_TAGS;
+  readonly demoFeaturesEnabled = DEMO_FEATURES_ENABLED;
 
   private longPressTimer: any = null;
   private isLongPressTriggered = false;

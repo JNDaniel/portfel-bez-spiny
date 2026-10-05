@@ -12,6 +12,7 @@ import { addIcons } from 'ionicons';
 import { add, refreshOutline, cameraOutline, micOutline, repeatOutline, alertCircleOutline, folderOutline } from 'ionicons/icons';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
+import { DEMO_FEATURES_ENABLED } from '../../core/config/demo-features';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 import { BudgetHeroGaugeComponent } from './budget-hero-gauge.component';
 import { BudgetTrendChartComponent } from './budget-trend-chart.component';
@@ -51,7 +52,9 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
   template: `
     <ion-content [fullscreen]="true" class="bg-[#0b0f19] text-slate-100">
       <!-- Simulated Bank Push Notification Floating Bar -->
-      <app-budget-bank-simulator></app-budget-bank-simulator>
+      @if (demoFeaturesEnabled) {
+        <app-budget-bank-simulator></app-budget-bank-simulator>
+      }
 
       <!-- Native Pull to Refresh -->
       <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
@@ -108,65 +111,69 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
             </button>
           </header>
 
-          <!-- GAME CHANGER QUICK ACTION TOOLBAR -->
-          <div class="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none">
-            <!-- Bank Push Ingestion Test -->
-            <button 
-              type="button"
-              (click)="state.triggerSampleBankNotification()"
-              class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
-            >
-              <span>🔔</span>
-              <span>Test Push z Banku</span>
-            </button>
+          @if (demoFeaturesEnabled) {
+            <!-- GAME CHANGER QUICK ACTION TOOLBAR -->
+            <div class="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none">
+              <!-- Bank Push Ingestion Test -->
+              <button 
+                type="button"
+                (click)="state.triggerSampleBankNotification()"
+                class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
+              >
+                <span>🔔</span>
+                <span>Test Push z Banku</span>
+              </button>
 
-            <!-- OCR Scanner Modal -->
-            <button 
-              type="button"
-              (click)="openScanner()"
-              class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-purple-500/30 text-purple-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
-            >
-              <span>📸</span>
-              <span>Skaner Paragonów</span>
-            </button>
+              <!-- OCR Scanner Modal -->
+              <button 
+                type="button"
+                (click)="openScanner()"
+                class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-purple-500/30 text-purple-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
+              >
+                <span>📸</span>
+                <span>Skaner Paragonów</span>
+              </button>
 
-            <!-- Voice AI Modal -->
-            <button 
-              type="button"
-              (click)="openVoice()"
-              class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-blue-500/30 text-blue-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
-            >
-              <span>🎙️</span>
-              <span>Głos AI</span>
-            </button>
+              <!-- Voice AI Modal -->
+              <button 
+                type="button"
+                (click)="openVoice()"
+                class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-blue-500/30 text-blue-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
+              >
+                <span>🎙️</span>
+                <span>Głos AI</span>
+              </button>
 
-            <!-- Subscriptions Toggle -->
-            <button 
-              type="button"
-              (click)="toggleSubscriptions()"
-              class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-cyan-500/30 text-cyan-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
-            >
-              <span>🔄</span>
-              <span>Subskrypcje</span>
-            </button>
+              <!-- Subscriptions Toggle -->
+              <button 
+                type="button"
+                (click)="toggleSubscriptions()"
+                class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-cyan-500/30 text-cyan-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
+              >
+                <span>🔄</span>
+                <span>Subskrypcje</span>
+              </button>
 
-            <!-- Waste Radar Toggle -->
-            <button 
-              type="button"
-              (click)="toggleWasteRadar()"
-              class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-amber-500/30 text-amber-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
-            >
-              <span>🚨</span>
-              <span>Radar Zachcianek</span>
-            </button>
-          </div>
+              <!-- Waste Radar Toggle -->
+              <button 
+                type="button"
+                (click)="toggleWasteRadar()"
+                class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-amber-500/30 text-amber-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
+              >
+                <span>🚨</span>
+                <span>Radar Zachcianek</span>
+              </button>
+            </div>
+          }
 
           <!-- 1. Hero Gauge Card (52% utilized, WYDANO / LIMIT / POZOSTAŁO + Safe-to-Spend Daily) -->
           <app-budget-hero-gauge></app-budget-hero-gauge>
 
           <!-- Modals & Drawers for Game Changers -->
-          <app-budget-subscriptions></app-budget-subscriptions>
-          <app-budget-radar-waste></app-budget-radar-waste>
+          @if (demoFeaturesEnabled) {
+            <app-budget-subscriptions></app-budget-subscriptions>
+            <app-budget-radar-waste></app-budget-radar-waste>
+          }
 
           <!-- 2. Dual Row: Spending Trend Chart & Categories Progress Breakdown -->
           <div class="grid grid-cols-1 md:grid-cols-5 gap-5">
@@ -200,16 +207,19 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
       <!-- Create Folder Modal -->
       <app-budget-create-folder-modal></app-budget-create-folder-modal>
 
-      <!-- OCR Scanner Modal -->
-      <app-budget-scanner-modal></app-budget-scanner-modal>
+      @if (demoFeaturesEnabled) {
+        <!-- OCR Scanner Modal -->
+        <app-budget-scanner-modal></app-budget-scanner-modal>
 
-      <!-- Voice AI Modal -->
-      <app-budget-voice-modal></app-budget-voice-modal>
+        <!-- Voice AI Modal -->
+        <app-budget-voice-modal></app-budget-voice-modal>
+      }
     </ion-content>
   `
 })
 export class BudgetMainComponent {
   readonly state = inject(BudgetStateService);
+  readonly demoFeaturesEnabled = DEMO_FEATURES_ENABLED;
 
   constructor() {
     addIcons({ add, refreshOutline, cameraOutline, micOutline, repeatOutline, alertCircleOutline, folderOutline });

@@ -3,7 +3,7 @@ project: Portfel Bez Spiny
 version: 1
 status: draft
 created: 2026-10-04
-updated: 2026-10-04
+updated: 2026-10-05
 prd_version: 2
 main_goal: quality
 top_blocker: decisions
@@ -43,7 +43,7 @@ Portfel Bez Spiny oddziela codzienne wydatki od okazjonalnych (prezent, wyjazd),
 | ---- | ---------------------------- | ------------------------------------------------------------------------------------ | -------------------------- | ------------------------------ | -------- |
 | F-01 | angular-security-upgrade     | (foundation) framework i toolchain bez krytycznych podatności, aplikacja działa jak dziś | —                          | FR-007, Guardrails             | ready    |
 | F-02 | lint-and-format-checks       | (foundation) lint i formatowanie są deterministyczną bramką przed każdym przekazaniem   | F-01                       | FR-007                         | proposed |
-| S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | ready    |
+| S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | in-progress |
 | S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | proposed |
 | S-03 | email-password-sign-in       | zarejestrować się, zalogować i wylogować; niezalogowany trafia na ekran logowania       | F-01                       | FR-001, FR-002                 | proposed |
 | S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | proposed |
@@ -118,7 +118,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Najmniejsza zmiana z natychmiastowym efektem dla zasady jednej sekundy (PRD §Observable quality requirements) i PRD §Non-Goals; zawęża też to, co S-02 musi przenieść na docelowy model. Ryzyko to test E2E podsumowania AI, który trzeba dostosować.
-- **Status:** ready
+- **Status:** in-progress
 
 ### S-02: Klasyfikacja wydatków na jednym modelu
 
@@ -227,7 +227,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | ---------- | -------------------------------- | ------------------------------------------------------------- | --------------------- | ----- |
 | F-01       | angular-security-upgrade         | Upgrade frameworka i toolchainu bez krytycznych podatności    | yes                   | Run `/10x-plan angular-security-upgrade` |
 | F-02       | lint-and-format-checks           | Dodać lint i formatowanie jako bramkę jakości                 | no                    | Po F-01 |
-| S-01       | mvp-focused-dashboard            | Ukryć funkcje demo i skupić dashboard na MVP                  | yes                   | Run `/10x-plan mvp-focused-dashboard` |
+| S-01       | mvp-focused-dashboard            | Ukryć funkcje demo i skupić dashboard na MVP                  | yes                   | Run `/10x-implement mvp-focused-dashboard phase 1` |
 | S-02       | canonical-expense-classification | Klasyfikacja wydatków na jednym modelu danych                 | no                    | Po F-01 i S-01 |
 | S-03       | email-password-sign-in           | Rejestracja, logowanie i ochrona tras                         | no                    | Po F-01 |
 | S-04       | private-monthly-budget           | Prywatny, trwały budżet miesięczny                            | no                    | Po S-02 i S-03 |
