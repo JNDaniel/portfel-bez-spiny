@@ -1,7 +1,7 @@
 ---
 change_id: mvp-focused-dashboard
 title: Hide non-MVP demo features and focus the dashboard on Safe-to-Spend
-status: implementing
+status: implemented
 created: 2026-10-05
 updated: 2026-10-05
 archived_at: null
