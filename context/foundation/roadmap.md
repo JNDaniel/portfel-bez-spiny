@@ -44,11 +44,11 @@ Portfel Bez Spiny oddziela codzienne wydatki od okazjonalnych (prezent, wyjazd),
 | F-01 | angular-security-upgrade     | (foundation) framework i toolchain bez krytycznych podatności, aplikacja działa jak dziś | —                          | FR-007, Guardrails             | ready    |
 | F-02 | lint-and-format-checks       | (foundation) lint i formatowanie są deterministyczną bramką przed każdym przekazaniem   | F-01                       | FR-007                         | proposed |
 | S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | in-progress |
-| S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | proposed |
+| S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard z wykresem według klasyfikacji (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | proposed |
 | S-03 | email-password-sign-in       | zarejestrować się, zalogować i wylogować; niezalogowany trafia na ekran logowania       | F-01                       | FR-001, FR-002                 | proposed |
 | S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | proposed |
 | S-05 | private-classified-expenses  | dodać wydatki trzech typów i zobaczyć Safe-to-Spend policzony z własnych, prywatnych danych | S-04                       | US-01, FR-004, FR-005, FR-006, FR-002 | proposed |
-| S-06 | edit-delete-own-expenses     | poprawić i usunąć własne wydatki, z zachowaniem tagów i folderów                       | S-05                       | FR-004, FR-002                 | proposed |
+| S-06 | edit-delete-own-expenses     | poprawić, usunąć i przypisać do folderu własne wydatki, z zachowaniem tagów                   | S-05                       | FR-004, FR-002                 | proposed |
 | S-07 | android-authenticated-flow   | przejść cały zalogowany przepływ w aplikacji Android                                   | S-06, JDK 21 zainstalowany | FR-007, US-01                  | proposed |
 | S-08 | production-supabase-switch   | założyć konto na publicznym adresie produkcyjnym i korzystać z trwałych, prywatnych danych | F-01, F-02, S-06           | FR-001, FR-002, FR-007, US-01  | blocked  |
 | S-09 | private-wants-radar          | zobaczyć radar zachcianek z roczną projekcją oszczędności na własnych danych           | S-01, S-05                 | FR-008                         | proposed |
@@ -122,7 +122,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-02: Klasyfikacja wydatków na jednym modelu
 
-- **Outcome:** użytkownik może oznaczyć wydatek jako codzienny, okazjonalny albo zachciankę, a dashboard wyklucza okazje z codziennego limitu i Safe-to-Spend i osobno pokazuje zachcianki — na danych lokalnych, ale już na jednym docelowym modelu, z którego czyta każdy ekran z wydatkami.
+- **Outcome:** użytkownik może oznaczyć wydatek jako codzienny, okazjonalny albo zachciankę, a dashboard wyklucza okazje z codziennego limitu i Safe-to-Spend, a wykresy dashboardu grupują wydatki według tej klasyfikacji i wyraźnie wyróżniają zachcianki i okazje (zamiast kategorii, których nie da się wybrać przy transakcji) — na danych lokalnych, ale już na jednym docelowym modelu, z którego czyta każdy ekran z wydatkami.
 - **Change ID:** canonical-expense-classification
 - **PRD refs:** US-01, FR-005, FR-006
 - **Prerequisites:** F-01, S-01
@@ -130,7 +130,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:**
   - Który model staje się docelowy i które ekrany starego modelu (`/expenses`, `/budgets`, `/analytics`) przechodzą na wspólny kontrakt, a które są usuwane lub izolowane jako poza MVP? — Owner: user. Block: no (rozstrzygane w planie tej zmiany).
-  - Jak mapują się istniejące tagi (np. „Zachcianka”) na nową klasyfikację, przy zachowaniu tagowania wymaganego przez PRD? — Owner: user. Block: no.
+  - Jak mapują się istniejące tagi (np. „Zachcianka”) na nową klasyfikację, przy zachowaniu tagowania wymaganego przez PRD? „Zbędne” i „Zachcianka” praktycznie się dublują. — Owner: user. Block: no.
+  - Czy kategorie zostają w modelu (z wyborem przy transakcji), czy wykres kategorii znika na rzecz wykresu klasyfikacji? — Owner: user. Block: no (rozstrzygane w planie tej zmiany).
 - **Risk:** Rozstrzyga główne ryzyko (dwa modele danych) przed powstaniem tabel; po tej zmianie żaden ekran nie zapisuje danych użytkownika do localStorage z pominięciem repozytorium.
 - **Status:** proposed
 
@@ -173,14 +174,14 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-06: Edycja i usuwanie własnych wydatków
 
-- **Outcome:** zalogowany użytkownik może poprawić i usunąć własne wydatki, a tagi i foldery pozostają zachowane po ponownym otwarciu aplikacji.
+- **Outcome:** zalogowany użytkownik może poprawić i usunąć własne wydatki, przypisać wydatek do istniejącego folderu (także akcją przesunięcia) lub go z folderu wyjąć, a tagi i foldery pozostają zachowane po ponownym otwarciu aplikacji.
 - **Change ID:** edit-delete-own-expenses
 - **PRD refs:** FR-004, FR-002
 - **Prerequisites:** S-05
 - **Parallel with:** S-09
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** Domyka pełny CRUD i zgodność z istniejącym tagowaniem; ryzyko to cudzy wiersz zmieniony przez błędną politykę, wykluczany testem dwóch użytkowników.
+- **Risk:** Domyka pełny CRUD, zgodność z istniejącym tagowaniem i dopracowanie folderów (dziś akcja folderu przy przesunięciu nie pozwala wybrać istniejącego folderu); ryzyko to cudzy wiersz zmieniony przez błędną politykę, wykluczany testem dwóch użytkowników.
 - **Status:** proposed
 
 ### S-07: Zalogowany przepływ na Androidzie
@@ -232,7 +233,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-03       | email-password-sign-in           | Rejestracja, logowanie i ochrona tras                         | no                    | Po F-01 |
 | S-04       | private-monthly-budget           | Prywatny, trwały budżet miesięczny                            | no                    | Po S-02 i S-03 |
 | S-05       | private-classified-expenses      | Prywatne wydatki trzech typów i Safe-to-Spend z backendu      | no                    | Po S-04 |
-| S-06       | edit-delete-own-expenses         | Edycja i usuwanie własnych wydatków z tagami i folderami      | no                    | Po S-05 |
+| S-06       | edit-delete-own-expenses         | Edycja, usuwanie i przypisanie do folderów własnych wydatków  | no                    | Po S-05 |
 | S-07       | android-authenticated-flow       | Zalogowany przepływ na Androidzie                             | no                    | Po S-06; wymaga JDK 21 |
 | S-08       | production-supabase-switch       | Przełączenie produkcji na Supabase                            | no                    | Zablokowane decyzją o planie i kopiach zapasowych |
 | S-09       | private-wants-radar              | Radar zachcianek na prywatnych danych                         | no                    | Po S-01 i S-05; opcjonalne |
