@@ -43,18 +43,20 @@ test.describe('Portfel Bez Spiny — E2E UI & Gesture Flow', () => {
     await expect(page.getByText('Kawiarnia Costa')).toBeVisible();
   });
 
-  test('3. Should trigger and accept simulated bank push notification', async ({ page }) => {
-    // Click "Test Push z Banku"
-    await page.getByRole('button', { name: 'Test Push z Banku' }).click();
+  test('3. Should show only the MVP surface with Safe-to-Spend above the fold', async ({ page }) => {
+    // Demo-only actions must not render
+    for (const name of ['Test Push z Banku', 'Skaner Paragonów', 'Głos AI', 'Subskrypcje', 'Radar Zachcianek']) {
+      await expect(page.getByRole('button', { name })).toHaveCount(0);
+    }
+    await expect(page.getByRole('button', { name: /Analizuj cały/ })).toHaveCount(0);
 
-    // Check if push card appeared
-    await expect(page.getByText('Dodaj jednym kliknięciem')).toBeVisible();
+    // Safe-to-Spend visible without scrolling
+    await expect(page.getByText('Bezpiecznie na dziś:')).toBeInViewport();
 
-    // Click to add
-    await page.getByRole('button', { name: 'Dodaj jednym kliknięciem' }).click();
-
-    // Notification banner should be dismissed
-    await expect(page.getByText('Dodaj jednym kliknięciem')).not.toBeVisible();
+    // Header button on desktop, FAB on mobile
+    await expect(
+      page.getByRole('button', { name: 'Dodaj wydatek' }).filter({ visible: true }).first()
+    ).toBeVisible();
   });
 
   test('4. Should filter by folder (Wycieczka Japonia)', async ({ page }) => {
@@ -66,17 +68,5 @@ test.describe('Portfel Bez Spiny — E2E UI & Gesture Flow', () => {
       // Reset back to all
       await page.getByRole('button', { name: 'Pokaż wszystkie' }).click();
     }
-  });
-
-  test('5. Should open and close AI Summary insights', async ({ page }) => {
-    // Click bottom AI analysis button
-    const aiButton = page.getByRole('button', { name: /Analizuj cały/ });
-    await aiButton.click();
-
-    // Check 4 AI cards
-    await expect(page.getByText('Największy wydatek')).toBeVisible();
-    await expect(page.getByText('Potencjalnie zbędne')).toBeVisible();
-    await expect(page.getByText('Dobra wiadomość')).toBeVisible();
-    await expect(page.getByText('Rekomendacja AI')).toBeVisible();
   });
 });

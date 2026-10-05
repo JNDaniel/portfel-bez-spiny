@@ -174,23 +174,23 @@ None. No data or persistence changes; demo data in LocalStorage stays as is.
 
 #### Automated
 
-- [x] 1.1 Production build passes with the bundle secret scan: `npm run build`
-- [x] 1.2 Unit tests pass: `npm test -- --watch=false`
+- [x] 1.1 Production build passes with the bundle secret scan: `npm run build` — abd94a5
+- [x] 1.2 Unit tests pass: `npm test -- --watch=false` — abd94a5
 
 #### Manual
 
-- [x] 1.3 On `npm start`, the dashboard shows no demo toolbar, no AI summary button, and an expanded transaction shows no receipt-upload box or AI comment
-- [ ] 1.4 Temporarily setting the switch to `true` locally restores the toolbar, AI summary and per-transaction AI exactly as before (not committed)
+- [x] 1.3 On `npm start`, the dashboard shows no demo toolbar, no AI summary button, and an expanded transaction shows no receipt-upload box or AI comment — abd94a5
+- [x] 1.4 Temporarily setting the switch to `true` locally restores the toolbar, AI summary and per-transaction AI exactly as before (not committed)
 
 ### Phase 2: E2E coverage and full validation
 
 #### Automated
 
-- [ ] 2.1 E2E passes on Desktop Chrome and Mobile Pixel (8 cases): `npm run test:e2e`
-- [ ] 2.2 Production build passes with the bundle secret scan: `npm run build`
+- [x] 2.1 E2E passes on Desktop Chrome and Mobile Pixel (8 cases): `npm run test:e2e`
+- [x] 2.2 Production build passes with the bundle secret scan: `npm run build`
 - [ ] 2.3 Android debug APK builds: `JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 npm run cap:build:apk`
 
 #### Manual
 
-- [ ] 2.4 On a Pixel 7-sized viewport, Safe-to-Spend and its warning state are visible without scrolling and the FAB opens manual entry in one tap
+- [x] 2.4 On a Pixel 7-sized viewport, Safe-to-Spend and its warning state are visible without scrolling and the FAB opens manual entry in one tap
 - [ ] 2.5 After deployment to `https://portfel-bez-spiny.themantax.workers.dev`, the dashboard shows the MVP-only surface
