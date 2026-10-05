@@ -43,7 +43,7 @@ Portfel Bez Spiny oddziela codzienne wydatki od okazjonalnych (prezent, wyjazd),
 | ---- | ---------------------------- | ------------------------------------------------------------------------------------ | -------------------------- | ------------------------------ | -------- |
 | F-01 | angular-security-upgrade     | (foundation) framework i toolchain bez krytycznych podatności, aplikacja działa jak dziś | —                          | FR-007, Guardrails             | ready    |
 | F-02 | lint-and-format-checks       | (foundation) lint i formatowanie są deterministyczną bramką przed każdym przekazaniem   | F-01                       | FR-007                         | proposed |
-| S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | in-progress |
+| S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | done |
 | S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard z wykresem według klasyfikacji (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | proposed |
 | S-03 | email-password-sign-in       | zarejestrować się, zalogować i wylogować; niezalogowany trafia na ekran logowania       | F-01                       | FR-001, FR-002                 | proposed |
 | S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | proposed |
@@ -118,7 +118,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Najmniejsza zmiana z natychmiastowym efektem dla zasady jednej sekundy (PRD §Observable quality requirements) i PRD §Non-Goals; zawęża też to, co S-02 musi przenieść na docelowy model. Ryzyko to test E2E podsumowania AI, który trzeba dostosować.
-- **Status:** in-progress
+- **Status:** done
 
 ### S-02: Klasyfikacja wydatków na jednym modelu
 
@@ -260,3 +260,5 @@ Foundations below assume these are present and do NOT re-scaffold them.
 ## Milestone History
 
 ## Done
+
+- **S-01: użytkownik otwiera dashboard z samymi akcjami MVP (ręczne dodanie wydatku, foldery, lista transakcji) i Safe-to-Spend widocznym bez przewijania; funkcje demo spoza MVP — test powiadomienia z banku, skaner paragonów, głos AI, subskrypcje, radar zachcianek i podsumowanie AI — są ukryte, a ich kod zostaje do późniejszego przywrócenia.** — Archived 2026-10-05 → `context/archive/2026-10-05-mvp-focused-dashboard/`. Lesson: —.
