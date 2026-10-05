@@ -49,7 +49,7 @@ Portfel Bez Spiny oddziela codzienne wydatki od okazjonalnych (prezent, wyjazd),
 | S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | proposed |
 | S-05 | private-classified-expenses  | dodać wydatki trzech typów i zobaczyć Safe-to-Spend policzony z własnych, prywatnych danych | S-04                       | US-01, FR-004, FR-005, FR-006, FR-002 | proposed |
 | S-06 | edit-delete-own-expenses     | poprawić, usunąć i przypisać do folderu własne wydatki, z zachowaniem tagów                   | S-05                       | FR-004, FR-002                 | proposed |
-| S-07 | android-authenticated-flow   | przejść cały zalogowany przepływ w aplikacji Android                                   | S-06, JDK 21 zainstalowany | FR-007, US-01                  | proposed |
+| S-07 | android-authenticated-flow   | przejść cały zalogowany przepływ w aplikacji Android                                   | S-06, Android SDK          | FR-007, US-01                  | proposed |
 | S-08 | production-supabase-switch   | założyć konto na publicznym adresie produkcyjnym i korzystać z trwałych, prywatnych danych | F-01, F-02, S-06           | FR-001, FR-002, FR-007, US-01  | blocked  |
 | S-09 | private-wants-radar          | zobaczyć radar zachcianek z roczną projekcją oszczędności na własnych danych           | S-01, S-05                 | FR-008                         | proposed |
 
@@ -189,9 +189,9 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Outcome:** zalogowany użytkownik może przejść cały przepływ (logowanie, budżet, wydatki trzech typów, dashboard) w aplikacji Android.
 - **Change ID:** android-authenticated-flow
 - **PRD refs:** FR-007, US-01
-- **Prerequisites:** S-06, JDK 21 zainstalowany
+- **Prerequisites:** S-06, Android SDK (platform 36) zainstalowany
 - **Parallel with:** S-08, S-09
-- **Blockers:** Brak pełnego JDK 21 lokalnie (wymaga instalacji przez właściciela maszyny).
+- **Blockers:** Brak Android SDK lokalnie; `npm run cap:build:apk` nigdy nie przeszedł na tej maszynie. Pełny JDK 21 już jest (`~/workspace/jdks/jdk-21-temurin`). Pierwszy krok tej zmiany: instalacja SDK i zielony build APK, w tym zaległy krok 2.3 z S-01 (`mvp-focused-dashboard`).
 - **Unknowns:**
   - Jak sesja i przekierowania Auth zachowują się w natywnej powłoce mobilnej? — Owner: team. Block: no.
 - **Risk:** Po pełnym CRUD, żeby walidować kompletny przepływ raz; ryzyko to różnice sesji i przekierowań między webem a powłoką natywną.
@@ -234,7 +234,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-04       | private-monthly-budget           | Prywatny, trwały budżet miesięczny                            | no                    | Po S-02 i S-03 |
 | S-05       | private-classified-expenses      | Prywatne wydatki trzech typów i Safe-to-Spend z backendu      | no                    | Po S-04 |
 | S-06       | edit-delete-own-expenses         | Edycja, usuwanie i przypisanie do folderów własnych wydatków  | no                    | Po S-05 |
-| S-07       | android-authenticated-flow       | Zalogowany przepływ na Androidzie                             | no                    | Po S-06; wymaga JDK 21 |
+| S-07       | android-authenticated-flow       | Zalogowany przepływ na Androidzie                             | no                    | Po S-06; wymaga Android SDK |
 | S-08       | production-supabase-switch       | Przełączenie produkcji na Supabase                            | no                    | Zablokowane decyzją o planie i kopiach zapasowych |
 | S-09       | private-wants-radar              | Radar zachcianek na prywatnych danych                         | no                    | Po S-01 i S-05; opcjonalne |
 
