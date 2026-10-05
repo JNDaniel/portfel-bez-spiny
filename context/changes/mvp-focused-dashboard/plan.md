@@ -193,4 +193,4 @@ None. No data or persistence changes; demo data in LocalStorage stays as is.
 #### Manual
 
 - [x] 2.4 On a Pixel 7-sized viewport, Safe-to-Spend and its warning state are visible without scrolling and the FAB opens manual entry in one tap — 11acdde
-- [ ] 2.5 After deployment to `https://portfel-bez-spiny.themantax.workers.dev`, the dashboard shows the MVP-only surface
+- [x] 2.5 After deployment to `https://portfel-bez-spiny.themantax.workers.dev`, the dashboard shows the MVP-only surface
