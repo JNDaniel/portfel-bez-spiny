@@ -1,14 +1,22 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { 
-  IonContent, 
-  IonRefresher, 
-  IonRefresherContent, 
-  IonFab, 
-  IonFabButton, 
-  IonIcon 
+import {
+  IonContent,
+  IonRefresher,
+  IonRefresherContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { add, refreshOutline, cameraOutline, micOutline, repeatOutline, alertCircleOutline, folderOutline } from 'ionicons/icons';
+import {
+  add,
+  refreshOutline,
+  cameraOutline,
+  micOutline,
+  repeatOutline,
+  alertCircleOutline,
+  folderOutline,
+} from 'ionicons/icons';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 import { DEMO_FEATURES_ENABLED } from '../../core/config/demo-features';
@@ -45,7 +53,7 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
     BudgetSubscriptionsComponent,
     BudgetScannerModalComponent,
     BudgetVoiceModalComponent,
-    BudgetCreateFolderModalComponent
+    BudgetCreateFolderModalComponent,
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
@@ -57,27 +65,35 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
 
       <!-- Native Pull to Refresh -->
       <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
-        <ion-refresher-content pullingIcon="refresh-outline" pullingText="Odśwież budżet"></ion-refresher-content>
+        <ion-refresher-content
+          pullingIcon="refresh-outline"
+          pullingText="Odśwież budżet"
+        ></ion-refresher-content>
       </ion-refresher>
 
-      <div class="min-h-screen bg-[#0b0f19] text-slate-100 p-4 sm:p-6 lg:p-8 flex flex-col items-center">
+      <div
+        class="min-h-screen bg-[#0b0f19] text-slate-100 p-4 sm:p-6 lg:p-8 flex flex-col items-center"
+      >
         <!-- Main Centered Container (Max 800px) matching screenshots -->
         <div class="w-full max-w-3xl space-y-6">
-          
           <!-- Top Header: Logo + Month Navigator + Game Changer Quick Tools -->
           <header class="flex items-center justify-between px-2 pt-2">
             <!-- Left Logo -->
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-sm shadow-lg shadow-emerald-500/20">
+              <div
+                class="w-7 h-7 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-sm shadow-lg shadow-emerald-500/20"
+              >
                 💰
               </div>
-              <span class="font-extrabold text-sm md:text-base text-white tracking-tight">Budżet</span>
+              <span class="font-extrabold text-sm md:text-base text-white tracking-tight"
+                >Budżet</span
+              >
             </div>
 
             <!-- Center Month Navigator (Arrows with month name) -->
             <div class="flex items-center gap-3 text-slate-400">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 (click)="state.previousMonth()"
                 title="Poprzedni miesiąc"
                 class="p-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition"
@@ -85,12 +101,14 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
                 &lsaquo;
               </button>
 
-              <span class="text-xs md:text-sm font-bold text-slate-200 tracking-wide select-none min-w-[100px] text-center font-mono">
+              <span
+                class="text-xs md:text-sm font-bold text-slate-200 tracking-wide select-none min-w-[100px] text-center font-mono"
+              >
                 {{ state.currentMonth().label }}
               </span>
 
-              <button 
-                type="button" 
+              <button
+                type="button"
                 (click)="state.nextMonth()"
                 title="Następny miesiąc"
                 class="p-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition"
@@ -100,8 +118,8 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
             </div>
 
             <!-- Right Add Action Button -->
-            <button 
-              type="button" 
+            <button
+              type="button"
               (click)="openAddModal()"
               class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition"
             >
@@ -114,7 +132,7 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
             <!-- GAME CHANGER QUICK ACTION TOOLBAR -->
             <div class="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none">
               <!-- Bank Push Ingestion Test -->
-              <button 
+              <button
                 type="button"
                 (click)="state.triggerSampleBankNotification()"
                 class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
@@ -124,7 +142,7 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
               </button>
 
               <!-- OCR Scanner Modal -->
-              <button 
+              <button
                 type="button"
                 (click)="openScanner()"
                 class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-purple-500/30 text-purple-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
@@ -134,7 +152,7 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
               </button>
 
               <!-- Voice AI Modal -->
-              <button 
+              <button
                 type="button"
                 (click)="openVoice()"
                 class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-blue-500/30 text-blue-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
@@ -144,7 +162,7 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
               </button>
 
               <!-- Subscriptions Toggle -->
-              <button 
+              <button
                 type="button"
                 (click)="toggleSubscriptions()"
                 class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-cyan-500/30 text-cyan-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
@@ -154,7 +172,7 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
               </button>
 
               <!-- Waste Radar Toggle -->
-              <button 
+              <button
                 type="button"
                 (click)="toggleWasteRadar()"
                 class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-amber-500/30 text-amber-400 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition"
@@ -189,7 +207,6 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
 
           <!-- 3. Transactions Ledger with Swipe Gestures, Folders, AI Comment & Period Summary -->
           <app-budget-transactions></app-budget-transactions>
-
         </div>
       </div>
 
@@ -214,14 +231,22 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
         <app-budget-voice-modal></app-budget-voice-modal>
       }
     </ion-content>
-  `
+  `,
 })
 export class BudgetMainComponent {
   readonly state = inject(BudgetStateService);
   readonly demoFeaturesEnabled = DEMO_FEATURES_ENABLED;
 
   constructor() {
-    addIcons({ add, refreshOutline, cameraOutline, micOutline, repeatOutline, alertCircleOutline, folderOutline });
+    addIcons({
+      add,
+      refreshOutline,
+      cameraOutline,
+      micOutline,
+      repeatOutline,
+      alertCircleOutline,
+      folderOutline,
+    });
   }
 
   async openAddModal() {
@@ -241,12 +266,12 @@ export class BudgetMainComponent {
 
   async toggleSubscriptions() {
     await Haptics.impact({ style: ImpactStyle.Light });
-    this.state.isSubscriptionsOpen.update(v => !v);
+    this.state.isSubscriptionsOpen.update((v) => !v);
   }
 
   async toggleWasteRadar() {
     await Haptics.impact({ style: ImpactStyle.Light });
-    this.state.isWasteRadarOpen.update(v => !v);
+    this.state.isWasteRadarOpen.update((v) => !v);
   }
 
   async handleRefresh(event: any) {

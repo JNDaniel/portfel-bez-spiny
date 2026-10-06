@@ -8,9 +8,11 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    <div class="relative w-full rounded-3xl bg-[#111827]/90 border border-slate-800/80 p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl backdrop-blur-xl">
+    <div
+      class="relative w-full rounded-3xl bg-[#111827]/90 border border-slate-800/80 p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl backdrop-blur-xl"
+    >
       <!-- Glow ambient light behind gauge -->
-      <div 
+      <div
         class="absolute top-6 w-52 h-52 rounded-full blur-3xl opacity-25 transition-all duration-700 pointer-events-none"
         [style.backgroundColor]="gaugeColor()"
       ></div>
@@ -56,7 +58,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 
         <!-- Centered Percentage & Subtitle -->
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center -mt-2">
-          <span 
+          <span
             class="text-4xl md:text-5xl font-black tracking-tight"
             [style.color]="gaugeColor()"
             [style.textShadow]="'0 0 25px ' + gaugeColor() + '60'"
@@ -70,32 +72,47 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
       </div>
 
       <!-- Safe-to-Spend Daily Allowance Pill -->
-      <div class="mb-4 -mt-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-emerald-500/30 flex items-center gap-2 shadow-lg backdrop-blur-md">
+      <div
+        class="mb-4 -mt-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-emerald-500/30 flex items-center gap-2 shadow-lg backdrop-blur-md"
+      >
         <span class="text-xs">🎯</span>
         <span class="text-xs text-slate-300">
-          Bezpiecznie na dziś: <strong class="text-emerald-400 font-bold font-mono">{{ state.safeToSpendDaily() }} zł/dzień</strong> do końca miesiąca
+          Bezpiecznie na dziś:
+          <strong class="text-emerald-400 font-bold font-mono"
+            >{{ state.safeToSpendDaily() }} zł/dzień</strong
+          >
+          do końca miesiąca
         </span>
       </div>
 
       <!-- 3 Key Metric Numbers at Bottom -->
       <div class="grid grid-cols-3 w-full max-w-md pt-4 border-t border-slate-800/60 text-center">
         <div>
-          <span class="block text-[10px] md:text-xs uppercase font-bold text-slate-500 tracking-wider">WYDANO</span>
+          <span
+            class="block text-[10px] md:text-xs uppercase font-bold text-slate-500 tracking-wider"
+            >WYDANO</span
+          >
           <span class="block text-base md:text-lg font-extrabold text-white mt-0.5 font-mono">
             {{ state.spentAmount() }} zł
           </span>
         </div>
 
         <div>
-          <span class="block text-[10px] md:text-xs uppercase font-bold text-slate-500 tracking-wider">LIMIT</span>
+          <span
+            class="block text-[10px] md:text-xs uppercase font-bold text-slate-500 tracking-wider"
+            >LIMIT</span
+          >
           <span class="block text-base md:text-lg font-extrabold text-white mt-0.5 font-mono">
             {{ state.limitAmount() }} zł
           </span>
         </div>
 
         <div>
-          <span class="block text-[10px] md:text-xs uppercase font-bold text-slate-500 tracking-wider">POZOSTAŁO</span>
-          <span 
+          <span
+            class="block text-[10px] md:text-xs uppercase font-bold text-slate-500 tracking-wider"
+            >POZOSTAŁO</span
+          >
+          <span
             class="block text-base md:text-lg font-extrabold mt-0.5 font-mono"
             [ngClass]="state.remainingAmount() >= 0 ? 'text-emerald-400' : 'text-rose-400'"
           >
@@ -104,7 +121,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class BudgetHeroGaugeComponent {
   readonly state = inject(BudgetStateService);
@@ -126,6 +143,6 @@ export class BudgetHeroGaugeComponent {
   readonly strokeDashoffset = computed(() => {
     const totalArcLength = 320; // 250 degree sweep
     const pct = Math.min(100, Math.max(0, this.state.percentageUsed()));
-    return totalArcLength - (totalArcLength * (pct / 100));
+    return totalArcLength - totalArcLength * (pct / 100);
   });
 }

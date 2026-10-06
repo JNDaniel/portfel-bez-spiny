@@ -6,15 +6,15 @@ const config: CapacitorConfig = {
   webDir: 'dist/cost-management-app/browser',
   bundledWebRuntime: false,
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
   },
   plugins: {
     StatusBar: {
       overlaysWebView: false,
       style: 'DARK',
-      backgroundColor: '#0f172a'
-    }
-  }
+      backgroundColor: '#0f172a',
+    },
+  },
 };
 
 export default config;

@@ -1,11 +1,16 @@
-import { Injectable, signal, computed, effect } from "@angular/core";
-import { AppSettings, DEFAULT_SETTINGS, CURRENCY_SYMBOLS, SupportedCurrency } from "../models/settings.model";
+import { Injectable, signal, computed, effect } from '@angular/core';
+import {
+  AppSettings,
+  DEFAULT_SETTINGS,
+  CURRENCY_SYMBOLS,
+  SupportedCurrency,
+} from '../models/settings.model';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class SettingsService {
-  private readonly STORAGE_KEY = "costflow_settings";
+  private readonly STORAGE_KEY = 'costflow_settings';
   private readonly _settings = signal<AppSettings>(this.loadSettings());
 
   public readonly settings = this._settings.asReadonly();
@@ -22,10 +27,10 @@ export class SettingsService {
   }
 
   updateSettings(partial: Partial<AppSettings>) {
-    this._settings.update(curr => {
+    this._settings.update((curr) => {
       const updated = { ...curr, ...partial };
       if (partial.currency) {
-        updated.currencySymbol = CURRENCY_SYMBOLS[partial.currency] || "€";
+        updated.currencySymbol = CURRENCY_SYMBOLS[partial.currency] || '€';
       }
       return updated;
     });
@@ -34,7 +39,7 @@ export class SettingsService {
   setCurrency(currency: SupportedCurrency) {
     this.updateSettings({
       currency,
-      currencySymbol: CURRENCY_SYMBOLS[currency] || "$"
+      currencySymbol: CURRENCY_SYMBOLS[currency] || '$',
     });
   }
 
@@ -45,12 +50,12 @@ export class SettingsService {
   formatCurrency(amount: number, options?: { hideDecimals?: boolean }): string {
     const symbol = this.currencySymbol();
     const curr = this.currency();
-    const formattedNum = new Intl.NumberFormat("en-US", {
+    const formattedNum = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: options?.hideDecimals ? 0 : 2,
-      maximumFractionDigits: options?.hideDecimals ? 0 : 2
+      maximumFractionDigits: options?.hideDecimals ? 0 : 2,
     }).format(amount);
 
-    if (curr === "PLN") {
+    if (curr === 'PLN') {
       return `${formattedNum} zł`;
     }
     return `${symbol}${formattedNum}`;
@@ -63,7 +68,7 @@ export class SettingsService {
         return { ...DEFAULT_SETTINGS, ...JSON.parse(saved) };
       }
     } catch (e) {
-      console.warn("Failed to read settings from localStorage", e);
+      console.warn('Failed to read settings from localStorage', e);
     }
     return { ...DEFAULT_SETTINGS };
   }

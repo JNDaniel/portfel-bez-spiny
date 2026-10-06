@@ -6,6 +6,6 @@
   "assets": {
     // Set explicitly; Wrangler's Angular auto-detection has picked the wrong output directory.
     "directory": "./dist/cost-management-app/browser",
-    "not_found_handling": "single-page-application"
-  }
+    "not_found_handling": "single-page-application",
+  },
 }

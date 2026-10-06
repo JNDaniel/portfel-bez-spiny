@@ -1,14 +1,14 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { 
+import {
   BankPushNotification,
-  CategoryBreakdown, 
-  CATEGORY_COLORS, 
-  MonthData, 
+  CategoryBreakdown,
+  CATEGORY_COLORS,
+  MonthData,
   SubscriptionItem,
-  Transaction, 
-  TransactionCategory, 
-  TransactionFolder, 
-  TransactionTag 
+  Transaction,
+  TransactionCategory,
+  TransactionFolder,
+  TransactionTag,
 } from '../models/budget-app.model';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
@@ -29,11 +29,9 @@ const INITIAL_MONTHS: MonthData[] = [
       { day: '15 cze', amount: 450 },
       { day: '20 cze', amount: 800 },
       { day: '25 cze', amount: 200 },
-      { day: '30 cze', amount: 1100 }
+      { day: '30 cze', amount: 1100 },
     ],
-    folders: [
-      { id: 'f-bieszczady', name: 'Weekend Bieszczady', emoji: '🏕️', color: '#10b981' }
-    ],
+    folders: [{ id: 'f-bieszczady', name: 'Weekend Bieszczady', emoji: '🏕️', color: '#10b981' }],
     transactions: [
       {
         id: 't-jun-1',
@@ -43,24 +41,24 @@ const INITIAL_MONTHS: MonthData[] = [
         date: '01 cze, 08:00',
         isoDate: '2025-06-01',
         note: 'Przelew do 10-go',
-        tags: ['Cykliczne', 'Potrzebne']
+        tags: ['Cykliczne', 'Potrzebne'],
       },
       {
         id: 't-jun-2',
         title: 'Biedronka',
         category: 'Jedzenie',
-        amount: 145.20,
+        amount: 145.2,
         date: '15 cze, 17:30',
         isoDate: '2025-06-15',
-        tags: ['Potrzebne', 'Spożywcze']
-      }
+        tags: ['Potrzebne', 'Spożywcze'],
+      },
     ],
     aiSummary: {
       biggestExpense: 'Czynsz 2 200 zł = 44% budżetu.',
       potentialWaste: 'Brak niepokojących impulsów nocnych.',
       goodNews: 'Wydatki o 2% niższe niż w maju.',
-      recommendation: 'Utrzymaj obecną dyscyplinę na jedzeniu.'
-    }
+      recommendation: 'Utrzymaj obecną dyscyplinę na jedzeniu.',
+    },
   },
   {
     periodKey: '2025-07',
@@ -78,92 +76,93 @@ const INITIAL_MONTHS: MonthData[] = [
       { day: '7 lip', amount: 1800 },
       { day: '9 lip', amount: 550 },
       { day: '11 lip', amount: 400 },
-      { day: 'Dziś', amount: 2200 }
+      { day: 'Dziś', amount: 2200 },
     ],
     folders: [
       { id: 'f-japan', name: 'Wycieczka Japonia', emoji: '🇯🇵', color: '#f43f5e' },
-      { id: 'f-remont', name: 'Remont Kuchni', emoji: '🔨', color: '#f59e0b' }
+      { id: 'f-remont', name: 'Remont Kuchni', emoji: '🔨', color: '#f59e0b' },
     ],
     transactions: [
       {
         id: 't-1',
         title: 'Biedronka',
         category: 'Jedzenie',
-        amount: 84.50,
+        amount: 84.5,
         date: 'Dziś, 14:32',
         isoDate: '2025-07-12',
         tags: ['Potrzebne'],
-        aiComment: 'Standardowe zakupy codzienne — koszyk w granicach średniej domowej (84 zł).'
+        aiComment: 'Standardowe zakupy codzienne — koszyk w granicach średniej domowej (84 zł).',
       },
       {
         id: 't-2',
         title: 'Czynsz lipiec',
         category: 'Mieszkanie',
-        amount: 2200.00,
+        amount: 2200.0,
         date: 'Dziś, 08:00',
         isoDate: '2025-07-12',
         note: 'Przelew do 10-go',
-        tags: ['Cykliczne', 'Potrzebne']
+        tags: ['Cykliczne', 'Potrzebne'],
       },
       {
         id: 't-3',
         title: 'Orlen',
         category: 'Transport',
-        amount: 180.00,
+        amount: 180.0,
         date: 'Wczoraj, 18:15',
         isoDate: '2025-07-11',
         tags: ['Potrzebne'],
-        aiComment: 'Tankowałeś w godzinach szczytu. Średnia cena za litr o 4% wyższa niż poza miastem.'
+        aiComment:
+          'Tankowałeś w godzinach szczytu. Średnia cena za litr o 4% wyższa niż poza miastem.',
       },
       {
         id: 't-4',
         title: 'Netflix',
         category: 'Rozrywka',
-        amount: 49.00,
+        amount: 49.0,
         date: 'Wczoraj, 00:00',
         isoDate: '2025-07-11',
         note: 'Plan rodzinny',
-        tags: ['Zachcianka', 'Cykliczne']
+        tags: ['Zachcianka', 'Cykliczne'],
       },
       {
         id: 't-5',
         title: 'Apteka Dbam o Zdrowie',
         category: 'Zdrowie',
-        amount: 67.80,
+        amount: 67.8,
         date: '10 lip, 11:20',
         isoDate: '2025-07-10',
-        tags: ['Potrzebne']
+        tags: ['Potrzebne'],
       },
       {
         id: 't-6',
         title: 'Żabka nocna',
         category: 'Jedzenie',
-        amount: 23.40,
+        amount: 23.4,
         date: '09 lip, 23:15',
         isoDate: '2025-07-09',
         note: 'Przekąski',
         tags: ['Zbędne'],
-        aiComment: 'Klasyczny impuls po 22:00. W skali miesiąca takie wizyty kosztują Cię ~94 zł.'
+        aiComment: 'Klasyczny impuls po 22:00. W skali miesiąca takie wizyty kosztują Cię ~94 zł.',
       },
       {
         id: 't-7',
         title: 'Bolt po imprezie',
         category: 'Transport',
-        amount: 34.50,
+        amount: 34.5,
         date: '06 lip, 02:40',
         isoDate: '2025-07-06',
         tags: ['Zbędne'],
-        aiComment: 'Przejazd nocny taryfą dynamiczną (+35% względem standardu dziennego).'
+        aiComment: 'Przejazd nocny taryfą dynamiczną (+35% względem standardu dziennego).',
       },
       {
         id: 't-8',
         title: 'Zara Man',
         category: 'Zakupy',
-        amount: 280.00,
+        amount: 280.0,
         date: '05 lip, 16:30',
         isoDate: '2025-07-05',
         note: 'Koszule do pracy',
-        tags: ['Potrzebne', 'Służbowe']
+        tags: ['Potrzebne', 'Służbowe'],
       },
       {
         id: 't-9',
@@ -172,7 +171,7 @@ const INITIAL_MONTHS: MonthData[] = [
         amount: 19.99,
         date: '01 lip, 00:00',
         isoDate: '2025-07-01',
-        tags: ['Cykliczne']
+        tags: ['Cykliczne'],
       },
       {
         id: 't-10',
@@ -182,27 +181,31 @@ const INITIAL_MONTHS: MonthData[] = [
         date: '02 lip, 10:00',
         isoDate: '2025-07-02',
         note: 'Prognoza czerwiec-lipiec',
-        tags: ['Cykliczne', 'Potrzebne']
-      }
+        tags: ['Cykliczne', 'Potrzebne'],
+      },
     ],
     aiSummary: {
-      biggestExpense: 'Czynsz 2 200 zł = 42% budżetu. Cel: zejść do 30% — rozważ podnajęcie pokoju lub negocjację czynszu.',
-      potentialWaste: 'Żabka nocna 23,40 zł + Bolt po imprezie 34,50 zł = 57,90 zł. Łatwe do wyeliminowania impulsy nocne.',
-      goodNews: 'Transport 8% poniżej limitu, zdrowie w normie. Oszczędzasz 860 zł względem budżetu — tak trzymaj!',
-      recommendation: 'Zastąp 2 wizyty w Żabce zakupami w dyskoncie → ~80 zł/mies. Woda butelkowana → filtr → ~45 zł/mies. Razem 125 zł oszczędności.'
-    }
-  }
+      biggestExpense:
+        'Czynsz 2 200 zł = 42% budżetu. Cel: zejść do 30% — rozważ podnajęcie pokoju lub negocjację czynszu.',
+      potentialWaste:
+        'Żabka nocna 23,40 zł + Bolt po imprezie 34,50 zł = 57,90 zł. Łatwe do wyeliminowania impulsy nocne.',
+      goodNews:
+        'Transport 8% poniżej limitu, zdrowie w normie. Oszczędzasz 860 zł względem budżetu — tak trzymaj!',
+      recommendation:
+        'Zastąp 2 wizyty w Żabce zakupami w dyskoncie → ~80 zł/mies. Woda butelkowana → filtr → ~45 zł/mies. Razem 125 zł oszczędności.',
+    },
+  },
 ];
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BudgetStateService {
   private readonly STORAGE_KEY = 'budzetapp_v2_data';
-  
+
   private readonly _months = signal<MonthData[]>(this.loadFromStorage());
   private readonly _currentMonthIndex = signal<number>(1); // Lipiec 2025
-  
+
   // Selected Folder Filter (null = All)
   public readonly selectedFolderId = signal<string | null>(null);
 
@@ -238,13 +241,13 @@ export class BudgetStateService {
     const all = this.currentMonth().transactions;
     const folderId = this.selectedFolderId();
     if (!folderId) return all;
-    return all.filter(t => t.folderId === folderId);
+    return all.filter((t) => t.folderId === folderId);
   });
 
   public readonly activeFolder = computed(() => {
     const id = this.selectedFolderId();
     if (!id) return null;
-    return this.folders().find(f => f.id === id) || null;
+    return this.folders().find((f) => f.id === id) || null;
   });
 
   public readonly activeFolderTotal = computed(() => {
@@ -281,43 +284,52 @@ export class BudgetStateService {
 
   public readonly wasteStats = computed(() => {
     const txs = this.currentMonth().transactions;
-    const wasteList = txs.filter(t => t.tags.includes('Zbędne') || t.tags.includes('Zachcianka'));
+    const wasteList = txs.filter((t) => t.tags.includes('Zbędne') || t.tags.includes('Zachcianka'));
     const totalWaste = wasteList.reduce((acc, t) => acc + t.amount, 0);
-    const percentageOfSpend = this.spentAmount() > 0 ? Math.round((totalWaste / this.spentAmount()) * 100) : 0;
+    const percentageOfSpend =
+      this.spentAmount() > 0 ? Math.round((totalWaste / this.spentAmount()) * 100) : 0;
     const potentialAnnualSavings = Math.round(totalWaste * 0.5 * 12);
 
     return {
       items: wasteList,
       totalAmount: totalWaste,
       percentageOfSpend,
-      potentialAnnualSavings
+      potentialAnnualSavings,
     };
   });
 
   public readonly subscriptions = computed<SubscriptionItem[]>(() => {
-    const txs = this.currentMonth().transactions.filter(t => t.tags.includes('Cykliczne'));
+    const txs = this.currentMonth().transactions.filter((t) => t.tags.includes('Cykliczne'));
     const currentDay = this.currentMonth().currentDay;
-    
-    return txs.map(t => {
-      const day = t.title.includes('Czynsz') ? 10 : (t.title.includes('Netflix') ? 11 : (t.title.includes('PGE') ? 2 : 15));
-      const daysUntil = day >= currentDay ? (day - currentDay) : (31 - currentDay + day);
-      
-      let emoji = '💳';
-      if (t.category === 'Mieszkanie') emoji = '🏠';
-      if (t.category === 'Rozrywka') emoji = '🍿';
-      if (t.category === 'Media') emoji = '⚡';
 
-      return {
-        id: t.id,
-        name: t.title,
-        amount: t.amount,
-        billingDay: day,
-        category: t.category,
-        frequency: 'monthly' as const,
-        daysUntilBilling: daysUntil,
-        iconEmoji: emoji
-      };
-    }).sort((a, b) => a.daysUntilBilling - b.daysUntilBilling);
+    return txs
+      .map((t) => {
+        const day = t.title.includes('Czynsz')
+          ? 10
+          : t.title.includes('Netflix')
+            ? 11
+            : t.title.includes('PGE')
+              ? 2
+              : 15;
+        const daysUntil = day >= currentDay ? day - currentDay : 31 - currentDay + day;
+
+        let emoji = '💳';
+        if (t.category === 'Mieszkanie') emoji = '🏠';
+        if (t.category === 'Rozrywka') emoji = '🍿';
+        if (t.category === 'Media') emoji = '⚡';
+
+        return {
+          id: t.id,
+          name: t.title,
+          amount: t.amount,
+          billingDay: day,
+          category: t.category,
+          frequency: 'monthly' as const,
+          daysUntilBilling: daysUntil,
+          iconEmoji: emoji,
+        };
+      })
+      .sort((a, b) => a.daysUntilBilling - b.daysUntilBilling);
   });
 
   public readonly totalRecurringMonthly = computed(() => {
@@ -327,13 +339,19 @@ export class BudgetStateService {
   public readonly categoriesBreakdown = computed<CategoryBreakdown[]>(() => {
     const txs = this.currentMonth().transactions;
     const total = this.spentAmount() || 1;
-    
+
     const categories: TransactionCategory[] = [
-      'Mieszkanie', 'Jedzenie', 'Transport', 'Zakupy', 'Zdrowie', 'Rozrywka', 'Media'
+      'Mieszkanie',
+      'Jedzenie',
+      'Transport',
+      'Zakupy',
+      'Zdrowie',
+      'Rozrywka',
+      'Media',
     ];
 
-    return categories.map(cat => {
-      const sum = txs.filter(t => t.category === cat).reduce((acc, t) => acc + t.amount, 0);
+    return categories.map((cat) => {
+      const sum = txs.filter((t) => t.category === cat).reduce((acc, t) => acc + t.amount, 0);
       const pct = Math.round((sum / total) * 100);
       const meta = CATEGORY_COLORS[cat] || CATEGORY_COLORS['Inne'];
       return {
@@ -341,7 +359,7 @@ export class BudgetStateService {
         amount: Math.round(sum),
         percentage: pct,
         color: meta.hex,
-        barColorClass: meta.barClass
+        barColorClass: meta.barClass,
       };
     });
   });
@@ -361,11 +379,11 @@ export class BudgetStateService {
       const saved = localStorage.getItem(this.STORAGE_KEY);
       if (saved) {
         const parsed: MonthData[] = JSON.parse(saved);
-        return parsed.map(m => ({
+        return parsed.map((m) => ({
           ...m,
           daysInMonth: m.daysInMonth || 31,
           currentDay: m.currentDay || 12,
-          folders: m.folders || []
+          folders: m.folders || [],
         }));
       }
     } catch (e) {
@@ -385,7 +403,7 @@ export class BudgetStateService {
   async previousMonth() {
     await Haptics.impact({ style: ImpactStyle.Light });
     if (this._currentMonthIndex() > 0) {
-      this._currentMonthIndex.update(i => i - 1);
+      this._currentMonthIndex.update((i) => i - 1);
       this.selectedFolderId.set(null);
     }
   }
@@ -393,7 +411,7 @@ export class BudgetStateService {
   async nextMonth() {
     await Haptics.impact({ style: ImpactStyle.Light });
     if (this._currentMonthIndex() < this._months().length - 1) {
-      this._currentMonthIndex.update(i => i + 1);
+      this._currentMonthIndex.update((i) => i + 1);
       this.selectedFolderId.set(null);
     }
   }
@@ -410,13 +428,13 @@ export class BudgetStateService {
     const newFolder: TransactionFolder = { id, name, emoji, color };
     const idx = this._currentMonthIndex();
 
-    this._months.update(months => {
+    this._months.update((months) => {
       const copy = [...months];
       const m = { ...copy[idx] };
       m.folders = [...(m.folders || []), newFolder];
 
       if (txIdsToAssign.length > 0) {
-        m.transactions = m.transactions.map(t => {
+        m.transactions = m.transactions.map((t) => {
           if (txIdsToAssign.includes(t.id)) {
             return { ...t, folderId: id, folderName: name };
           }
@@ -434,17 +452,17 @@ export class BudgetStateService {
   }
 
   async assignSelectedToFolder(folderId: string) {
-    const folder = this.folders().find(f => f.id === folderId);
+    const folder = this.folders().find((f) => f.id === folderId);
     if (!folder) return;
 
     await Haptics.impact({ style: ImpactStyle.Medium });
     const txIds = this.selectedTxIds();
     const idx = this._currentMonthIndex();
 
-    this._months.update(months => {
+    this._months.update((months) => {
       const copy = [...months];
       const m = { ...copy[idx] };
-      m.transactions = m.transactions.map(t => {
+      m.transactions = m.transactions.map((t) => {
         if (txIds.includes(t.id)) {
           return { ...t, folderId, folderName: folder.name };
         }
@@ -462,11 +480,11 @@ export class BudgetStateService {
     await Haptics.impact({ style: ImpactStyle.Heavy });
     const idx = this._currentMonthIndex();
 
-    this._months.update(months => {
+    this._months.update((months) => {
       const copy = [...months];
       const m = { ...copy[idx] };
-      m.folders = (m.folders || []).filter(f => f.id !== folderId);
-      m.transactions = m.transactions.map(t => {
+      m.folders = (m.folders || []).filter((f) => f.id !== folderId);
+      m.transactions = m.transactions.map((t) => {
         if (t.folderId === folderId) {
           const { folderId: _, folderName: __, ...rest } = t;
           return rest as Transaction;
@@ -486,9 +504,9 @@ export class BudgetStateService {
   // MULTI-SELECTION & GESTURES
   toggleSelectTx(id: string) {
     Haptics.impact({ style: ImpactStyle.Light });
-    this.selectedTxIds.update(current => {
+    this.selectedTxIds.update((current) => {
       const exists = current.includes(id);
-      const updated = exists ? current.filter(i => i !== id) : [...current, id];
+      const updated = exists ? current.filter((i) => i !== id) : [...current, id];
       if (updated.length === 0) {
         this.isSelectionMode.set(false);
       } else {
@@ -514,10 +532,10 @@ export class BudgetStateService {
   async deleteTransaction(id: string) {
     await Haptics.impact({ style: ImpactStyle.Heavy });
     const idx = this._currentMonthIndex();
-    this._months.update(months => {
+    this._months.update((months) => {
       const copy = [...months];
       const m = { ...copy[idx] };
-      m.transactions = m.transactions.filter(t => t.id !== id);
+      m.transactions = m.transactions.filter((t) => t.id !== id);
       copy[idx] = m;
       return copy;
     });
@@ -530,10 +548,10 @@ export class BudgetStateService {
 
     await Haptics.impact({ style: ImpactStyle.Heavy });
     const idx = this._currentMonthIndex();
-    this._months.update(months => {
+    this._months.update((months) => {
       const copy = [...months];
       const m = { ...copy[idx] };
-      m.transactions = m.transactions.filter(t => !ids.includes(t.id));
+      m.transactions = m.transactions.filter((t) => !ids.includes(t.id));
       copy[idx] = m;
       return copy;
     });
@@ -548,32 +566,32 @@ export class BudgetStateService {
         id: 'push-1',
         bankName: 'mBank',
         merchant: 'Biedronka',
-        amount: 64.20,
+        amount: 64.2,
         time: 'Przed chwilą',
         suggestedCategory: 'Jedzenie',
         suggestedTags: ['Potrzebne', 'Spożywcze'],
-        rawText: 'Płatność kartą: 64,20 zł w Biedronka Warszawa'
+        rawText: 'Płatność kartą: 64,20 zł w Biedronka Warszawa',
       },
       {
         id: 'push-2',
         bankName: 'Revolut',
         merchant: 'Uber Eats',
-        amount: 48.50,
+        amount: 48.5,
         time: '1 min temu',
         suggestedCategory: 'Jedzenie',
         suggestedTags: ['Zachcianka'],
-        rawText: 'Płatność Revolut: 48,50 zł w Uber Eats'
+        rawText: 'Płatność Revolut: 48,50 zł w Uber Eats',
       },
       {
         id: 'push-3',
         bankName: 'PKO BP',
         merchant: 'Stacja BP',
-        amount: 210.00,
+        amount: 210.0,
         time: '3 min temu',
         suggestedCategory: 'Transport',
         suggestedTags: ['Potrzebne'],
-        rawText: 'Transakcja IKO: 210,00 zł Stacja Paliw BP'
-      }
+        rawText: 'Transakcja IKO: 210,00 zł Stacja Paliw BP',
+      },
     ];
 
     const pick = samples[Math.floor(Math.random() * samples.length)];
@@ -597,7 +615,7 @@ export class BudgetStateService {
       isoDate: now.toISOString().substring(0, 10),
       note: `Automatycznie z powiadomienia ${notif.bankName}`,
       tags: notif.suggestedTags,
-      aiComment: `Płatność zarejestrowana automatycznie z powiadomienia bankowego ${notif.bankName}.`
+      aiComment: `Płatność zarejestrowana automatycznie z powiadomienia bankowego ${notif.bankName}.`,
     });
 
     this.activeBankNotification.set(null);
@@ -615,10 +633,10 @@ export class BudgetStateService {
 
     await Haptics.impact({ style: ImpactStyle.Light });
     const idx = this._currentMonthIndex();
-    this._months.update(months => {
+    this._months.update((months) => {
       const copy = [...months];
       const targetMonth = { ...copy[idx] };
-      targetMonth.transactions = targetMonth.transactions.map(t => {
+      targetMonth.transactions = targetMonth.transactions.map((t) => {
         if (t.id === txId) {
           return { ...t, isExpanded: !t.isExpanded };
         }
@@ -632,10 +650,10 @@ export class BudgetStateService {
 
   async updateTransactionNote(txId: string, note: string) {
     const idx = this._currentMonthIndex();
-    this._months.update(months => {
+    this._months.update((months) => {
       const copy = [...months];
       const targetMonth = { ...copy[idx] };
-      targetMonth.transactions = targetMonth.transactions.map(t => {
+      targetMonth.transactions = targetMonth.transactions.map((t) => {
         if (t.id === txId) {
           return { ...t, note: note.trim() || undefined };
         }
@@ -650,13 +668,13 @@ export class BudgetStateService {
   async toggleTransactionTag(txId: string, tag: TransactionTag) {
     await Haptics.impact({ style: ImpactStyle.Medium });
     const idx = this._currentMonthIndex();
-    this._months.update(months => {
+    this._months.update((months) => {
       const copy = [...months];
       const targetMonth = { ...copy[idx] };
-      targetMonth.transactions = targetMonth.transactions.map(t => {
+      targetMonth.transactions = targetMonth.transactions.map((t) => {
         if (t.id === txId) {
           const hasTag = t.tags.includes(tag);
-          const newTags = hasTag ? t.tags.filter(tg => tg !== tag) : [...t.tags, tag];
+          const newTags = hasTag ? t.tags.filter((tg) => tg !== tag) : [...t.tags, tag];
           return { ...t, tags: newTags };
         }
         return t;
@@ -670,17 +688,17 @@ export class BudgetStateService {
   async attachReceiptAndGenerateAi(txId: string, fileName: string) {
     await Haptics.impact({ style: ImpactStyle.Medium });
     const idx = this._currentMonthIndex();
-    
-    this._months.update(months => {
+
+    this._months.update((months) => {
       const copy = [...months];
       const targetMonth = { ...copy[idx] };
-      targetMonth.transactions = targetMonth.transactions.map(t => {
+      targetMonth.transactions = targetMonth.transactions.map((t) => {
         if (t.id === txId) {
           const simulatedAi = this.generateSmartAiComment(t.title, t.category, t.amount);
-          return { 
-            ...t, 
+          return {
+            ...t,
             receiptFileName: fileName,
-            aiComment: simulatedAi
+            aiComment: simulatedAi,
           };
         }
         return t;
@@ -691,7 +709,11 @@ export class BudgetStateService {
     this.persist();
   }
 
-  private generateSmartAiComment(title: string, category: TransactionCategory, amount: number): string {
+  private generateSmartAiComment(
+    title: string,
+    category: TransactionCategory,
+    amount: number,
+  ): string {
     const lower = title.toLowerCase();
     if (lower.includes('biedronka') || lower.includes('lidl') || lower.includes('auchan')) {
       return `Rozpoznano paragon z ${title} (${amount.toFixed(2)} zł). Zakup w dyskoncie — oszczędność ~15% względem sklepów convenience.`;
@@ -714,7 +736,7 @@ export class BudgetStateService {
     const tx: Transaction = { ...newTx, id };
     const idx = this._currentMonthIndex();
 
-    this._months.update(months => {
+    this._months.update((months) => {
       const copy = [...months];
       const targetMonth = { ...copy[idx] };
       targetMonth.transactions = [tx, ...targetMonth.transactions];
@@ -727,11 +749,11 @@ export class BudgetStateService {
 
   async toggleAiSummary() {
     await Haptics.impact({ style: ImpactStyle.Light });
-    this.isAiSummaryOpen.update(v => !v);
+    this.isAiSummaryOpen.update((v) => !v);
   }
 
   async toggleShowAll() {
     await Haptics.impact({ style: ImpactStyle.Light });
-    this.showAllTransactions.update(v => !v);
+    this.showAllTransactions.update((v) => !v);
   }
 }

@@ -7,7 +7,9 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
   imports: [],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    <div class="h-full w-full rounded-3xl bg-[#111827]/90 border border-slate-800/80 p-5 md:p-6 flex flex-col justify-between shadow-2xl backdrop-blur-xl">
+    <div
+      class="h-full w-full rounded-3xl bg-[#111827]/90 border border-slate-800/80 p-5 md:p-6 flex flex-col justify-between shadow-2xl backdrop-blur-xl"
+    >
       <!-- Header -->
       <div class="mb-3">
         <h3 class="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider font-mono">
@@ -21,11 +23,13 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
           <div>
             <div class="flex items-center justify-between text-xs mb-1">
               <span class="font-medium text-slate-300">{{ cat.name }}</span>
-              <span class="font-bold text-slate-400 font-mono text-[11px]">{{ cat.percentage }}%</span>
+              <span class="font-bold text-slate-400 font-mono text-[11px]"
+                >{{ cat.percentage }}%</span
+              >
             </div>
             <!-- Progress Bar -->
             <div class="w-full bg-slate-800/80 h-1.5 rounded-full overflow-hidden">
-              <div 
+              <div
                 class="h-full rounded-full transition-all duration-700"
                 [style.width.%]="cat.percentage"
                 [style.backgroundColor]="cat.color"
@@ -35,7 +39,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
         }
       </div>
     </div>
-  `
+  `,
 })
 export class BudgetCategoriesComponent {
   readonly state = inject(BudgetStateService);

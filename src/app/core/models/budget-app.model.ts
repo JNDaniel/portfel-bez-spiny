@@ -1,20 +1,8 @@
-export type TransactionCategory = 
-  | 'Mieszkanie' 
-  | 'Jedzenie' 
-  | 'Transport' 
-  | 'Zakupy' 
-  | 'Zdrowie' 
-  | 'Rozrywka' 
-  | 'Media' 
-  | 'Inne';
+export type TransactionCategory =
+  'Mieszkanie' | 'Jedzenie' | 'Transport' | 'Zakupy' | 'Zdrowie' | 'Rozrywka' | 'Media' | 'Inne';
 
-export type TransactionTag = 
-  | 'Potrzebne' 
-  | 'Zachcianka' 
-  | 'Cykliczne' 
-  | 'Zbędne' 
-  | 'Służbowe' 
-  | 'Spożywcze';
+export type TransactionTag =
+  'Potrzebne' | 'Zachcianka' | 'Cykliczne' | 'Zbędne' | 'Służbowe' | 'Spożywcze';
 
 export interface TransactionFolder {
   id: string;
@@ -91,25 +79,25 @@ export interface MonthData {
 }
 
 export const CATEGORY_ICONS: Record<TransactionCategory, string> = {
-  'Mieszkanie': 'home-outline',
-  'Jedzenie': 'cafe-outline',
-  'Transport': 'car-outline',
-  'Zakupy': 'bag-handle-outline',
-  'Zdrowie': 'heart-outline',
-  'Rozrywka': 'musical-notes-outline',
-  'Media': 'flash-outline',
-  'Inne': 'ellipsis-horizontal-outline'
+  Mieszkanie: 'home-outline',
+  Jedzenie: 'cafe-outline',
+  Transport: 'car-outline',
+  Zakupy: 'bag-handle-outline',
+  Zdrowie: 'heart-outline',
+  Rozrywka: 'musical-notes-outline',
+  Media: 'flash-outline',
+  Inne: 'ellipsis-horizontal-outline',
 };
 
 export const CATEGORY_COLORS: Record<TransactionCategory, { hex: string; barClass: string }> = {
-  'Mieszkanie': { hex: '#10b981', barClass: 'bg-emerald-500' },
-  'Jedzenie': { hex: '#3b82f6', barClass: 'bg-blue-500' },
-  'Transport': { hex: '#f59e0b', barClass: 'bg-amber-500' },
-  'Zakupy': { hex: '#a855f7', barClass: 'bg-purple-500' },
-  'Zdrowie': { hex: '#f43f5e', barClass: 'bg-rose-500' },
-  'Rozrywka': { hex: '#10b981', barClass: 'bg-emerald-400' },
-  'Media': { hex: '#06b6d4', barClass: 'bg-cyan-500' },
-  'Inne': { hex: '#94a3b8', barClass: 'bg-slate-400' }
+  Mieszkanie: { hex: '#10b981', barClass: 'bg-emerald-500' },
+  Jedzenie: { hex: '#3b82f6', barClass: 'bg-blue-500' },
+  Transport: { hex: '#f59e0b', barClass: 'bg-amber-500' },
+  Zakupy: { hex: '#a855f7', barClass: 'bg-purple-500' },
+  Zdrowie: { hex: '#f43f5e', barClass: 'bg-rose-500' },
+  Rozrywka: { hex: '#10b981', barClass: 'bg-emerald-400' },
+  Media: { hex: '#06b6d4', barClass: 'bg-cyan-500' },
+  Inne: { hex: '#94a3b8', barClass: 'bg-slate-400' },
 };
 
 export const AVAILABLE_TAGS: { name: TransactionTag; activeClass: string }[] = [
@@ -118,5 +106,5 @@ export const AVAILABLE_TAGS: { name: TransactionTag; activeClass: string }[] = [
   { name: 'Cykliczne', activeClass: 'bg-blue-950/80 text-blue-400 border-blue-500/50' },
   { name: 'Zbędne', activeClass: 'bg-rose-950/80 text-rose-400 border-rose-500/50' },
   { name: 'Służbowe', activeClass: 'bg-indigo-950/80 text-indigo-400 border-indigo-500/50' },
-  { name: 'Spożywcze', activeClass: 'bg-teal-950/80 text-teal-400 border-teal-500/50' }
+  { name: 'Spożywcze', activeClass: 'bg-teal-950/80 text-teal-400 border-teal-500/50' },
 ];

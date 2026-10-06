@@ -1,10 +1,10 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { 
-  AVAILABLE_TAGS, 
-  TransactionCategory, 
-  TransactionTag 
+import {
+  AVAILABLE_TAGS,
+  TransactionCategory,
+  TransactionTag,
 } from '../../core/models/budget-app.model';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
@@ -15,7 +15,9 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (state.isAddModalOpen()) {
-      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in"
+      >
         <div
           role="dialog"
           aria-modal="true"
@@ -24,9 +26,11 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
         >
           <!-- Modal Header -->
           <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 id="budget-add-modal-title" class="text-base font-bold text-white">Dodaj nowy wydatek</h3>
-            <button 
-              type="button" 
+            <h3 id="budget-add-modal-title" class="text-base font-bold text-white">
+              Dodaj nowy wydatek
+            </h3>
+            <button
+              type="button"
               (click)="state.isAddModalOpen.set(false)"
               class="text-slate-400 hover:text-white text-sm p-1"
             >
@@ -37,9 +41,11 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
           <!-- Form -->
           <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 text-xs">
             <div>
-              <label class="block text-slate-400 font-semibold mb-1">Nazwa / Tytuł transakcji *</label>
-              <input 
-                type="text" 
+              <label class="block text-slate-400 font-semibold mb-1"
+                >Nazwa / Tytuł transakcji *</label
+              >
+              <input
+                type="text"
                 formControlName="title"
                 placeholder="np. Biedronka, Paliwo, Restauracja"
                 class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-900/90 border border-slate-700 text-white outline-none focus:border-emerald-500"
@@ -49,8 +55,8 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-slate-400 font-semibold mb-1">Kwota (zł) *</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   step="0.01"
                   min="0.01"
                   formControlName="amount"
@@ -61,7 +67,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 
               <div>
                 <label class="block text-slate-400 font-semibold mb-1">Kategoria *</label>
-                <select 
+                <select
                   formControlName="category"
                   class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-900/90 border border-slate-700 text-white outline-none focus:border-emerald-500"
                 >
@@ -79,8 +85,8 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 
             <div>
               <label class="block text-slate-400 font-semibold mb-1">Krótki opis / Notatka</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 formControlName="note"
                 placeholder="np. „głodny po treningu”, „farba do salonu”"
                 class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-900/90 border border-slate-700 text-white outline-none focus:border-emerald-500 italic"
@@ -89,14 +95,20 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 
             <!-- Tags Selector -->
             <div>
-              <label class="block text-slate-400 font-semibold mb-1.5">Charakter zakupu (Tagi)</label>
+              <label class="block text-slate-400 font-semibold mb-1.5"
+                >Charakter zakupu (Tagi)</label
+              >
               <div class="flex flex-wrap gap-2">
                 @for (tag of availableTags; track tag.name) {
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     (click)="toggleTag(tag.name)"
                     class="px-3 py-1 rounded-full text-xs font-semibold border transition flex items-center gap-1"
-                    [ngClass]="selectedTags.includes(tag.name) ? tag.activeClass : 'bg-slate-900/80 text-slate-400 border-slate-700/60 hover:bg-slate-800'"
+                    [ngClass]="
+                      selectedTags.includes(tag.name)
+                        ? tag.activeClass
+                        : 'bg-slate-900/80 text-slate-400 border-slate-700/60 hover:bg-slate-800'
+                    "
                   >
                     @if (selectedTags.includes(tag.name)) {
                       <span>✓</span>
@@ -109,15 +121,15 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 
             <!-- Modal Actions -->
             <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 (click)="state.isAddModalOpen.set(false)"
                 class="px-4 py-2 rounded-xl text-slate-400 hover:text-white font-semibold"
               >
                 Anuluj
               </button>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 [disabled]="form.invalid"
                 class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-bold shadow-lg shadow-emerald-500/20 transition"
               >
@@ -128,7 +140,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
         </div>
       </div>
     }
-  `
+  `,
 })
 export class BudgetAddModalComponent {
   private readonly fb = inject(FormBuilder);
@@ -141,12 +153,12 @@ export class BudgetAddModalComponent {
     title: ['', [Validators.required, Validators.minLength(2)]],
     amount: [null, [Validators.required, Validators.min(0.01)]],
     category: ['Jedzenie', Validators.required],
-    note: ['']
+    note: [''],
   });
 
   toggleTag(tag: TransactionTag) {
     if (this.selectedTags.includes(tag)) {
-      this.selectedTags = this.selectedTags.filter(t => t !== tag);
+      this.selectedTags = this.selectedTags.filter((t) => t !== tag);
     } else {
       this.selectedTags = [...this.selectedTags, tag];
     }
@@ -166,7 +178,7 @@ export class BudgetAddModalComponent {
       date: formattedTime,
       isoDate: now.toISOString().substring(0, 10),
       note: val.note || undefined,
-      tags: this.selectedTags
+      tags: this.selectedTags,
     });
 
     this.form.reset({ category: 'Jedzenie' });

@@ -1,12 +1,12 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { BudgetRepository } from "../repositories/budget.repository";
-import { Budget, CreateBudgetDto, UpdateBudgetDto } from "../models/budget.model";
-import { SettingsService } from "./settings.service";
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { BudgetRepository } from '../repositories/budget.repository';
+import { Budget, CreateBudgetDto, UpdateBudgetDto } from '../models/budget.model';
+import { SettingsService } from './settings.service';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class HttpBudgetService implements BudgetRepository {
   private readonly http = inject(HttpClient);

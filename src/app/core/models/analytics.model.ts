@@ -1,4 +1,4 @@
-import { ExpenseCategory } from "./expense.model";
+import { ExpenseCategory } from './expense.model';
 
 export interface SpendingSummary {
   totalSpent: number;

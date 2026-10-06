@@ -31,7 +31,9 @@ const supabaseUrl = env[`SUPABASE_URL_${target}`]?.trim() ?? '';
 const supabasePublishableKey = env[`SUPABASE_PUBLISHABLE_KEY_${target}`]?.trim() ?? '';
 
 if (supabasePublishableKey && !supabasePublishableKey.startsWith('sb_publishable_')) {
-  fail(`SUPABASE_PUBLISHABLE_KEY_${target} must be a publishable key (sb_publishable_...). Never use a secret or service_role key in the client.`);
+  fail(
+    `SUPABASE_PUBLISHABLE_KEY_${target} must be a publishable key (sb_publishable_...). Never use a secret or service_role key in the client.`,
+  );
 }
 
 if (supabaseUrl) {
@@ -43,12 +45,16 @@ if (supabaseUrl) {
   }
   const isLocalHost = parsed.hostname === '127.0.0.1' || parsed.hostname === 'localhost';
   if (parsed.protocol !== 'https:' && !(isLocalHost && target === 'STAGING' && !branch)) {
-    fail(`SUPABASE_URL_${target} must use https (http is allowed only for a local stack in local builds).`);
+    fail(
+      `SUPABASE_URL_${target} must use https (http is allowed only for a local stack in local builds).`,
+    );
   }
 }
 
 if (dataBackend === 'supabase' && (!supabaseUrl || !supabasePublishableKey)) {
-  fail(`DATA_BACKEND=supabase requires SUPABASE_URL_${target} and SUPABASE_PUBLISHABLE_KEY_${target}.`);
+  fail(
+    `DATA_BACKEND=supabase requires SUPABASE_URL_${target} and SUPABASE_PUBLISHABLE_KEY_${target}.`,
+  );
 }
 
 const config = {

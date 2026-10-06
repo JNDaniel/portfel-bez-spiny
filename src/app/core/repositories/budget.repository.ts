@@ -1,5 +1,5 @@
-import { Observable } from "rxjs";
-import { Budget, CreateBudgetDto, UpdateBudgetDto } from "../models/budget.model";
+import { Observable } from 'rxjs';
+import { Budget, CreateBudgetDto, UpdateBudgetDto } from '../models/budget.model';
 
 export abstract class BudgetRepository {
   abstract getBudgets(): Observable<Budget[]>;

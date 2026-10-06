@@ -1,16 +1,32 @@
-import { Component, ElementRef, ViewChild, computed, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  computed,
+  effect,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { 
-  IonContent, 
-  IonRefresher, 
-  IonRefresherContent, 
-  IonFab, 
-  IonFabButton, 
-  IonIcon 
+import {
+  IonContent,
+  IonRefresher,
+  IonRefresherContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { add, refreshOutline, trendingUp, walletOutline, alertCircleOutline, barChartOutline } from 'ionicons/icons';
+import {
+  add,
+  refreshOutline,
+  trendingUp,
+  walletOutline,
+  alertCircleOutline,
+  barChartOutline,
+} from 'ionicons/icons';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { Chart, registerables } from 'chart.js';
 import { ExpenseService } from '../../core/services/expense.service';
@@ -27,34 +43,41 @@ Chart.register(...registerables);
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterLink, 
-    IonContent, 
-    IonRefresher, 
-    IonRefresherContent, 
-    IonFab, 
-    IonFabButton, 
+    CommonModule,
+    RouterLink,
+    IonContent,
+    IonRefresher,
+    IonRefresherContent,
+    IonFab,
+    IonFabButton,
     IonIcon,
-    StatCardComponent, 
-    ExpenseFormModalComponent
+    StatCardComponent,
+    ExpenseFormModalComponent,
   ],
   template: `
     <ion-content [fullscreen]="true" class="ion-padding-bottom">
       <!-- Native Pull to Refresh -->
       <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
-        <ion-refresher-content pullingIcon="refresh-outline" pullingText="Pull to refresh expenses"></ion-refresher-content>
+        <ion-refresher-content
+          pullingIcon="refresh-outline"
+          pullingText="Pull to refresh expenses"
+        ></ion-refresher-content>
       </ion-refresher>
 
       <div class="space-y-6">
         <!-- Page Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Executive Dashboard</h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Real-time cost tracking, monthly burn rate, and budget allocations.</p>
+            <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Executive Dashboard
+            </h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Real-time cost tracking, monthly burn rate, and budget allocations.
+            </p>
           </div>
           <div class="hidden sm:flex items-center gap-3">
-            <button 
-              type="button" 
+            <button
+              type="button"
               (click)="openAddModal()"
               class="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-md shadow-brand-500/25 transition"
             >
@@ -69,15 +92,26 @@ Chart.register(...registerables);
           <!-- Spent This Month -->
           <app-stat-card
             label="Spent This Month"
-            [value]="settingsService.formatCurrency(expenseService.spendingSummary().spentThisMonth)"
+            [value]="
+              settingsService.formatCurrency(expenseService.spendingSummary().spentThisMonth)
+            "
             [subValue]="expenseService.spendingSummary().burnRatePercentage + '% of target'"
             accentColor="#0284c7"
             iconBgColor="rgba(2, 132, 199, 0.12)"
-            [badgeText]="expenseService.spendingSummary().burnRatePercentage > 100 ? 'Over Budget' : 'On Track'"
-            [badgeType]="expenseService.spendingSummary().burnRatePercentage > 100 ? 'negative' : 'positive'"
+            [badgeText]="
+              expenseService.spendingSummary().burnRatePercentage > 100 ? 'Over Budget' : 'On Track'
+            "
+            [badgeType]="
+              expenseService.spendingSummary().burnRatePercentage > 100 ? 'negative' : 'positive'
+            "
           >
             <svg icon class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+              />
             </svg>
           </app-stat-card>
 
@@ -92,22 +126,47 @@ Chart.register(...registerables);
             badgeType="neutral"
           >
             <svg icon class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
             </svg>
           </app-stat-card>
 
           <!-- Remaining Budget -->
           <app-stat-card
             label="Remaining Available"
-            [value]="settingsService.formatCurrency(expenseService.spendingSummary().remainingBudgetThisMonth)"
-            [subValue]="'Daily burn: ' + settingsService.formatCurrency(expenseService.spendingSummary().averageDailySpend, { hideDecimals: true })"
+            [value]="
+              settingsService.formatCurrency(
+                expenseService.spendingSummary().remainingBudgetThisMonth
+              )
+            "
+            [subValue]="
+              'Daily burn: ' +
+              settingsService.formatCurrency(expenseService.spendingSummary().averageDailySpend, {
+                hideDecimals: true,
+              })
+            "
             accentColor="#10b981"
             iconBgColor="rgba(16, 185, 129, 0.12)"
-            [badgeText]="expenseService.spendingSummary().remainingBudgetThisMonth > 0 ? 'Safe' : 'Depleted'"
-            [badgeType]="expenseService.spendingSummary().remainingBudgetThisMonth > 0 ? 'positive' : 'negative'"
+            [badgeText]="
+              expenseService.spendingSummary().remainingBudgetThisMonth > 0 ? 'Safe' : 'Depleted'
+            "
+            [badgeType]="
+              expenseService.spendingSummary().remainingBudgetThisMonth > 0
+                ? 'positive'
+                : 'negative'
+            "
           >
             <svg icon class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
           </app-stat-card>
 
@@ -122,7 +181,12 @@ Chart.register(...registerables);
             badgeType="warning"
           >
             <svg icon class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
             </svg>
           </app-stat-card>
         </div>
@@ -133,10 +197,16 @@ Chart.register(...registerables);
           <div class="lg:col-span-2 glass-card p-5">
             <div class="flex items-center justify-between mb-4">
               <div>
-                <h2 class="text-sm font-bold text-slate-900 dark:text-white">6-Month Spending vs Budget</h2>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400">Historical trend across previous periods</p>
+                <h2 class="text-sm font-bold text-slate-900 dark:text-white">
+                  6-Month Spending vs Budget
+                </h2>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                  Historical trend across previous periods
+                </p>
               </div>
-              <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              <span
+                class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+              >
                 Monthly Aggregation
               </span>
             </div>
@@ -150,7 +220,9 @@ Chart.register(...registerables);
             <div class="flex items-center justify-between mb-4">
               <div>
                 <h2 class="text-sm font-bold text-slate-900 dark:text-white">Spend by Category</h2>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400">August 2026 Distribution</p>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                  August 2026 Distribution
+                </p>
               </div>
             </div>
             <div class="relative h-48 w-full flex items-center justify-center">
@@ -162,10 +234,17 @@ Chart.register(...registerables);
               @for (cat of expenseService.categoryBreakdowns(); track cat.category) {
                 <div class="flex items-center justify-between text-xs">
                   <div class="flex items-center gap-2 truncate">
-                    <span class="w-2.5 h-2.5 rounded-full shrink-0" [style.backgroundColor]="cat.color"></span>
-                    <span class="text-slate-700 dark:text-slate-300 truncate">{{ cat.category }}</span>
+                    <span
+                      class="w-2.5 h-2.5 rounded-full shrink-0"
+                      [style.backgroundColor]="cat.color"
+                    ></span>
+                    <span class="text-slate-700 dark:text-slate-300 truncate">{{
+                      cat.category
+                    }}</span>
                   </div>
-                  <span class="font-bold text-slate-900 dark:text-white shrink-0">{{ settingsService.formatCurrency(cat.amount, { hideDecimals: true }) }}</span>
+                  <span class="font-bold text-slate-900 dark:text-white shrink-0">{{
+                    settingsService.formatCurrency(cat.amount, { hideDecimals: true })
+                  }}</span>
                 </div>
               }
             </div>
@@ -177,31 +256,50 @@ Chart.register(...registerables);
           <!-- Budget Health Monitor -->
           <div class="glass-card p-5">
             <div class="flex items-center justify-between mb-4">
-              <h2 class="text-sm font-bold text-slate-900 dark:text-white">Category Budget Limits</h2>
-              <a routerLink="/budgets" class="text-xs font-semibold text-brand-600 hover:text-brand-500">Manage &rarr;</a>
+              <h2 class="text-sm font-bold text-slate-900 dark:text-white">
+                Category Budget Limits
+              </h2>
+              <a
+                routerLink="/budgets"
+                class="text-xs font-semibold text-brand-600 hover:text-brand-500"
+                >Manage &rarr;</a
+              >
             </div>
 
             <div class="space-y-4">
               @for (status of budgetService.budgetStatuses().slice(0, 4); track status.category) {
                 <div>
                   <div class="flex items-center justify-between text-xs mb-1">
-                    <span class="font-medium text-slate-700 dark:text-slate-300">{{ status.category }}</span>
-                    <span class="font-semibold" [ngClass]="{
-                      'text-rose-500': status.isOverBudget,
-                      'text-amber-500': status.isNearLimit,
-                      'text-slate-600 dark:text-slate-400': !status.isOverBudget && !status.isNearLimit
-                    }">
-                      {{ settingsService.formatCurrency(status.spent, { hideDecimals: true }) }} / {{ settingsService.formatCurrency(status.budget.monthlyLimit, { hideDecimals: true }) }}
+                    <span class="font-medium text-slate-700 dark:text-slate-300">{{
+                      status.category
+                    }}</span>
+                    <span
+                      class="font-semibold"
+                      [ngClass]="{
+                        'text-rose-500': status.isOverBudget,
+                        'text-amber-500': status.isNearLimit,
+                        'text-slate-600 dark:text-slate-400':
+                          !status.isOverBudget && !status.isNearLimit,
+                      }"
+                    >
+                      {{ settingsService.formatCurrency(status.spent, { hideDecimals: true }) }} /
+                      {{
+                        settingsService.formatCurrency(status.budget.monthlyLimit, {
+                          hideDecimals: true,
+                        })
+                      }}
                     </span>
                   </div>
-                  <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-                    <div 
+                  <div
+                    class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden"
+                  >
+                    <div
                       class="h-full rounded-full transition-all duration-500"
                       [style.width.%]="Math.min(100, status.percentageUsed)"
                       [ngClass]="{
                         'bg-rose-500': status.isOverBudget,
                         'bg-amber-500': status.isNearLimit,
-                        'bg-emerald-500': !status.isOverBudget && !status.isNearLimit
+                        'bg-emerald-500': !status.isOverBudget && !status.isNearLimit,
                       }"
                     ></div>
                   </div>
@@ -214,15 +312,25 @@ Chart.register(...registerables);
           <div class="lg:col-span-2 glass-card p-5">
             <div class="flex items-center justify-between mb-4">
               <div>
-                <h2 class="text-sm font-bold text-slate-900 dark:text-white">Recent Transactions</h2>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400">Latest company expenses</p>
+                <h2 class="text-sm font-bold text-slate-900 dark:text-white">
+                  Recent Transactions
+                </h2>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                  Latest company expenses
+                </p>
               </div>
-              <a routerLink="/expenses" class="text-xs font-semibold text-brand-600 hover:text-brand-500">View All &rarr;</a>
+              <a
+                routerLink="/expenses"
+                class="text-xs font-semibold text-brand-600 hover:text-brand-500"
+                >View All &rarr;</a
+              >
             </div>
 
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs">
-                <thead class="text-slate-400 uppercase text-[10px] font-semibold border-b border-slate-100 dark:border-slate-800">
+                <thead
+                  class="text-slate-400 uppercase text-[10px] font-semibold border-b border-slate-100 dark:border-slate-800"
+                >
                   <tr>
                     <th class="pb-2">Expense / Vendor</th>
                     <th class="pb-2">Category</th>
@@ -235,25 +343,40 @@ Chart.register(...registerables);
                   @for (exp of recentExpenses(); track exp.id) {
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
                       <td class="py-2.5 pr-2">
-                        <div class="font-semibold text-slate-900 dark:text-white truncate max-w-xs">{{ exp.title }}</div>
+                        <div class="font-semibold text-slate-900 dark:text-white truncate max-w-xs">
+                          {{ exp.title }}
+                        </div>
                         <div class="text-[11px] text-slate-400 truncate">{{ exp.vendor }}</div>
                       </td>
                       <td class="py-2.5 pr-2">
-                        <span class="px-2 py-0.5 rounded-md text-[11px] font-medium" [ngClass]="getCategoryBadgeClass(exp.category)">
+                        <span
+                          class="px-2 py-0.5 rounded-md text-[11px] font-medium"
+                          [ngClass]="getCategoryBadgeClass(exp.category)"
+                        >
                           {{ exp.category }}
                         </span>
                       </td>
-                      <td class="py-2.5 pr-2 text-slate-500 dark:text-slate-400 whitespace-nowrap">{{ exp.date }}</td>
+                      <td class="py-2.5 pr-2 text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                        {{ exp.date }}
+                      </td>
                       <td class="py-2.5 pr-2">
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase" [ngClass]="{
-                          'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400': exp.status === 'cleared',
-                          'bg-amber-500/10 text-amber-600 dark:text-amber-400': exp.status === 'pending',
-                          'bg-purple-500/10 text-purple-600 dark:text-purple-400': exp.status === 'recurring'
-                        }">
+                        <span
+                          class="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase"
+                          [ngClass]="{
+                            'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400':
+                              exp.status === 'cleared',
+                            'bg-amber-500/10 text-amber-600 dark:text-amber-400':
+                              exp.status === 'pending',
+                            'bg-purple-500/10 text-purple-600 dark:text-purple-400':
+                              exp.status === 'recurring',
+                          }"
+                        >
                           {{ exp.status }}
                         </span>
                       </td>
-                      <td class="py-2.5 text-right font-bold text-slate-900 dark:text-white whitespace-nowrap">
+                      <td
+                        class="py-2.5 text-right font-bold text-slate-900 dark:text-white whitespace-nowrap"
+                      >
                         {{ settingsService.formatCurrency(exp.amount) }}
                       </td>
                     </tr>
@@ -278,7 +401,7 @@ Chart.register(...registerables);
       [isOpen]="isAddModalOpen()"
       (close)="isAddModalOpen.set(false)"
     ></app-expense-form-modal>
-  `
+  `,
 })
 export class DashboardComponent {
   readonly expenseService = inject(ExpenseService);
@@ -299,13 +422,20 @@ export class DashboardComponent {
   });
 
   constructor() {
-    addIcons({ add, refreshOutline, trendingUp, walletOutline, alertCircleOutline, barChartOutline });
+    addIcons({
+      add,
+      refreshOutline,
+      trendingUp,
+      walletOutline,
+      alertCircleOutline,
+      barChartOutline,
+    });
 
     effect(() => {
       const trends = this.expenseService.monthlyTrends();
       const categories = this.expenseService.categoryBreakdowns();
       const symbol = this.settingsService.currencySymbol();
-      
+
       setTimeout(() => {
         this.renderTrendChart(trends, symbol);
         this.renderCategoryChart(categories);
@@ -342,26 +472,26 @@ export class DashboardComponent {
     this.trendChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: trends.map(t => t.label),
+        labels: trends.map((t) => t.label),
         datasets: [
           {
             label: 'Actual Spend',
-            data: trends.map(t => t.total),
+            data: trends.map((t) => t.total),
             backgroundColor: 'rgba(2, 132, 199, 0.8)',
             borderRadius: 8,
-            borderSkipped: false
+            borderSkipped: false,
           },
           {
             type: 'line',
             label: 'Budget Ceiling',
-            data: trends.map(t => t.budget),
+            data: trends.map((t) => t.budget),
             borderColor: '#ef4444',
             borderWidth: 2,
             borderDash: [5, 5],
             fill: false,
-            pointRadius: 0
-          }
-        ]
+            pointRadius: 0,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -369,27 +499,29 @@ export class DashboardComponent {
         plugins: {
           legend: {
             position: 'top',
-            labels: { font: { family: 'Plus Jakarta Sans', size: 11 } }
+            labels: { font: { family: 'Plus Jakarta Sans', size: 11 } },
           },
           tooltip: {
             callbacks: {
               label: (item) => {
                 const val = item.parsed?.y;
-                return val !== null && val !== undefined ? (' ' + item.dataset.label + ': ' + symbol + val.toLocaleString()) : '';
-              }
-            }
-          }
+                return val !== null && val !== undefined
+                  ? ' ' + item.dataset.label + ': ' + symbol + val.toLocaleString()
+                  : '';
+              },
+            },
+          },
         },
         scales: {
           x: { grid: { display: false } },
           y: {
             beginAtZero: true,
             ticks: {
-              callback: (val) => symbol + (Number(val) / 1000) + 'k'
-            }
-          }
-        }
-      }
+              callback: (val) => symbol + Number(val) / 1000 + 'k',
+            },
+          },
+        },
+      },
     });
   }
 
@@ -403,24 +535,26 @@ export class DashboardComponent {
     this.categoryChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: categories.map(c => c.category),
+        labels: categories.map((c) => c.category),
         datasets: [
           {
-            data: categories.map(c => c.amount),
-            backgroundColor: categories.map(c => c.color),
+            data: categories.map((c) => c.amount),
+            backgroundColor: categories.map((c) => c.color),
             borderWidth: 2,
-            borderColor: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff'
-          }
-        ]
+            borderColor: document.documentElement.classList.contains('dark')
+              ? '#0f172a'
+              : '#ffffff',
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         cutout: '70%',
         plugins: {
-          legend: { display: false }
-        }
-      }
+          legend: { display: false },
+        },
+      },
     });
   }
 }

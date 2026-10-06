@@ -1,0 +1,12 @@
+# Prettier also skips everything in .gitignore.
+android/
+dist/
+.angular/
+coverage/
+playwright-report/
+test-results/
+supabase/
+package-lock.json
+context/
+docs/
+*.md

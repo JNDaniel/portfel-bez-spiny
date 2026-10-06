@@ -1,5 +1,10 @@
-import { Observable } from "rxjs";
-import { CreateExpenseDto, Expense, ExpenseFilter, UpdateExpenseDto } from "../models/expense.model";
+import { Observable } from 'rxjs';
+import {
+  CreateExpenseDto,
+  Expense,
+  ExpenseFilter,
+  UpdateExpenseDto,
+} from '../models/expense.model';
 
 export abstract class ExpenseRepository {
   abstract getExpenses(filter?: ExpenseFilter): Observable<Expense[]>;

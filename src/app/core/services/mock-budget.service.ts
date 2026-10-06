@@ -1,16 +1,16 @@
-import { Injectable, inject } from "@angular/core";
-import { Observable, of, throwError } from "rxjs";
-import { delay } from "rxjs/operators";
-import { BudgetRepository } from "../repositories/budget.repository";
-import { Budget, CreateBudgetDto, UpdateBudgetDto } from "../models/budget.model";
-import { INITIAL_SAMPLE_BUDGETS } from "./mock-data.seed";
-import { SettingsService } from "./settings.service";
+import { Injectable, inject } from '@angular/core';
+import { Observable, of, throwError } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { BudgetRepository } from '../repositories/budget.repository';
+import { Budget, CreateBudgetDto, UpdateBudgetDto } from '../models/budget.model';
+import { INITIAL_SAMPLE_BUDGETS } from './mock-data.seed';
+import { SettingsService } from './settings.service';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class MockBudgetService implements BudgetRepository {
-  private readonly STORAGE_KEY = "costflow_budgets_v1";
+  private readonly STORAGE_KEY = 'costflow_budgets_v1';
   private readonly settingsService = inject(SettingsService);
 
   private getLatency(): number {
@@ -40,7 +40,7 @@ export class MockBudgetService implements BudgetRepository {
 
   createBudget(dto: CreateBudgetDto): Observable<Budget> {
     const list = this.loadFromStorage();
-    const existingIndex = list.findIndex(b => b.category === dto.category);
+    const existingIndex = list.findIndex((b) => b.category === dto.category);
     const now = new Date().toISOString();
 
     if (existingIndex !== -1) {
@@ -49,7 +49,7 @@ export class MockBudgetService implements BudgetRepository {
         monthlyLimit: dto.monthlyLimit,
         alertThresholdPercent: dto.alertThresholdPercent,
         notes: dto.notes,
-        updatedAt: now
+        updatedAt: now,
       };
       this.saveToStorage(list);
       return of(list[existingIndex]).pipe(delay(this.getLatency()));
@@ -57,8 +57,8 @@ export class MockBudgetService implements BudgetRepository {
 
     const newBudget: Budget = {
       ...dto,
-      id: "bud-" + Date.now().toString(36),
-      updatedAt: now
+      id: 'bud-' + Date.now().toString(36),
+      updatedAt: now,
     };
     list.push(newBudget);
     this.saveToStorage(list);
@@ -67,14 +67,14 @@ export class MockBudgetService implements BudgetRepository {
 
   updateBudget(id: string, dto: UpdateBudgetDto): Observable<Budget> {
     const list = this.loadFromStorage();
-    const index = list.findIndex(b => b.id === id);
+    const index = list.findIndex((b) => b.id === id);
     if (index === -1) {
       return throwError(() => new Error(`Budget with id ${id} not found`));
     }
     const updated: Budget = {
       ...list[index],
       ...dto,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     list[index] = updated;
     this.saveToStorage(list);
@@ -83,7 +83,7 @@ export class MockBudgetService implements BudgetRepository {
 
   deleteBudget(id: string): Observable<boolean> {
     const list = this.loadFromStorage();
-    const filtered = list.filter(b => b.id !== id);
+    const filtered = list.filter((b) => b.id !== id);
     this.saveToStorage(filtered);
     return of(true).pipe(delay(this.getLatency()));
   }

@@ -29,7 +29,10 @@ async function run() {
   if (await firstTx.isVisible()) {
     await firstTx.click();
     await page.waitForTimeout(600);
-    await page.screenshot({ path: path.join(outDir, '03_transaction_expanded.png'), fullPage: false });
+    await page.screenshot({
+      path: path.join(outDir, '03_transaction_expanded.png'),
+      fullPage: false,
+    });
     console.log('✅ Captured 03_transaction_expanded.png');
   }
 
@@ -38,7 +41,10 @@ async function run() {
   if (await pushBtn.isVisible()) {
     await pushBtn.click();
     await page.waitForTimeout(500);
-    await page.screenshot({ path: path.join(outDir, '04_bank_push_simulator.png'), fullPage: false });
+    await page.screenshot({
+      path: path.join(outDir, '04_bank_push_simulator.png'),
+      fullPage: false,
+    });
     console.log('✅ Captured 04_bank_push_simulator.png');
     // Dismiss push
     const dismissBtn = page.getByRole('button', { name: 'Ignoruj' });
@@ -51,7 +57,10 @@ async function run() {
     await aiSummaryBtn.scrollIntoViewIfNeeded();
     await aiSummaryBtn.click();
     await page.waitForTimeout(600);
-    await page.screenshot({ path: path.join(outDir, '05_ai_summary_insights.png'), fullPage: false });
+    await page.screenshot({
+      path: path.join(outDir, '05_ai_summary_insights.png'),
+      fullPage: false,
+    });
     console.log('✅ Captured 05_ai_summary_insights.png');
   }
 
@@ -60,7 +69,10 @@ async function run() {
   if (await scannerBtn.isVisible()) {
     await scannerBtn.click();
     await page.waitForTimeout(600);
-    await page.screenshot({ path: path.join(outDir, '06_receipt_scanner_ocr.png'), fullPage: false });
+    await page.screenshot({
+      path: path.join(outDir, '06_receipt_scanner_ocr.png'),
+      fullPage: false,
+    });
     console.log('✅ Captured 06_receipt_scanner_ocr.png');
     // Close modal
     const closeBtn = page.locator('app-budget-scanner-modal button:has-text("✕")');
@@ -72,7 +84,10 @@ async function run() {
   if (await voiceBtn.isVisible()) {
     await voiceBtn.click();
     await page.waitForTimeout(600);
-    await page.screenshot({ path: path.join(outDir, '07_voice_ai_assistant.png'), fullPage: false });
+    await page.screenshot({
+      path: path.join(outDir, '07_voice_ai_assistant.png'),
+      fullPage: false,
+    });
     console.log('✅ Captured 07_voice_ai_assistant.png');
     // Close modal
     const closeBtn = page.locator('app-budget-voice-modal button:has-text("✕")');
@@ -84,7 +99,10 @@ async function run() {
   if (await subBtn.isVisible()) {
     await subBtn.click();
     await page.waitForTimeout(600);
-    await page.screenshot({ path: path.join(outDir, '08_subscriptions_tracker.png'), fullPage: false });
+    await page.screenshot({
+      path: path.join(outDir, '08_subscriptions_tracker.png'),
+      fullPage: false,
+    });
     console.log('✅ Captured 08_subscriptions_tracker.png');
     // Close drawer
     const closeBtn = page.locator('app-budget-subscriptions button:has-text("✕")');
@@ -113,7 +131,10 @@ async function run() {
   const mobilePage = await mobileContext.newPage();
   await mobilePage.goto('http://localhost:4200', { waitUntil: 'networkidle' });
   await mobilePage.waitForTimeout(1000);
-  await mobilePage.screenshot({ path: path.join(outDir, '02_dashboard_mobile.png'), fullPage: false });
+  await mobilePage.screenshot({
+    path: path.join(outDir, '02_dashboard_mobile.png'),
+    fullPage: false,
+  });
   console.log('✅ Captured 02_dashboard_mobile.png');
 
   await mobileContext.close();
@@ -121,7 +142,7 @@ async function run() {
   console.log('🎉 All screenshots captured successfully!');
 }
 
-run().catch(err => {
+run().catch((err) => {
   console.error('Error capturing screenshots:', err);
   process.exit(1);
 });

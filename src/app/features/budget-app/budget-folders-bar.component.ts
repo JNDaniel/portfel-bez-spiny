@@ -12,13 +12,15 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
     <div class="w-full space-y-2">
       <!-- Section Title & Add Action -->
       <div class="flex items-center justify-between px-1">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono flex items-center gap-1.5">
+        <span
+          class="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono flex items-center gap-1.5"
+        >
           <span>📁</span>
           <span>Foldery & Wycieczki</span>
         </span>
 
-        <button 
-          type="button" 
+        <button
+          type="button"
           (click)="openCreateFolderModal()"
           class="text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1"
         >
@@ -30,11 +32,15 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
       <!-- Folders Horizontal Carousel -->
       <div class="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none">
         <!-- 'Wszystkie' (All) Chip -->
-        <button 
+        <button
           type="button"
           (click)="state.selectFolder(null)"
           class="shrink-0 px-3.5 py-2 rounded-2xl border text-xs font-semibold flex items-center gap-2 transition backdrop-blur-md"
-          [ngClass]="state.selectedFolderId() === null ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-lg shadow-emerald-500/10' : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:border-slate-700'"
+          [ngClass]="
+            state.selectedFolderId() === null
+              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-lg shadow-emerald-500/10'
+              : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:border-slate-700'
+          "
         >
           <span>✨</span>
           <span>Wszystkie transakcje</span>
@@ -42,11 +48,15 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
         <!-- Folder Items -->
         @for (f of state.folders(); track f.id) {
-          <div 
+          <div
             class="shrink-0 flex items-center rounded-2xl border transition group"
-            [ngClass]="state.selectedFolderId() === f.id ? 'bg-slate-800/90 text-white border-emerald-500 shadow-md shadow-emerald-500/20' : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:border-slate-700'"
+            [ngClass]="
+              state.selectedFolderId() === f.id
+                ? 'bg-slate-800/90 text-white border-emerald-500 shadow-md shadow-emerald-500/20'
+                : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:border-slate-700'
+            "
           >
-            <button 
+            <button
               type="button"
               (click)="state.selectFolder(f.id)"
               class="px-3 py-2 text-xs font-semibold flex items-center gap-2"
@@ -56,7 +66,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
             </button>
 
             <!-- Delete Folder button -->
-            <button 
+            <button
               type="button"
               (click)="deleteFolder(f.id, $event)"
               title="Usuń folder"
@@ -70,15 +80,22 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
       <!-- Active Folder Banner (if filtered) -->
       @if (state.activeFolder(); as folder) {
-        <div class="p-3 rounded-2xl bg-slate-900/90 border border-emerald-500/40 flex items-center justify-between text-xs animate-in fade-in">
+        <div
+          class="p-3 rounded-2xl bg-slate-900/90 border border-emerald-500/40 flex items-center justify-between text-xs animate-in fade-in"
+        >
           <div class="flex items-center gap-2.5">
             <span class="text-lg">{{ folder.emoji }}</span>
             <div>
               <span class="font-bold text-white block">{{ folder.name }}</span>
-              <span class="text-slate-400 text-[11px]">Suma w folderze: <strong class="text-emerald-400 font-mono">{{ state.activeFolderTotal().toFixed(2) }} zł</strong></span>
+              <span class="text-slate-400 text-[11px]"
+                >Suma w folderze:
+                <strong class="text-emerald-400 font-mono"
+                  >{{ state.activeFolderTotal().toFixed(2) }} zł</strong
+                ></span
+              >
             </div>
           </div>
-          <button 
+          <button
             type="button"
             (click)="state.selectFolder(null)"
             class="text-[11px] font-semibold text-slate-400 hover:text-white px-2.5 py-1 rounded-xl bg-slate-800"
@@ -88,7 +105,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
         </div>
       }
     </div>
-  `
+  `,
 })
 export class BudgetFoldersBarComponent {
   readonly state = inject(BudgetStateService);

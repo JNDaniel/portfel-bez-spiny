@@ -5,7 +5,16 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const bundleDir = resolve(root, 'dist/cost-management-app/browser');
-const textExtensions = new Set(['.js', '.mjs', '.css', '.html', '.json', '.map', '.txt', '.webmanifest']);
+const textExtensions = new Set([
+  '.js',
+  '.mjs',
+  '.css',
+  '.html',
+  '.json',
+  '.map',
+  '.txt',
+  '.webmanifest',
+]);
 
 const patterns = [
   { name: 'Supabase secret key', regex: /sb_secret_[A-Za-z0-9_-]+/ },

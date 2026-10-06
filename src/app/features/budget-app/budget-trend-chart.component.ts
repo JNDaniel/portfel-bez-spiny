@@ -1,4 +1,11 @@
-import { Component, ElementRef, ViewChild, effect, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  effect,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
@@ -10,16 +17,24 @@ Chart.register(...registerables);
   imports: [],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    <div class="h-full w-full rounded-3xl bg-[#111827]/90 border border-slate-800/80 p-5 md:p-6 flex flex-col justify-between shadow-2xl backdrop-blur-xl">
+    <div
+      class="h-full w-full rounded-3xl bg-[#111827]/90 border border-slate-800/80 p-5 md:p-6 flex flex-col justify-between shadow-2xl backdrop-blur-xl"
+    >
       <!-- Header -->
       <div class="flex items-start justify-between mb-2">
         <div>
-          <h3 class="text-xs md:text-sm font-bold text-slate-300 uppercase tracking-wider font-mono">
+          <h3
+            class="text-xs md:text-sm font-bold text-slate-300 uppercase tracking-wider font-mono"
+          >
             WYDATKI — {{ state.currentMonth().label.split(' ')[0].toUpperCase() }}
           </h3>
           <div class="flex items-center gap-1.5 mt-1 text-xs font-semibold text-rose-400">
             <span>📈</span>
-            <span>{{ state.currentMonth().vsPreviousMonthPercent }}% {{ state.currentMonth().vsPreviousMonthDirection === 'more' ? 'więcej' : 'mniej' }} vs poprzedni miesiąc</span>
+            <span
+              >{{ state.currentMonth().vsPreviousMonthPercent }}%
+              {{ state.currentMonth().vsPreviousMonthDirection === 'more' ? 'więcej' : 'mniej' }} vs
+              poprzedni miesiąc</span
+            >
           </div>
         </div>
       </div>
@@ -29,7 +44,7 @@ Chart.register(...registerables);
         <canvas #chartCanvas></canvas>
       </div>
     </div>
-  `
+  `,
 })
 export class BudgetTrendChartComponent {
   readonly state = inject(BudgetStateService);
@@ -60,10 +75,10 @@ export class BudgetTrendChartComponent {
     this.chart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: points.map(p => p.day),
+        labels: points.map((p) => p.day),
         datasets: [
           {
-            data: points.map(p => p.amount),
+            data: points.map((p) => p.amount),
             borderColor: '#34d399',
             borderWidth: 2.5,
             tension: 0.45,
@@ -73,9 +88,9 @@ export class BudgetTrendChartComponent {
             pointHoverRadius: 5,
             pointHoverBackgroundColor: '#34d399',
             pointHoverBorderColor: '#ffffff',
-            pointHoverBorderWidth: 2
-          }
-        ]
+            pointHoverBorderWidth: 2,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -90,31 +105,31 @@ export class BudgetTrendChartComponent {
             padding: 8,
             displayColors: false,
             callbacks: {
-              label: (item) => ` ${item.parsed?.y?.toLocaleString()} zł`
-            }
-          }
+              label: (item) => ` ${item.parsed?.y?.toLocaleString()} zł`,
+            },
+          },
         },
         scales: {
           x: {
             grid: { display: false },
             ticks: {
               color: '#64748b',
-              font: { size: 10, family: 'JetBrains Mono, monospace' }
-            }
+              font: { size: 10, family: 'JetBrains Mono, monospace' },
+            },
           },
           y: {
             beginAtZero: true,
             grid: {
-              color: 'rgba(51, 65, 85, 0.25)'
+              color: 'rgba(51, 65, 85, 0.25)',
             },
             ticks: {
               color: '#64748b',
               font: { size: 10, family: 'JetBrains Mono, monospace' },
-              callback: (val) => `${(Number(val) / 1000).toFixed(1)}k`
-            }
-          }
-        }
-      }
+              callback: (val) => `${(Number(val) / 1000).toFixed(1)}k`,
+            },
+          },
+        },
+      },
     });
   }
 }
