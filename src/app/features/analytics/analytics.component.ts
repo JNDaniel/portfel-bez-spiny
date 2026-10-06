@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, effect, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, effect, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IonContent } from '@ionic/angular/standalone';
 import { Chart, registerables } from 'chart.js';
 import { ExpenseService } from '../../core/services/expense.service';
@@ -10,6 +10,7 @@ Chart.register(...registerables);
   selector: 'app-analytics',
   standalone: true,
   imports: [IonContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ion-content [fullscreen]="true" class="ion-padding-bottom">
       <div class="space-y-6">

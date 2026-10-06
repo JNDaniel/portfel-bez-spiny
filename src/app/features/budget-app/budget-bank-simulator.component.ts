@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
 @Component({
   selector: 'app-budget-bank-simulator',
   standalone: true,
   imports: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <!-- Top Floating Bank Notification Card (Matching Android / iOS Push) -->
     @if (state.activeBankNotification(); as notif) {

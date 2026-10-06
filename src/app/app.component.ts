@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { IonApp } from '@ionic/angular/standalone';
 import { ToastComponent } from './shared/components/toast/toast.component';
@@ -12,6 +12,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
     ToastComponent
   ],
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.component.css'
 })
 export class AppComponent {}

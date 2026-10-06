@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
@@ -13,6 +13,7 @@ import { SupportedCurrency } from '../../core/models/settings.model';
   selector: 'app-settings',
   standalone: true,
   imports: [CommonModule, FormsModule, IonContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ion-content [fullscreen]="true" class="ion-padding-bottom">
       <div class="max-w-4xl space-y-8">

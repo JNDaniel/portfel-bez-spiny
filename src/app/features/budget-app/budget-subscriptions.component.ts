@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
 @Component({
   selector: 'app-budget-subscriptions',
   standalone: true,
   imports: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (state.isSubscriptionsOpen()) {
       <div class="w-full rounded-3xl bg-[#111827]/95 border border-blue-500/30 p-5 md:p-6 shadow-2xl backdrop-blur-xl space-y-4 animate-in fade-in zoom-in-95 duration-200">

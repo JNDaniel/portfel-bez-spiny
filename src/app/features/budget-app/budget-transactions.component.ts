@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
@@ -48,6 +48,7 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
       padding: 0 !important;
     }
   `],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <!-- Folders Bar (Wycieczki / Grupy) -->
     <app-budget-folders-bar></app-budget-folders-bar>

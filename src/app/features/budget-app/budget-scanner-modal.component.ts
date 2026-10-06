@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
@@ -14,6 +14,7 @@ interface ScannedReceiptData {
   selector: 'app-budget-scanner-modal',
   standalone: true,
   imports: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (state.isScannerModalOpen()) {
       <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in">

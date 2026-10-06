@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
@@ -7,6 +7,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
   selector: 'app-budget-folders-bar',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="w-full space-y-2">
       <!-- Section Title & Add Action -->

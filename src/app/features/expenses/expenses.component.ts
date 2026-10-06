@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
@@ -31,6 +31,7 @@ import { ExpenseFormModalComponent } from '../../shared/components/expense-form-
     IonIcon,
     ExpenseFormModalComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ion-content [fullscreen]="true" class="ion-padding-bottom">
       <!-- Native Pull to Refresh -->

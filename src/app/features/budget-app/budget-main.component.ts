@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { 
   IonContent, 
   IonRefresher, 
@@ -47,6 +47,7 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
     BudgetVoiceModalComponent,
     BudgetCreateFolderModalComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ion-content [fullscreen]="true" class="bg-[#0b0f19] text-slate-100">
       <!-- Simulated Bank Push Notification Floating Bar -->

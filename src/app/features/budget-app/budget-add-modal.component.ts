@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { 
@@ -12,6 +12,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
   selector: 'app-budget-add-modal',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (state.isAddModalOpen()) {
       <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">

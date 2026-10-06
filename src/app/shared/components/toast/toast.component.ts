@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { NotificationService } from "../../../core/services/notification.service";
 
@@ -6,6 +6,7 @@ import { NotificationService } from "../../../core/services/notification.service
   selector: "app-toast",
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
       @for (toast of notificationService.toasts(); track toast.id) {

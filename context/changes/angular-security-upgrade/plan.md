@@ -488,34 +488,34 @@ No data migration. Rollback is per phase: each phase is its own commit, so rever
 
 #### Automated
 
-- [x] 3.1 `npm ls @angular/core @angular/cli @angular/build typescript` shows 21.2.x and TypeScript 5.9.x
-- [x] 3.2 `src/app/app.config.ts` still provides `provideZoneChangeDetection({ eventCoalescing: true })`
-- [x] 3.3 `npm run build` passes, including the post-build secret scan
-- [x] 3.4 `npm test -- --watch=false` passes
-- [x] 3.5 `npm run test:e2e` passes on both projects
+- [x] 3.1 `npm ls @angular/core @angular/cli @angular/build typescript` shows 21.2.x and TypeScript 5.9.x — a78f125
+- [x] 3.2 `src/app/app.config.ts` still provides `provideZoneChangeDetection({ eventCoalescing: true })` — a78f125
+- [x] 3.3 `npm run build` passes, including the post-build secret scan — a78f125
+- [x] 3.4 `npm test -- --watch=false` passes — a78f125
+- [x] 3.5 `npm run test:e2e` passes on both projects — a78f125
 
 #### Manual
 
-- [x] 3.6 Dashboard and expense entry behave as before on Pixel 7 viewport
+- [x] 3.6 Dashboard and expense entry behave as before on Pixel 7 viewport — a78f125
 
 ### Phase 4: Angular 21 → 22.2 and TypeScript 6
 
 #### Automated
 
-- [ ] 4.1 `npm ls @angular/core @angular/cli @angular/build typescript` shows 22.2.x and TypeScript 6.0.x
-- [ ] 4.2 `npm ls @ionic/angular` shows 8.8.19 with no peer-dependency errors
-- [ ] 4.3 `src/app/app.config.ts` still provides `provideZoneChangeDetection({ eventCoalescing: true })`
-- [ ] 4.4 `npm audit` lists no `@angular/*` packages
-- [ ] 4.5 `npm run build` passes, including the post-build secret scan
-- [ ] 4.6 `npm test -- --watch=false` passes
-- [ ] 4.7 `npm run test:e2e` passes on both projects
-- [ ] 4.8 `npm run cap:sync` completes without errors
+- [x] 4.1 `npm ls @angular/core @angular/cli @angular/build typescript` shows 22.2.x and TypeScript 6.0.x
+- [x] 4.2 `npm ls @ionic/angular` shows 8.8.19 with no peer-dependency errors
+- [x] 4.3 `src/app/app.config.ts` still provides `provideZoneChangeDetection({ eventCoalescing: true })`
+- [x] 4.4 `npm audit` lists no `@angular/*` packages
+- [x] 4.5 `npm run build` passes, including the post-build secret scan
+- [x] 4.6 `npm test -- --watch=false` passes
+- [x] 4.7 `npm run test:e2e` passes on both projects
+- [x] 4.8 `npm run cap:sync` completes without errors
 
 #### Manual
 
-- [ ] 4.9 Dashboard, expense entry, occasion expenses not triggering the daily-budget warning, and Safe-to-Spend visibility without scrolling verified on Pixel 7 viewport
-- [ ] 4.10 Ionic components (pull-to-refresh, floating action button, sliding item options, icons) behave as before on Ionic 8.8.19
-- [ ] 4.11 Production build output size is within roughly 10% of the Phase 1 build
+- [x] 4.9 Dashboard, expense entry, occasion expenses not triggering the daily-budget warning, and Safe-to-Spend visibility without scrolling verified on Pixel 7 viewport
+- [x] 4.10 Ionic components (pull-to-refresh, floating action button, sliding item options, icons) behave as before on Ionic 8.8.19
+- [x] 4.11 Production build output size is within roughly 10% of the Phase 1 build
 
 ### Phase 5: Ionic 8 → 9
 

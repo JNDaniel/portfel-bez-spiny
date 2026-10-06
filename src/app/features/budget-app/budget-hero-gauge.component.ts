@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
@@ -6,6 +6,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
   selector: 'app-budget-hero-gauge',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="relative w-full rounded-3xl bg-[#111827]/90 border border-slate-800/80 p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl backdrop-blur-xl">
       <!-- Glow ambient light behind gauge -->

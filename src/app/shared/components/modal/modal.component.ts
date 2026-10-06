@@ -1,10 +1,11 @@
-import { Component, HostListener, computed, input, output } from "@angular/core";
+import { Component, HostListener, computed, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-modal",
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (isOpen()) {
       <div class="fixed inset-0 z-50 overflow-y-auto">
