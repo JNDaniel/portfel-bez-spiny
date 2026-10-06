@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from "@angular/core";
+import { Component, inject, output, signal, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { ThemeService } from "../../../core/services/theme.service";
@@ -8,6 +8,7 @@ import { SupportedCurrency } from "../../../core/models/settings.model";
 
 @Component({
   selector: "app-header",
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `

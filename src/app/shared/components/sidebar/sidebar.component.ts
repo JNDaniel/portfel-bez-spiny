@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { BudgetService } from "../../../core/services/budget.service";
@@ -7,6 +7,7 @@ import { ExpenseService } from "../../../core/services/expense.service";
 
 @Component({
   selector: "app-sidebar",
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive],
   template: `

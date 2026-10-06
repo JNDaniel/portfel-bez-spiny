@@ -551,15 +551,15 @@ No data migration. Rollback is per phase: each phase is its own commit, so rever
 
 #### Automated
 
-- [x] 7.1 `npm audit` reports 0 critical
-- [x] 7.2 Every high package in `npm audit --json` appears in the `audit-triage.md` Final table
-- [x] 7.3 `npm run build` passes, including the post-build secret scan
-- [x] 7.4 `npm test -- --watch=false` passes
-- [x] 7.5 `npm run test:e2e` passes on both projects
-- [x] 7.6 `npm run cap:sync` completes without errors
+- [x] 7.1 `npm audit` reports 0 critical — 8082890
+- [x] 7.2 Every high package in `npm audit --json` appears in the `audit-triage.md` Final table — 8082890
+- [x] 7.3 `npm run build` passes, including the post-build secret scan — 8082890
+- [x] 7.4 `npm test -- --watch=false` passes — 8082890
+- [x] 7.5 `npm run test:e2e` passes on both projects — 8082890
+- [x] 7.6 `npm run cap:sync` completes without errors — 8082890
 
 #### Manual
 
-- [x] 7.7 Triage decisions reviewed and accepted by the user
-- [x] 7.8 Roadmap, AGENTS.md and deploy-plan updates reviewed
+- [x] 7.7 Triage decisions reviewed and accepted by the user — 8082890
+- [x] 7.8 Roadmap, AGENTS.md and deploy-plan updates reviewed — 8082890
 - [ ] 7.9 Cloudflare Workers Builds succeeds for the final branch state on Node 24

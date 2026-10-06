@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, computed, effect, inject, signal } from '@angular/core';
+import { Component, ElementRef, ViewChild, computed, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { 
@@ -24,6 +24,7 @@ Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [
     CommonModule, 
