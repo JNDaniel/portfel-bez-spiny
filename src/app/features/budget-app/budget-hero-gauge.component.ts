@@ -76,13 +76,30 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
         class="mb-4 -mt-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-emerald-500/30 flex items-center gap-2 shadow-lg backdrop-blur-md"
       >
         <span class="text-xs">🎯</span>
-        <span class="text-xs text-slate-300">
-          Bezpiecznie na dziś:
-          <strong class="text-emerald-400 font-bold font-mono" data-testid="safe-to-spend">{{
-            state.safeToSpendDaily() === null ? '—' : state.safeToSpendDaily() + ' zł/dzień'
-          }}</strong>
-          do końca miesiąca
-        </span>
+        @if (state.isClosedMonth()) {
+          <span class="text-xs text-slate-300">
+            <strong
+              class="font-bold font-mono"
+              [ngClass]="
+                state.limitAmount() === null
+                  ? 'text-slate-400'
+                  : (state.remainingAmount() ?? 0) >= 0
+                    ? 'text-emerald-400'
+                    : 'text-rose-400'
+              "
+              data-testid="month-result"
+              >{{ monthResult() }}</strong
+            >
+          </span>
+        } @else {
+          <span class="text-xs text-slate-300">
+            Bezpiecznie na dziś:
+            <strong class="text-emerald-400 font-bold font-mono" data-testid="safe-to-spend">{{
+              state.safeToSpendDaily() === null ? '—' : state.safeToSpendDaily() + ' zł/dzień'
+            }}</strong>
+            do końca miesiąca
+          </span>
+        }
       </div>
 
       <!-- 3 Key Metric Numbers at Bottom -->
@@ -150,6 +167,16 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 })
 export class BudgetHeroGaugeComponent {
   readonly state = inject(BudgetStateService);
+
+  readonly monthResult = computed(() => {
+    const remaining = this.state.remainingAmount();
+    if (this.state.limitAmount() === null || remaining === null) {
+      return 'Brak limitu w tym miesiącu';
+    }
+    return remaining >= 0
+      ? `Zostało z limitu: ${remaining} zł`
+      : `Przekroczono o ${Math.abs(remaining)} zł`;
+  });
 
   readonly gaugeColor = computed(() => {
     const pct = this.state.percentageUsed() ?? 0;

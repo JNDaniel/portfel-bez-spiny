@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { CumulativeSeries } from '../../core/domain/budget-summary';
+import { formatAxisZloty } from '../../core/domain/money';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
 Chart.register(...registerables);
@@ -145,13 +146,16 @@ export class BudgetTrendChartComponent {
           },
           y: {
             beginAtZero: true,
+            suggestedMax: 100,
             grid: {
               color: 'rgba(51, 65, 85, 0.25)',
             },
             ticks: {
               color: '#64748b',
               font: { size: 10, family: 'JetBrains Mono, monospace' },
-              callback: (val) => `${(Number(val) / 1000).toFixed(1)}k`,
+              precision: 0,
+              maxTicksLimit: 6,
+              callback: (val) => formatAxisZloty(Number(val)),
             },
           },
         },

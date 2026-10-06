@@ -292,25 +292,25 @@ None. No stored data changes.
 
 #### Automated
 
-- [x] 2.1 `npm run check` passes
-- [x] 2.2 `clock.service.spec.ts` and the two new `budget-state.service.spec.ts` cases pass
-- [x] 2.3 `rg -n "clock\.now\(\)" src/app/core/services/budget-state.service.ts` shows only the `addExpense` action
-- [x] 2.4 `npm run test:e2e` passes on both projects (UI unchanged)
+- [x] 2.1 `npm run check` passes — eeced79
+- [x] 2.2 `clock.service.spec.ts` and the two new `budget-state.service.spec.ts` cases pass — eeced79
+- [x] 2.3 `rg -n "clock\.now\(\)" src/app/core/services/budget-state.service.ts` shows only the `addExpense` action — eeced79
+- [x] 2.4 `npm run test:e2e` passes on both projects (UI unchanged) — eeced79
 
 #### Manual
 
-- [x] 2.5 `vi.mock` is not used anywhere in `src/`
+- [x] 2.5 `vi.mock` is not used anywhere in `src/` — eeced79
 
 ### Phase 3: UI and End-to-End Coverage
 
 #### Automated
 
-- [ ] 3.1 `npm run check` passes
-- [ ] 3.2 `npm run test:e2e` passes on both projects (existing 7 tests plus the 3 new ones, × 2)
-- [ ] 3.3 Deliberate break: making `isClosed` always false makes the closed-month E2E tests fail (then reverted)
+- [x] 3.1 `npm run check` passes
+- [x] 3.2 `npm run test:e2e` passes on both projects (existing 7 tests plus the 3 new ones, × 2)
+- [x] 3.3 Deliberate break: making `isClosed` always false makes the closed-month E2E tests fail (then reverted)
 
 #### Manual
 
-- [ ] 3.4 Pixel 7 screenshots (production configuration, fixed clock): empty month shows distinct y-axis labels (`0` … `100`); a month with a few hundred złoty shows distinct whole-złoty labels; a month above 1000 zł shows `k` labels with a comma
-- [ ] 3.5 Pixel 7 screenshots of a closed month in all three pill variants; the pill does not wrap differently from the current month, and "Bezpiecznie na dziś:" is still above the fold on the current month
-- [ ] 3.6 KLASYFIKACJA percentages visibly add up to 100 in the US-01 state (three expenses, one per classification)
+- [x] 3.4 Pixel 7 screenshots (production configuration, fixed clock): empty month shows distinct y-axis labels (`0` … `100`); a month with a few hundred złoty shows distinct whole-złoty labels; a month above 1000 zł shows `k` labels with a comma
+- [x] 3.5 Pixel 7 screenshots of a closed month in all three pill variants; the pill does not wrap differently from the current month, and "Bezpiecznie na dziś:" is still above the fold on the current month
+- [x] 3.6 KLASYFIKACJA percentages visibly add up to 100 in the US-01 state (three expenses, one per classification)

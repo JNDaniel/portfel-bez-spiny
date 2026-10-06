@@ -171,4 +171,50 @@ test.describe('Portfel Bez Spiny — E2E UI & Gesture Flow', () => {
     await page.getByTitle('Następny miesiąc').click();
     await expect(page.getByText('Październik 2026')).toBeVisible();
   });
+
+  test('8. A closed month without a limit shows no daily allowance', async ({ page }) => {
+    await page.getByTitle('Poprzedni miesiąc').click();
+
+    await expect(page.locator('[data-testid=month-result]')).toHaveText(
+      'Brak limitu w tym miesiącu',
+    );
+    await expect(page.getByText('Bezpiecznie na dziś:')).toHaveCount(0);
+  });
+
+  test('9. A closed month over the limit shows the overspend', async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-09-20T10:00:00'));
+    await page.reload();
+    await setLimit(page, '1000');
+    await addExpense(page, 'Naprawa auta', '1200');
+
+    await page.clock.setFixedTime(new Date('2026-10-12T10:00:00'));
+    await page.reload();
+    await page.getByTitle('Poprzedni miesiąc').click();
+
+    await expect(page.getByText('Wrzesień 2026')).toBeVisible();
+    await expect(page.locator('[data-testid=month-result]')).toHaveText('Przekroczono o 200 zł');
+
+    await page.getByTitle('Następny miesiąc').click();
+    await expect(page.getByText('Bezpiecznie na dziś:')).toBeVisible();
+  });
+});
+
+test.describe('Portfel Bez Spiny — midnight rollover', () => {
+  test('10. Keeps the viewed month and closes it after midnight', async ({ page }) => {
+    await page.clock.install({ time: new Date('2026-10-31T23:58:00') });
+    await page.goto('/');
+    await setLimit(page, '3100');
+    await addExpense(page, 'Kolacja', '50');
+
+    await page.clock.fastForward('03:00');
+
+    await expect(page.getByText('Październik 2026')).toBeVisible();
+    await expect(page.locator('[data-testid=month-result]')).toBeVisible();
+    await expect(row(page, 'Kolacja')).toContainText('Wczoraj, 23:58');
+    await expect(page.getByTitle('Następny miesiąc')).toBeEnabled();
+
+    await page.getByTitle('Następny miesiąc').click();
+    await expect(page.getByText('Listopad 2026')).toBeVisible();
+    await expect(page.getByText('Bezpiecznie na dziś:')).toBeVisible();
+  });
 });
