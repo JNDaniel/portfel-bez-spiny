@@ -1,10 +1,10 @@
 ---
 change_id: lint-and-format-checks
 title: Lint and format checks as a quality gate
-status: implemented
+status: archived
 created: 2026-10-06
 updated: 2026-10-06
-archived_at: null
+archived_at: 2026-10-06T15:24:57Z
 ---
 
 ## Notes
