@@ -259,12 +259,12 @@ No data migration. Rollback is per phase. Contributors who use `git blame` shoul
 
 #### Automated
 
-- [x] 3.1 `npm run check` passes
-- [x] 3.2 `npm run test:e2e` passes on both projects
-- [x] 3.3 `git blame --ignore-revs-file .git-blame-ignore-revs src/app/app.config.ts` runs without error
-- [x] 3.4 A deliberately misformatted file and a deliberate lint violation each make `npm run check` fail (then reverted)
+- [x] 3.1 `npm run check` passes — c7b9fcb
+- [x] 3.2 `npm run test:e2e` passes on both projects — c7b9fcb
+- [x] 3.3 `git blame --ignore-revs-file .git-blame-ignore-revs src/app/app.config.ts` runs without error — c7b9fcb
+- [x] 3.4 A deliberately misformatted file and a deliberate lint violation each make `npm run check` fail (then reverted) — c7b9fcb
 
 #### Manual
 
-- [x] 3.5 AGENTS.md and README commands match what actually works
+- [x] 3.5 AGENTS.md and README commands match what actually works — c7b9fcb
 - [ ] 3.6 Cloudflare Workers Builds succeeds for the final state on `master`
