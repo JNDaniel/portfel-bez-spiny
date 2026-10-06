@@ -37,7 +37,19 @@ npm start
 npm run build
 npm test -- --watch=false
 npm test -- --watch=false --include src/app/app.component.spec.ts
+npm run lint
+npm run format
+npm run format:check
+npm run check
 npm run test:e2e
 npm run cap:sync
 npm run cap:build:apk
+```
+
+`npm run check` uruchamia kolejno sprawdzenie formatowania (Prettier), lint (Angular ESLint), testy jednostkowe i build; zatrzymuje się na pierwszym błędzie. Testy Playwright (`npm run test:e2e`) uruchamiaj osobno. `npm run format` poprawia formatowanie wszystkich plików.
+
+Jednorazowy commit formatujący jest pomijany przez `git blame` po ustawieniu:
+
+```bash
+git config blame.ignoreRevsFile .git-blame-ignore-revs
 ```

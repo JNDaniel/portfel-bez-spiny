@@ -22,7 +22,8 @@
     "cap:add:android": "cap add android",
     "cap:android": "cap open android",
     "cap:build:apk": "npm run build && cap sync android && cd android && ./gradlew assembleDebug",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "check": "npm run format:check && npm run lint && npm test -- --watch=false && npm run build"
   },
   "private": true,
   "dependencies": {

@@ -242,29 +242,29 @@ No data migration. Rollback is per phase. Contributors who use `git blame` shoul
 
 #### Automated
 
-- [x] 2.1 `npm run lint` reports 0 errors and 0 warnings
-- [x] 2.2 `eslint.config.js` contains no rule override other than the commented OnPush rule
-- [x] 2.3 No `eslint-disable` comments exist under `src/` or `e2e/`
-- [x] 2.4 `npm run format:check` passes
-- [x] 2.5 `npm run build` passes, including the post-build secret scan
-- [x] 2.6 `npm test -- --watch=false` passes (5 of 5)
-- [x] 2.7 `npm run test:e2e` passes on both projects
+- [x] 2.1 `npm run lint` reports 0 errors and 0 warnings — 7ad8d35
+- [x] 2.2 `eslint.config.js` contains no rule override other than the commented OnPush rule — 7ad8d35
+- [x] 2.3 No `eslint-disable` comments exist under `src/` or `e2e/` — 7ad8d35
+- [x] 2.4 `npm run format:check` passes — 7ad8d35
+- [x] 2.5 `npm run build` passes, including the post-build secret scan — 7ad8d35
+- [x] 2.6 `npm test -- --watch=false` passes (5 of 5) — 7ad8d35
+- [x] 2.7 `npm run test:e2e` passes on both projects — 7ad8d35
 
 #### Manual
 
-- [x] 2.8 Regression smoke (production configuration) shows no differences and identical screenshots against the current production deployment
-- [x] 2.9 Adding an expense through the dashboard modal and closing modals (button, backdrop, Escape where added) work on Desktop and Pixel 7
+- [x] 2.8 Regression smoke (production configuration) shows no differences and identical screenshots against the current production deployment — 7ad8d35
+- [x] 2.9 Adding an expense through the dashboard modal and closing modals (button, backdrop, Escape where added) work on Desktop and Pixel 7 — 7ad8d35
 
 ### Phase 3: Check Script, Docs and Handoff
 
 #### Automated
 
-- [ ] 3.1 `npm run check` passes
-- [ ] 3.2 `npm run test:e2e` passes on both projects
-- [ ] 3.3 `git blame --ignore-revs-file .git-blame-ignore-revs src/app/app.config.ts` runs without error
-- [ ] 3.4 A deliberately misformatted file and a deliberate lint violation each make `npm run check` fail (then reverted)
+- [x] 3.1 `npm run check` passes
+- [x] 3.2 `npm run test:e2e` passes on both projects
+- [x] 3.3 `git blame --ignore-revs-file .git-blame-ignore-revs src/app/app.config.ts` runs without error
+- [x] 3.4 A deliberately misformatted file and a deliberate lint violation each make `npm run check` fail (then reverted)
 
 #### Manual
 
-- [ ] 3.5 AGENTS.md and README commands match what actually works
+- [x] 3.5 AGENTS.md and README commands match what actually works
 - [ ] 3.6 Cloudflare Workers Builds succeeds for the final state on `master`
