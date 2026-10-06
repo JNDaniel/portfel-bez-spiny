@@ -685,4 +685,4 @@ There is no data migration (PRD §Constraints). Existing users of the demo see a
 #### Manual
 
 - [x] 4.4 AGENTS.md and README describe the code as it now is — 4fe3fe1
-- [ ] 4.5 After the user approves a push to `master`, Cloudflare Workers Builds succeeds and production shows the empty-start dashboard
+- [x] 4.5 After the user approves a push to `master`, Cloudflare Workers Builds succeeds and production shows the empty-start dashboard — b4f8d31
