@@ -637,26 +637,26 @@ There is no data migration (PRD §Constraints). Existing users of the demo see a
 
 #### Automated
 
-- [x] 1.1 `npm run check` passes
-- [x] 1.2 `npm run test:e2e` passes on both projects (the suite is unchanged)
-- [x] 1.3 `rg` for legacy model, service, storage-key and HttpClient references in `src` returns no matches
+- [x] 1.1 `npm run check` passes — 21534c2
+- [x] 1.2 `npm run test:e2e` passes on both projects (the suite is unchanged) — 21534c2
+- [x] 1.3 `rg` for legacy model, service, storage-key and HttpClient references in `src` returns no matches — 21534c2
 
 #### Manual
 
-- [x] 1.4 Dashboard screenshots are identical to production apart from the known chart flake; `/expenses` lands on the dashboard
+- [x] 1.4 Dashboard screenshots are identical to production apart from the known chart flake; `/expenses` lands on the dashboard — 21534c2
 
 ### Phase 2: Canonical Model, Domain Functions and Local Repositories
 
 #### Automated
 
-- [ ] 2.1 `npm run check` passes
-- [ ] 2.2 `budget-summary.spec.ts` passes and includes the US-01 case
-- [ ] 2.3 Deliberate break: including occasional in `inLimitMinor` makes `budget-summary.spec.ts` fail (then reverted)
-- [ ] 2.4 `npm run test:e2e` passes on both projects (UI unchanged)
+- [x] 2.1 `npm run check` passes
+- [x] 2.2 `budget-summary.spec.ts` passes and includes the US-01 case
+- [x] 2.3 Deliberate break: including occasional in `inLimitMinor` makes `budget-summary.spec.ts` fail (then reverted)
+- [x] 2.4 `npm run test:e2e` passes on both projects (UI unchanged)
 
 #### Manual
 
-- [ ] 2.5 `finance.model.ts` holds the whole contract; no second expense type exists besides `budget-app.model.ts` (removed in Phase 3)
+- [x] 2.5 `finance.model.ts` holds the whole contract; no second expense type exists besides `budget-app.model.ts` (removed in Phase 3)
 
 ### Phase 3: Dashboard on the Canonical Model
 
