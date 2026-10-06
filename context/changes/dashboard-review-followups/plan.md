@@ -280,26 +280,26 @@ None. No stored data changes.
 
 #### Automated
 
-- [x] 1.1 `npm run check` passes
-- [x] 1.2 `budget-summary.spec.ts` and `money.spec.ts` contain the cases listed above and pass
-- [x] 1.3 Deliberate break: switching `classificationBreakdown` back to per-row `Math.round` makes `budget-summary.spec.ts` fail (then reverted)
+- [x] 1.1 `npm run check` passes — bb4de3d
+- [x] 1.2 `budget-summary.spec.ts` and `money.spec.ts` contain the cases listed above and pass — bb4de3d
+- [x] 1.3 Deliberate break: switching `classificationBreakdown` back to per-row `Math.round` makes `budget-summary.spec.ts` fail (then reverted) — bb4de3d
 
 #### Manual
 
-- [x] 1.4 No `src/app/features/` file changed in this phase except where a type change forced it
+- [x] 1.4 No `src/app/features/` file changed in this phase except where a type change forced it — bb4de3d
 
 ### Phase 2: Reactive Clock
 
 #### Automated
 
-- [ ] 2.1 `npm run check` passes
-- [ ] 2.2 `clock.service.spec.ts` and the two new `budget-state.service.spec.ts` cases pass
-- [ ] 2.3 `rg -n "clock\.now\(\)" src/app/core/services/budget-state.service.ts` shows only the `addExpense` action
-- [ ] 2.4 `npm run test:e2e` passes on both projects (UI unchanged)
+- [x] 2.1 `npm run check` passes
+- [x] 2.2 `clock.service.spec.ts` and the two new `budget-state.service.spec.ts` cases pass
+- [x] 2.3 `rg -n "clock\.now\(\)" src/app/core/services/budget-state.service.ts` shows only the `addExpense` action
+- [x] 2.4 `npm run test:e2e` passes on both projects (UI unchanged)
 
 #### Manual
 
-- [ ] 2.5 `vi.mock` is not used anywhere in `src/`
+- [x] 2.5 `vi.mock` is not used anywhere in `src/`
 
 ### Phase 3: UI and End-to-End Coverage
 

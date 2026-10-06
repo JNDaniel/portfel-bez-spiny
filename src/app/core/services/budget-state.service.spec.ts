@@ -9,15 +9,19 @@ import { LocalMonthlyBudgetRepository } from '../repositories/local/local-monthl
 import { MonthlyBudgetRepository } from '../repositories/monthly-budget.repository';
 import { BudgetStateService } from './budget-state.service';
 import { ClockService } from './clock.service';
+import { FakeClockService } from './clock.service.testing';
+
+let fake: FakeClockService;
 
 async function setup(): Promise<BudgetStateService> {
   localStorage.clear();
+  fake = new FakeClockService(new Date(2026, 9, 12, 10, 0));
   TestBed.configureTestingModule({
     providers: [
       { provide: ExpenseRepository, useClass: LocalExpenseRepository },
       { provide: MonthlyBudgetRepository, useClass: LocalMonthlyBudgetRepository },
       { provide: ExpenseFolderRepository, useClass: LocalExpenseFolderRepository },
-      { provide: ClockService, useValue: { now: () => new Date(2026, 9, 12, 10, 0) } },
+      { provide: ClockService, useValue: fake },
     ],
   });
   const service = TestBed.inject(BudgetStateService);
@@ -109,5 +113,34 @@ describe('BudgetStateService', () => {
     await service.nextMonth();
 
     expect(service.currentPeriod()).toBe('2026-10');
+  });
+
+  it('relabels dates and shortens days left after the day rolls over', async () => {
+    const service = await setup();
+    await service.addExpense(expenseInput('Kawa', 2850));
+    expect(service.monthExpenses()[0].dateLabel.startsWith('Dziś')).toBe(true);
+    const daysLeft = service.summary().daysLeft;
+
+    fake.set(new Date(2026, 9, 13, 0, 1));
+
+    expect(service.monthExpenses()[0].dateLabel.startsWith('Wczoraj')).toBe(true);
+    expect(service.summary().daysLeft).toBe(daysLeft - 1);
+  });
+
+  it('keeps the viewed month but closes it after the month rolls over', async () => {
+    const service = await setup();
+    await service.setMonthlyLimit(310000);
+    expect(service.safeToSpendDaily()).not.toBeNull();
+
+    fake.set(new Date(2026, 10, 1, 0, 1));
+
+    expect(service.currentPeriod()).toBe('2026-10');
+    expect(service.isClosedMonth()).toBe(true);
+    expect(service.safeToSpendDaily()).toBeNull();
+    expect(service.canGoNext()).toBe(true);
+
+    await service.nextMonth();
+
+    expect(service.currentPeriod()).toBe('2026-11');
   });
 });

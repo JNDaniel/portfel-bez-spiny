@@ -67,7 +67,7 @@ export class BudgetStateService {
   private readonly folderList = signal<ExpenseFolder[]>([]);
 
   public readonly loaded = signal<boolean>(false);
-  public readonly currentPeriod = signal<Period>(periodOf(this.clock.now()));
+  public readonly currentPeriod = signal<Period>(periodOf(this.clock.today()));
 
   // Selected Folder Filter (null = All)
   public readonly selectedFolderId = signal<string | null>(null);
@@ -95,7 +95,7 @@ export class BudgetStateService {
 
   public readonly currentMonthLabel = computed(() => periodLabel(this.currentPeriod()));
 
-  public readonly canGoNext = computed(() => this.currentPeriod() < periodOf(this.clock.now()));
+  public readonly canGoNext = computed(() => this.currentPeriod() < periodOf(this.clock.today()));
 
   public readonly folders = computed(() => this.folderList());
 
@@ -108,18 +108,20 @@ export class BudgetStateService {
       expenses: this.expenses(),
       period: this.currentPeriod(),
       limitMinor: this.limitMinor(),
-      today: this.clock.now(),
+      today: this.clock.today(),
     }),
   );
+
+  public readonly isClosedMonth = computed(() => this.summary().isClosed);
 
   public readonly breakdown = computed(() => classificationBreakdown(this.summary()));
 
   public readonly trend = computed(() =>
-    cumulativeSeries(this.expenses(), this.currentPeriod(), this.clock.now()),
+    cumulativeSeries(this.expenses(), this.currentPeriod(), this.clock.today()),
   );
 
   public readonly vsPreviousMonth = computed(() =>
-    compareWithPreviousMonth(this.expenses(), this.currentPeriod(), this.clock.now()),
+    compareWithPreviousMonth(this.expenses(), this.currentPeriod(), this.clock.today()),
   );
 
   // Hero numbers: whole zloty or null
@@ -148,7 +150,7 @@ export class BudgetStateService {
 
   public readonly monthExpenses = computed<ExpenseView[]>(() => {
     const period = this.currentPeriod();
-    const now = this.clock.now();
+    const now = this.clock.today();
     const folders = this.folderList();
     const expanded = this.expandedIds();
     return this.expenses()
@@ -202,7 +204,7 @@ export class BudgetStateService {
   });
 
   public readonly subscriptions = computed<SubscriptionItem[]>(() => {
-    const currentDay = this.clock.now().getDate();
+    const currentDay = this.clock.today().getDate();
     return this.monthExpenses()
       .filter((expense) => expense.tags.includes('Cykliczne'))
       .map((expense) => {
@@ -527,6 +529,7 @@ export class BudgetStateService {
 
   async addExpense(input: AddExpenseInput) {
     await this.haptics.impact('medium');
+    this.clock.refresh();
     const now = this.clock.now();
     await this.run(async () => {
       const created = await this.expenseRepo.create({
