@@ -267,4 +267,4 @@ No data migration. Rollback is per phase. Contributors who use `git blame` shoul
 #### Manual
 
 - [x] 3.5 AGENTS.md and README commands match what actually works — c7b9fcb
-- [ ] 3.6 Cloudflare Workers Builds succeeds for the final state on `master`
+- [x] 3.6 Cloudflare Workers Builds succeeds for the final state on `master` — c95d4d3

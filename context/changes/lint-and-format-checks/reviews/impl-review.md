@@ -4,7 +4,7 @@
 - Date: 2026-10-06
 - Mode: manual (`/10x-impl-review` not installed)
 - Scope: `git diff b5450df..c7b9fcb` (excluding `package-lock.json`)
-- Verdict: approved; one open item (3.6, production build after push)
+- Verdict: approved; 3.6 closed (Workers Builds success for c95d4d3, production serves main-SS6PHRH2.js, screenshots identical)
 
 ## Plan conformance
 
