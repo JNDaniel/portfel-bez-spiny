@@ -40,6 +40,6 @@ No references to `karma`, `jasmine`, `expectAsync`, `toBeFalse`/`toBeTrue`, `@io
 
 ## Open items
 
-- 7.9 Cloudflare Workers Builds on the final branch state: needs a push. The non-production build trigger still holds a stale token (deploy step fails with `Authentication error [10000]`), so the deploy step is expected to fail until that trigger is repointed; the build step itself ran on Node 24 in Phase 1.
+- 7.9 closed after the review: the branch build (`6016ea17`) failed, most likely on the stale non-production trigger token, but the production build `61e53fb0` succeeded after `master` was fast-forwarded to `c06fa24` (see `audit-triage.md` Phase notes). Repointing the non-production trigger token remains outside this change.
 - Android APK build: deferred to S-07 (no Android SDK on this machine).
 - Occasion expenses not triggering the daily warning were covered as parity with the baseline (identical KPI and Safe-to-Spend output with the occasion folder selected), not by adding a new occasion expense.
