@@ -63,7 +63,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
             [style.color]="gaugeColor()"
             [style.textShadow]="'0 0 25px ' + gaugeColor() + '60'"
           >
-            {{ state.percentageUsed() }}%
+            {{ state.percentageUsed() === null ? '—' : state.percentageUsed() + '%' }}
           </span>
           <span class="text-xs text-slate-400 font-medium mt-1 select-none">
             wykorzystano budżetu
@@ -78,9 +78,9 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
         <span class="text-xs">🎯</span>
         <span class="text-xs text-slate-300">
           Bezpiecznie na dziś:
-          <strong class="text-emerald-400 font-bold font-mono"
-            >{{ state.safeToSpendDaily() }} zł/dzień</strong
-          >
+          <strong class="text-emerald-400 font-bold font-mono" data-testid="safe-to-spend">{{
+            state.safeToSpendDaily() === null ? '—' : state.safeToSpendDaily() + ' zł/dzień'
+          }}</strong>
           do końca miesiąca
         </span>
       </div>
@@ -92,9 +92,17 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
             class="block text-[10px] md:text-xs uppercase font-bold text-slate-500 tracking-wider"
             >WYDANO</span
           >
-          <span class="block text-base md:text-lg font-extrabold text-white mt-0.5 font-mono">
+          <span
+            class="block text-base md:text-lg font-extrabold text-white mt-0.5 font-mono"
+            data-testid="hero-spent"
+          >
             {{ state.spentAmount() }} zł
           </span>
+          @if (state.occasionalAmount() > 0) {
+            <span class="block text-[10px] text-violet-300 mt-0.5" data-testid="hero-occasional"
+              >+ {{ state.occasionalAmount() }} zł okazji poza limitem</span
+            >
+          }
         </div>
 
         <div>
@@ -102,9 +110,25 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
             class="block text-[10px] md:text-xs uppercase font-bold text-slate-500 tracking-wider"
             >LIMIT</span
           >
-          <span class="block text-base md:text-lg font-extrabold text-white mt-0.5 font-mono">
-            {{ state.limitAmount() }} zł
-          </span>
+          @if (state.limitAmount() === null) {
+            <button
+              type="button"
+              (click)="state.isLimitModalOpen.set(true)"
+              class="block w-full text-xs md:text-sm font-bold text-emerald-400 hover:text-emerald-300 mt-1 underline underline-offset-2"
+            >
+              Ustaw limit miesięczny
+            </button>
+          } @else {
+            <button
+              type="button"
+              (click)="state.isLimitModalOpen.set(true)"
+              aria-label="Zmień limit miesięczny"
+              data-testid="hero-limit"
+              class="block w-full text-base md:text-lg font-extrabold text-white mt-0.5 font-mono hover:text-emerald-300"
+            >
+              {{ state.limitAmount() }} zł
+            </button>
+          }
         </div>
 
         <div>
@@ -114,9 +138,10 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
           >
           <span
             class="block text-base md:text-lg font-extrabold mt-0.5 font-mono"
-            [ngClass]="state.remainingAmount() >= 0 ? 'text-emerald-400' : 'text-rose-400'"
+            data-testid="hero-remaining"
+            [ngClass]="(state.remainingAmount() ?? 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'"
           >
-            {{ state.remainingAmount() }} zł
+            {{ state.remainingAmount() === null ? '—' : state.remainingAmount() + ' zł' }}
           </span>
         </div>
       </div>
@@ -127,14 +152,14 @@ export class BudgetHeroGaugeComponent {
   readonly state = inject(BudgetStateService);
 
   readonly gaugeColor = computed(() => {
-    const pct = this.state.percentageUsed();
+    const pct = this.state.percentageUsed() ?? 0;
     if (pct < 75) return '#34d399';
     if (pct < 100) return '#fbbf24';
     return '#f43f5e';
   });
 
   readonly gaugeStartColor = computed(() => {
-    const pct = this.state.percentageUsed();
+    const pct = this.state.percentageUsed() ?? 0;
     if (pct < 75) return '#10b981';
     if (pct < 100) return '#f59e0b';
     return '#e11d48';
@@ -142,7 +167,7 @@ export class BudgetHeroGaugeComponent {
 
   readonly strokeDashoffset = computed(() => {
     const totalArcLength = 320; // 250 degree sweep
-    const pct = Math.min(100, Math.max(0, this.state.percentageUsed()));
+    const pct = Math.min(100, Math.max(0, this.state.percentageUsed() ?? 0));
     return totalArcLength - totalArcLength * (pct / 100);
   });
 }

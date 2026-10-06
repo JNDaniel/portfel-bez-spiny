@@ -649,30 +649,30 @@ There is no data migration (PRD §Constraints). Existing users of the demo see a
 
 #### Automated
 
-- [x] 2.1 `npm run check` passes
-- [x] 2.2 `budget-summary.spec.ts` passes and includes the US-01 case
-- [x] 2.3 Deliberate break: including occasional in `inLimitMinor` makes `budget-summary.spec.ts` fail (then reverted)
-- [x] 2.4 `npm run test:e2e` passes on both projects (UI unchanged)
+- [x] 2.1 `npm run check` passes — 9f18152
+- [x] 2.2 `budget-summary.spec.ts` passes and includes the US-01 case — 9f18152
+- [x] 2.3 Deliberate break: including occasional in `inLimitMinor` makes `budget-summary.spec.ts` fail (then reverted) — 9f18152
+- [x] 2.4 `npm run test:e2e` passes on both projects (UI unchanged) — 9f18152
 
 #### Manual
 
-- [x] 2.5 `finance.model.ts` holds the whole contract; no second expense type exists besides `budget-app.model.ts` (removed in Phase 3)
+- [x] 2.5 `finance.model.ts` holds the whole contract; no second expense type exists besides `budget-app.model.ts` (removed in Phase 3) — 9f18152
 
 ### Phase 3: Dashboard on the Canonical Model
 
 #### Automated
 
-- [ ] 3.1 `npm run check` passes
-- [ ] 3.2 `npm run test:e2e` passes on both projects (7 tests × 2)
-- [ ] 3.3 Only the local repository store touches `localStorage` in `src/app` (spec files excluded)
-- [ ] 3.4 No references to `budget-app.model`, `MonthData`, `chartPoints`, `categoriesBreakdown`, private bracket access, `budzetapp_v2_data` or UTC date slicing remain in `src`
-- [ ] 3.5 `@capacitor/haptics` is imported only by `haptics.service.ts`
-- [ ] 3.6 Deliberate break: `classificationAfterFolderAssign` always returning `current` makes the state-service spec and E2E test 5 fail (then reverted)
+- [x] 3.1 `npm run check` passes
+- [x] 3.2 `npm run test:e2e` passes on both projects (7 tests × 2)
+- [x] 3.3 Only the local repository store touches `localStorage` in `src/app` (spec files excluded)
+- [x] 3.4 No references to `budget-app.model`, `MonthData`, `chartPoints`, `categoriesBreakdown`, private bracket access, `budzetapp_v2_data` or UTC date slicing remain in `src`
+- [x] 3.5 `@capacitor/haptics` is imported only by `haptics.service.ts`
+- [x] 3.6 Deliberate break: `classificationAfterFolderAssign` always returning `current` makes the state-service spec and E2E test 5 fail (then reverted)
 
 #### Manual
 
-- [ ] 3.7 Desktop and Pixel 7 screenshots of the empty state, the US-01 state and the add modal look consistent; Safe-to-Spend is above the Pixel 7 fold in both states
-- [ ] 3.8 The add flow still takes one modal and one submit, with `Codzienny` preselected
+- [x] 3.7 Desktop and Pixel 7 screenshots of the empty state, the US-01 state and the add modal look consistent; Safe-to-Spend is above the Pixel 7 fold in both states
+- [x] 3.8 The add flow still takes one modal and one submit, with `Codzienny` preselected
 
 ### Phase 4: Documentation and Handoff
 

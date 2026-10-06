@@ -1,4 +1,5 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { formatMinorAmount } from '../../core/domain/money';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
 @Component({
@@ -33,7 +34,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
               >Suma zachcianek</span
             >
             <div class="text-xl font-extrabold text-white mt-0.5 font-mono">
-              {{ state.wasteStats().totalAmount.toFixed(2) }} zł
+              {{ formatMinor(state.wasteStats().totalMinor) }} zł
             </div>
             <span class="text-[11px] text-slate-400"
               >{{ state.wasteStats().percentageOfSpend }}% całkowitych wydatków</span
@@ -70,10 +71,10 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
               <div class="flex items-center gap-2">
                 <span class="text-amber-400">⚠️</span>
                 <span class="font-bold text-white">{{ item.title }}</span>
-                <span class="text-slate-500">({{ item.date }})</span>
+                <span class="text-slate-500">({{ item.dateLabel }})</span>
               </div>
               <span class="font-mono text-rose-400 font-bold"
-                >-{{ item.amount.toFixed(2) }} zł</span
+                >-{{ formatMinor(item.amountMinor) }} zł</span
               >
             </div>
           }
@@ -84,4 +85,5 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 })
 export class BudgetRadarWasteComponent {
   readonly state = inject(BudgetStateService);
+  readonly formatMinor = formatMinorAmount;
 }

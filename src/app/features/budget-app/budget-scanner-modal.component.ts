@@ -1,6 +1,7 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { BudgetStateService } from '../../core/services/budget-state.service';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { parseAmountToMinor } from '../../core/domain/money';
+import { HapticsService } from '../../core/services/haptics.service';
 
 interface ScannedReceiptData {
   merchant: string;
@@ -185,6 +186,7 @@ interface ScannedReceiptData {
 })
 export class BudgetScannerModalComponent {
   readonly state = inject(BudgetStateService);
+  private readonly haptics = inject(HapticsService);
   readonly scannedData = signal<ScannedReceiptData | null>(null);
 
   onFileUploaded(event: Event) {
@@ -202,7 +204,7 @@ export class BudgetScannerModalComponent {
   }
 
   simulateOcrScan(type: 'biedronka' | 'orlen') {
-    Haptics.impact({ style: ImpactStyle.Heavy });
+    void this.haptics.impact('heavy');
     if (type === 'orlen') {
       this.scannedData.set({
         merchant: 'Stacja Paliw PKN Orlen',
@@ -236,17 +238,19 @@ export class BudgetScannerModalComponent {
     const data = this.scannedData();
     if (!data) return;
 
-    await Haptics.impact({ style: ImpactStyle.Medium });
+    await this.haptics.impact('medium');
     const now = new Date();
 
-    this.state.addTransaction({
+    const amountMinor = parseAmountToMinor(data.total);
+    if (amountMinor === null) return;
+
+    await this.state.addExpense({
       title: data.merchant,
-      amount: data.total,
+      amountMinor,
       category: data.merchant.includes('Orlen') ? 'Transport' : 'Jedzenie',
-      date: data.date,
-      isoDate: now.toISOString().substring(0, 10),
+      classification: 'everyday',
       note: 'Zeskanowano aparatem OCR',
-      tags: data.merchant.includes('Orlen') ? ['Potrzebne'] : ['Potrzebne', 'Spożywcze'],
+      tags: data.merchant.includes('Orlen') ? [] : ['Spożywcze'],
       receiptFileName: 'paragon_ocr_' + now.getTime() + '.jpg',
       aiComment: data.aiAnalysis,
     });

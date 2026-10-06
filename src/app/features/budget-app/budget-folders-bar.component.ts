@@ -1,7 +1,8 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BudgetStateService } from '../../core/services/budget-state.service';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { HapticsService } from '../../core/services/haptics.service';
+import { formatMinorAmount } from '../../core/domain/money';
 
 @Component({
   selector: 'app-budget-folders-bar',
@@ -90,7 +91,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
               <span class="text-slate-400 text-[11px]"
                 >Suma w folderze:
                 <strong class="text-emerald-400 font-mono"
-                  >{{ state.activeFolderTotal().toFixed(2) }} zł</strong
+                  >{{ formatMinor(state.activeFolderTotal()) }} zł</strong
                 ></span
               >
             </div>
@@ -109,9 +110,11 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 })
 export class BudgetFoldersBarComponent {
   readonly state = inject(BudgetStateService);
+  private readonly haptics = inject(HapticsService);
+  readonly formatMinor = formatMinorAmount;
 
   async openCreateFolderModal() {
-    await Haptics.impact({ style: ImpactStyle.Light });
+    await this.haptics.impact('light');
     this.state.isCreateFolderModalOpen.set(true);
   }
 

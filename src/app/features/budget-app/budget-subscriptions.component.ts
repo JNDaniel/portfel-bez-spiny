@@ -1,4 +1,5 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { formatMinorAmount } from '../../core/domain/money';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
 @Component({
@@ -67,7 +68,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 
               <div class="text-right">
                 <span class="font-mono text-white font-bold text-sm block"
-                  >-{{ sub.amount.toFixed(2) }} zł</span
+                  >-{{ formatMinor(sub.amountMinor) }} zł</span
                 >
                 <span class="text-[10px] text-slate-500 uppercase">miesięcznie</span>
               </div>
@@ -80,4 +81,5 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 })
 export class BudgetSubscriptionsComponent {
   readonly state = inject(BudgetStateService);
+  readonly formatMinor = formatMinorAmount;
 }

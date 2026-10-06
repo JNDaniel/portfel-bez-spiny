@@ -1,12 +1,16 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { parseAmountToMinor } from '../../core/domain/money';
 import {
-  AVAILABLE_TAGS,
-  TransactionCategory,
-  TransactionTag,
-} from '../../core/models/budget-app.model';
+  EXPENSE_CLASSIFICATIONS,
+  EXPENSE_TAGS,
+  ExpenseCategory,
+  ExpenseClassification,
+  ExpenseTag,
+} from '../../core/models/finance.model';
 import { BudgetStateService } from '../../core/services/budget-state.service';
+import { CLASSIFICATION_META, TAG_META } from './budget-ui.meta';
 
 @Component({
   selector: 'app-budget-add-modal',
@@ -32,6 +36,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
             <button
               type="button"
               (click)="state.isAddModalOpen.set(false)"
+              aria-label="Zamknij"
               class="text-slate-400 hover:text-white text-sm p-1"
             >
               ✕
@@ -103,33 +108,66 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
               />
             </div>
 
+            <!-- Classification Selector -->
+            <div>
+              <span
+                id="budget-add-classification-label"
+                class="block leading-[normal] text-slate-400 font-semibold mb-1.5"
+                >Rodzaj wydatku</span
+              >
+              <div
+                class="flex flex-wrap gap-2"
+                role="group"
+                aria-labelledby="budget-add-classification-label"
+              >
+                @for (c of classifications; track c) {
+                  <button
+                    type="button"
+                    (click)="selectClassification(c)"
+                    [attr.aria-pressed]="selectedClassification === c"
+                    class="px-3 py-1 rounded-full text-xs font-semibold border transition flex items-center gap-1"
+                    [ngClass]="
+                      selectedClassification === c
+                        ? classificationMeta[c].activeClass
+                        : 'bg-slate-900/80 text-slate-400 border-slate-700/60 hover:bg-slate-800'
+                    "
+                  >
+                    @if (selectedClassification === c) {
+                      <span>✓</span>
+                    }
+                    <span>{{ classificationMeta[c].label }}</span>
+                  </button>
+                }
+              </div>
+            </div>
+
             <!-- Tags Selector -->
             <div>
               <span
                 id="budget-add-tags-label"
                 class="block leading-[normal] text-slate-400 font-semibold mb-1.5"
-                >Charakter zakupu (Tagi)</span
+                >Tagi (opcjonalnie)</span
               >
               <div
                 class="flex flex-wrap gap-2"
                 role="group"
                 aria-labelledby="budget-add-tags-label"
               >
-                @for (tag of availableTags; track tag.name) {
+                @for (tag of availableTags; track tag) {
                   <button
                     type="button"
-                    (click)="toggleTag(tag.name)"
+                    (click)="toggleTag(tag)"
                     class="px-3 py-1 rounded-full text-xs font-semibold border transition flex items-center gap-1"
                     [ngClass]="
-                      selectedTags.includes(tag.name)
-                        ? tag.activeClass
+                      selectedTags.includes(tag)
+                        ? tagMeta[tag].activeClass
                         : 'bg-slate-900/80 text-slate-400 border-slate-700/60 hover:bg-slate-800'
                     "
                   >
-                    @if (selectedTags.includes(tag.name)) {
+                    @if (selectedTags.includes(tag)) {
                       <span>✓</span>
                     }
-                    <span>{{ tag.name }}</span>
+                    <span>{{ tag }}</span>
                   </button>
                 }
               </div>
@@ -161,9 +199,13 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 export class BudgetAddModalComponent {
   private readonly fb = inject(FormBuilder);
   readonly state = inject(BudgetStateService);
-  readonly availableTags = AVAILABLE_TAGS;
+  readonly availableTags = EXPENSE_TAGS;
+  readonly tagMeta = TAG_META;
+  readonly classifications = EXPENSE_CLASSIFICATIONS;
+  readonly classificationMeta = CLASSIFICATION_META;
 
-  selectedTags: TransactionTag[] = ['Potrzebne'];
+  selectedTags: ExpenseTag[] = [];
+  selectedClassification: ExpenseClassification = 'everyday';
 
   readonly form: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(2)]],
@@ -172,7 +214,11 @@ export class BudgetAddModalComponent {
     note: [''],
   });
 
-  toggleTag(tag: TransactionTag) {
+  selectClassification(classification: ExpenseClassification) {
+    this.selectedClassification = classification;
+  }
+
+  toggleTag(tag: ExpenseTag) {
     if (this.selectedTags.includes(tag)) {
       this.selectedTags = this.selectedTags.filter((t) => t !== tag);
     } else {
@@ -184,20 +230,20 @@ export class BudgetAddModalComponent {
     if (this.form.invalid) return;
 
     const val = this.form.value;
-    const now = new Date();
-    const formattedTime = `Dziś, ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const amountMinor = parseAmountToMinor(val.amount);
+    if (amountMinor === null || amountMinor <= 0) return;
 
-    this.state.addTransaction({
+    void this.state.addExpense({
       title: val.title,
-      amount: Number(val.amount),
-      category: val.category as TransactionCategory,
-      date: formattedTime,
-      isoDate: now.toISOString().substring(0, 10),
+      amountMinor,
+      category: val.category as ExpenseCategory,
+      classification: this.selectedClassification,
       note: val.note || undefined,
       tags: this.selectedTags,
     });
 
     this.form.reset({ category: 'Jedzenie' });
-    this.selectedTags = ['Potrzebne'];
+    this.selectedTags = [];
+    this.selectedClassification = 'everyday';
   }
 }

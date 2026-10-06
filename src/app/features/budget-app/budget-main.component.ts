@@ -18,13 +18,14 @@ import {
   alertCircleOutline,
   folderOutline,
 } from 'ionicons/icons';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 import { DEMO_FEATURES_ENABLED } from '../../core/config/demo-features';
 import { BudgetStateService } from '../../core/services/budget-state.service';
+import { HapticsService } from '../../core/services/haptics.service';
 import { BudgetHeroGaugeComponent } from './budget-hero-gauge.component';
 import { BudgetTrendChartComponent } from './budget-trend-chart.component';
-import { BudgetCategoriesComponent } from './budget-categories.component';
+import { BudgetClassificationComponent } from './budget-classification.component';
+import { BudgetLimitModalComponent } from './budget-limit-modal.component';
 import { BudgetTransactionsComponent } from './budget-transactions.component';
 import { BudgetAddModalComponent } from './budget-add-modal.component';
 import { BudgetBankSimulatorComponent } from './budget-bank-simulator.component';
@@ -46,7 +47,8 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
     IonIcon,
     BudgetHeroGaugeComponent,
     BudgetTrendChartComponent,
-    BudgetCategoriesComponent,
+    BudgetClassificationComponent,
+    BudgetLimitModalComponent,
     BudgetTransactionsComponent,
     BudgetAddModalComponent,
     BudgetBankSimulatorComponent,
@@ -105,14 +107,15 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
               <span
                 class="text-xs md:text-sm font-bold text-slate-200 tracking-wide select-none min-w-[100px] text-center font-mono"
               >
-                {{ state.currentMonth().label }}
+                {{ state.currentMonthLabel() }}
               </span>
 
               <button
                 type="button"
                 (click)="state.nextMonth()"
+                [disabled]="!state.canGoNext()"
                 title="Następny miesiąc"
-                class="p-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition"
+                class="p-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition disabled:opacity-30 disabled:pointer-events-none"
               >
                 &rsaquo;
               </button>
@@ -200,9 +203,9 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
               <app-budget-trend-chart></app-budget-trend-chart>
             </div>
 
-            <!-- Right: Categories List (2 cols) -->
+            <!-- Right: Classification Breakdown (2 cols) -->
             <div class="md:col-span-2">
-              <app-budget-categories></app-budget-categories>
+              <app-budget-classification></app-budget-classification>
             </div>
           </div>
 
@@ -221,6 +224,9 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
       <!-- Add Expense Modal -->
       <app-budget-add-modal></app-budget-add-modal>
 
+      <!-- Monthly Limit Modal -->
+      <app-budget-limit-modal></app-budget-limit-modal>
+
       <!-- Create Folder Modal -->
       <app-budget-create-folder-modal></app-budget-create-folder-modal>
 
@@ -236,6 +242,7 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
 })
 export class BudgetMainComponent {
   readonly state = inject(BudgetStateService);
+  private readonly haptics = inject(HapticsService);
   readonly demoFeaturesEnabled = DEMO_FEATURES_ENABLED;
 
   constructor() {
@@ -251,32 +258,32 @@ export class BudgetMainComponent {
   }
 
   async openAddModal() {
-    await Haptics.impact({ style: ImpactStyle.Light });
+    await this.haptics.impact('light');
     this.state.isAddModalOpen.set(true);
   }
 
   async openScanner() {
-    await Haptics.impact({ style: ImpactStyle.Light });
+    await this.haptics.impact('light');
     this.state.isScannerModalOpen.set(true);
   }
 
   async openVoice() {
-    await Haptics.impact({ style: ImpactStyle.Light });
+    await this.haptics.impact('light');
     this.state.isVoiceModalOpen.set(true);
   }
 
   async toggleSubscriptions() {
-    await Haptics.impact({ style: ImpactStyle.Light });
+    await this.haptics.impact('light');
     this.state.isSubscriptionsOpen.update((v) => !v);
   }
 
   async toggleWasteRadar() {
-    await Haptics.impact({ style: ImpactStyle.Light });
+    await this.haptics.impact('light');
     this.state.isWasteRadarOpen.update((v) => !v);
   }
 
   async handleRefresh(event: RefresherCustomEvent) {
-    await Haptics.impact({ style: ImpactStyle.Medium });
+    await this.haptics.impact('medium');
     setTimeout(() => {
       event.target.complete();
     }, 600);

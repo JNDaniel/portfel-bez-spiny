@@ -2,8 +2,13 @@ import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BudgetStateService } from '../../core/services/budget-state.service';
-import { TransactionCategory, TransactionTag } from '../../core/models/budget-app.model';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { formatMinorAmount, parseAmountToMinor } from '../../core/domain/money';
+import {
+  ExpenseCategory,
+  ExpenseClassification,
+  ExpenseTag,
+} from '../../core/models/finance.model';
+import { HapticsService } from '../../core/services/haptics.service';
 
 @Component({
   selector: 'app-budget-voice-modal',
@@ -105,18 +110,19 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 })
 export class BudgetVoiceModalComponent {
   readonly state = inject(BudgetStateService);
+  private readonly haptics = inject(HapticsService);
   readonly isListening = signal<boolean>(false);
   voiceInputText = '';
 
   toggleListening() {
     this.isListening.set(!this.isListening());
-    Haptics.impact({ style: ImpactStyle.Medium });
+    void this.haptics.impact('medium');
 
     if (this.isListening()) {
       setTimeout(() => {
         this.voiceInputText = 'Wydałem 42,50 zł w aptece na witaminy';
         this.isListening.set(false);
-        Haptics.impact({ style: ImpactStyle.Light });
+        void this.haptics.impact('light');
       }, 1800);
     }
   }
@@ -128,16 +134,17 @@ export class BudgetVoiceModalComponent {
   async processVoiceNlp() {
     if (!this.voiceInputText.trim()) return;
 
-    await Haptics.impact({ style: ImpactStyle.Medium });
+    await this.haptics.impact('medium');
     const text = this.voiceInputText.toLowerCase();
 
     // Extract amount
     const amountMatch = text.match(/\d+([,.]\d+)?/);
-    const amount = amountMatch ? parseFloat(amountMatch[0].replace(',', '.')) : 25.0;
+    const amountMinor = (amountMatch ? parseAmountToMinor(amountMatch[0]) : null) ?? 2500;
 
-    let category: TransactionCategory = 'Jedzenie';
+    let category: ExpenseCategory = 'Jedzenie';
     let title = 'Wydatek głosowy';
-    let tags: TransactionTag[] = ['Potrzebne'];
+    let classification: ExpenseClassification = 'everyday';
+    const tags: ExpenseTag[] = [];
 
     if (
       text.includes('paliwo') ||
@@ -158,21 +165,17 @@ export class BudgetVoiceModalComponent {
     ) {
       category = 'Jedzenie';
       title = text.includes('kebab') ? 'Kebab' : 'Restauracja / Obiad';
-      tags = text.includes('kebab') ? ['Zachcianka'] : ['Potrzebne'];
+      classification = text.includes('kebab') ? 'want' : 'everyday';
     }
 
-    const now = new Date();
-    const formattedTime = `Dziś, ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-    this.state.addTransaction({
+    await this.state.addExpense({
       title,
-      amount,
+      amountMinor,
       category,
-      date: formattedTime,
-      isoDate: now.toISOString().substring(0, 10),
+      classification,
       note: `Głos: „${this.voiceInputText}”`,
       tags,
-      aiComment: `AI przetworzyło komendę głosową: ${this.voiceInputText}. Kwota: ${amount.toFixed(2)} zł przypisana do ${category}.`,
+      aiComment: `AI przetworzyło komendę głosową: ${this.voiceInputText}. Kwota: ${formatMinorAmount(amountMinor)} zł przypisana do ${category}.`,
     });
 
     this.voiceInputText = '';

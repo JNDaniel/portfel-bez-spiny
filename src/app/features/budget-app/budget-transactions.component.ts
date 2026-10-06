@@ -2,11 +2,12 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonList, IonItemSliding, IonItem, IonItemOptions, IonItemOption } from '@ionic/angular';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
-import { AVAILABLE_TAGS, Transaction, TransactionTag } from '../../core/models/budget-app.model';
 import { DEMO_FEATURES_ENABLED } from '../../core/config/demo-features';
-import { BudgetStateService } from '../../core/services/budget-state.service';
+import { EXPENSE_CLASSIFICATIONS, EXPENSE_TAGS } from '../../core/models/finance.model';
+import { BudgetStateService, ExpenseView } from '../../core/services/budget-state.service';
+import { HapticsService } from '../../core/services/haptics.service';
+import { CATEGORY_EMOJI, CLASSIFICATION_META, TAG_META } from './budget-ui.meta';
 import { BudgetAiSummaryComponent } from './budget-ai-summary.component';
 import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
 
@@ -131,6 +132,11 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
 
       <!-- Transaction List with Swipe Actions & Long-Press Selection -->
       <ion-list class="divide-y divide-slate-800/60 bg-transparent">
+        @if (state.filteredTransactions().length === 0 && !state.selectedFolderId()) {
+          <p class="py-6 text-center text-xs text-slate-500">
+            Brak wydatków w tym miesiącu. Dodaj pierwszy przyciskiem „Dodaj wydatek”.
+          </p>
+        }
         @for (tx of state.visibleTransactions(); track tx.id) {
           <ion-item-sliding class="bg-transparent group overflow-hidden rounded-2xl">
             <!-- Left Swipe Option: Quick Assign to Folder -->
@@ -191,12 +197,21 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
                       <div class="flex items-center gap-1.5 flex-wrap">
                         <span class="font-bold text-white text-sm truncate">{{ tx.title }}</span>
 
+                        <!-- Classification Badge -->
+                        <span
+                          data-testid="tx-classification"
+                          class="px-2 py-0.5 rounded-full text-[10px] font-semibold border"
+                          [ngClass]="classificationMeta[tx.classification].badgeClass"
+                        >
+                          {{ classificationMeta[tx.classification].label }}
+                        </span>
+
                         <!-- Folder Badge -->
-                        @if (tx.folderName) {
+                        @if (tx.folder) {
                           <span
                             class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-purple-950/80 text-purple-300 border border-purple-500/40"
                           >
-                            📁 {{ tx.folderName }}
+                            📁 {{ tx.folder.name }}
                           </span>
                         }
 
@@ -204,7 +219,7 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
                         @for (tag of tx.tags; track tag) {
                           <span
                             class="px-2 py-0.5 rounded-full text-[10px] font-semibold border"
-                            [ngClass]="getTagBadgeClass(tag)"
+                            [ngClass]="tagMeta[tag].badgeClass"
                           >
                             {{ tag }}
                           </span>
@@ -216,7 +231,7 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
                       >
                         <span>{{ tx.category }}</span>
                         <span>&bull;</span>
-                        <span>{{ tx.date }}</span>
+                        <span>{{ tx.dateLabel }}</span>
                       </div>
 
                       @if (tx.note && !tx.isExpanded) {
@@ -254,7 +269,7 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
                     <span
                       class="font-bold text-rose-500 text-sm md:text-base font-mono whitespace-nowrap"
                     >
-                      -{{ tx.amount.toFixed(2).replace('.', ',') }} zł
+                      -{{ tx.amountLabel }} zł
                     </span>
                     <span
                       class="text-slate-500 text-xs transition-transform duration-200"
@@ -282,24 +297,55 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
                       />
                     </div>
 
+                    <!-- Classification Selector -->
+                    <div class="flex items-center gap-2 flex-wrap text-xs">
+                      <span id="tx-class-{{ tx.id }}" class="text-slate-400 text-xs mr-1"
+                        >Rodzaj wydatku</span
+                      >
+                      <div
+                        class="flex items-center gap-2 flex-wrap"
+                        role="group"
+                        [attr.aria-labelledby]="'tx-class-' + tx.id"
+                      >
+                        @for (c of classifications; track c) {
+                          <button
+                            type="button"
+                            (click)="state.setClassification(tx.id, c)"
+                            [attr.aria-pressed]="tx.classification === c"
+                            class="px-2.5 py-1 rounded-full text-xs font-semibold border transition flex items-center gap-1"
+                            [ngClass]="
+                              tx.classification === c
+                                ? classificationMeta[c].activeClass
+                                : 'bg-slate-800/40 text-slate-400 border-slate-700/40 hover:bg-slate-800'
+                            "
+                          >
+                            @if (tx.classification === c) {
+                              <span>✓</span>
+                            }
+                            <span>{{ classificationMeta[c].label }}</span>
+                          </button>
+                        }
+                      </div>
+                    </div>
+
                     <!-- Interactive Tag Selector Pills -->
                     <div class="flex items-center gap-2 flex-wrap text-xs">
                       <span class="text-slate-400 text-xs mr-1">🏷️</span>
-                      @for (t of availableTags; track t.name) {
+                      @for (t of availableTags; track t) {
                         <button
                           type="button"
-                          (click)="state.toggleTransactionTag(tx.id, t.name)"
+                          (click)="state.toggleTransactionTag(tx.id, t)"
                           class="px-2.5 py-1 rounded-full text-xs font-semibold border transition flex items-center gap-1"
                           [ngClass]="
-                            tx.tags.includes(t.name)
-                              ? t.activeClass
+                            tx.tags.includes(t)
+                              ? tagMeta[t].activeClass
                               : 'bg-slate-800/40 text-slate-400 border-slate-700/40 hover:bg-slate-800'
                           "
                         >
-                          @if (tx.tags.includes(t.name)) {
+                          @if (tx.tags.includes(t)) {
                             <span>✓</span>
                           }
-                          <span>{{ t.name }}</span>
+                          <span>{{ t }}</span>
                         </button>
                       }
                     </div>
@@ -404,8 +450,7 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
             >
               <span>📊</span>
               <span
-                >Analizuj cały {{ state.currentMonth().label.split(' ')[0] }} — podsumowanie
-                AI</span
+                >Analizuj cały {{ state.currentMonthLabel().split(' ')[0] }} — podsumowanie AI</span
               >
             </button>
           }
@@ -421,57 +466,25 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
 })
 export class BudgetTransactionsComponent {
   readonly state = inject(BudgetStateService);
-  readonly availableTags = AVAILABLE_TAGS;
+  private readonly haptics = inject(HapticsService);
+  readonly availableTags = EXPENSE_TAGS;
+  readonly classifications = EXPENSE_CLASSIFICATIONS;
+  readonly classificationMeta = CLASSIFICATION_META;
+  readonly tagMeta = TAG_META;
   readonly demoFeaturesEnabled = DEMO_FEATURES_ENABLED;
 
   private longPressTimer: ReturnType<typeof setTimeout> | null = null;
   private isLongPressTriggered = false;
 
-  getCategoryEmoji(category: string): string {
-    switch (category) {
-      case 'Mieszkanie':
-        return '🏠';
-      case 'Jedzenie':
-        return '☕';
-      case 'Transport':
-        return '🚗';
-      case 'Zakupy':
-        return '🛍️';
-      case 'Zdrowie':
-        return '❤️';
-      case 'Rozrywka':
-        return '🎵';
-      case 'Media':
-        return '⚡';
-      default:
-        return '💳';
-    }
-  }
-
-  getTagBadgeClass(tag: TransactionTag): string {
-    switch (tag) {
-      case 'Potrzebne':
-        return 'bg-emerald-950/70 text-emerald-400 border-emerald-500/40';
-      case 'Zachcianka':
-        return 'bg-amber-950/70 text-amber-400 border-amber-500/40';
-      case 'Cykliczne':
-        return 'bg-blue-950/70 text-blue-400 border-blue-500/40';
-      case 'Zbędne':
-        return 'bg-rose-950/70 text-rose-400 border-rose-500/40';
-      case 'Służbowe':
-        return 'bg-indigo-950/70 text-indigo-400 border-indigo-500/40';
-      case 'Spożywcze':
-        return 'bg-teal-950/70 text-teal-400 border-teal-500/40';
-      default:
-        return 'bg-slate-800 text-slate-300 border-slate-700';
-    }
+  getCategoryEmoji(category: keyof typeof CATEGORY_EMOJI): string {
+    return CATEGORY_EMOJI[category] ?? '💳';
   }
 
   startLongPress(txId: string) {
     this.isLongPressTriggered = false;
     this.longPressTimer = setTimeout(() => {
       this.isLongPressTriggered = true;
-      Haptics.impact({ style: ImpactStyle.Heavy });
+      void this.haptics.impact('heavy');
       this.state.enableSelectionMode(txId);
     }, 450); // 450ms long press threshold
   }
@@ -512,8 +525,8 @@ export class BudgetTransactionsComponent {
     }
   }
 
-  async quickAssignFolder(tx: Transaction) {
-    await Haptics.impact({ style: ImpactStyle.Medium });
+  async quickAssignFolder(tx: ExpenseView) {
+    await this.haptics.impact('medium');
     this.state.enableSelectionMode(tx.id);
     this.state.isCreateFolderModalOpen.set(true);
   }
@@ -523,44 +536,7 @@ export class BudgetTransactionsComponent {
   }
 
   async assignSingleTxFolder(txId: string, folderId: string) {
-    if (!folderId) {
-      const idx = this.state['_currentMonthIndex']();
-      this.state['_months'].update((months) => {
-        const copy = [...months];
-        const m = { ...copy[idx] };
-        m.transactions = m.transactions.map((t) => {
-          if (t.id === txId) {
-            const rest: Transaction = { ...t };
-            delete rest.folderId;
-            delete rest.folderName;
-            return rest;
-          }
-          return t;
-        });
-        copy[idx] = m;
-        return copy;
-      });
-      this.state['persist']();
-      return;
-    }
-
-    const folder = this.state.folders().find((f) => f.id === folderId);
-    if (folder) {
-      const idx = this.state['_currentMonthIndex']();
-      this.state['_months'].update((months) => {
-        const copy = [...months];
-        const m = { ...copy[idx] };
-        m.transactions = m.transactions.map((t) => {
-          if (t.id === txId) {
-            return { ...t, folderId: folder.id, folderName: folder.name };
-          }
-          return t;
-        });
-        copy[idx] = m;
-        return copy;
-      });
-      this.state['persist']();
-    }
+    await this.state.assignToFolder([txId], folderId || null);
   }
 
   openFolderAssignModal() {

@@ -1,5 +1,17 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AiSummary } from '../../core/models/demo.model';
 import { BudgetStateService } from '../../core/services/budget-state.service';
+
+const DEMO_AI_SUMMARY: AiSummary = {
+  biggestExpense:
+    'Czynsz 2 200 zł = 42% budżetu. Cel: zejść do 30% — rozważ podnajęcie pokoju lub negocjację czynszu.',
+  potentialWaste:
+    'Żabka nocna 23,40 zł + Bolt po imprezie 34,50 zł = 57,90 zł. Łatwe do wyeliminowania impulsy nocne.',
+  goodNews:
+    'Transport 8% poniżej limitu, zdrowie w normie. Oszczędzasz 860 zł względem budżetu — tak trzymaj!',
+  recommendation:
+    'Zastąp 2 wizyty w Żabce zakupami w dyskoncie → ~80 zł/mies. Woda butelkowana → filtr → ~45 zł/mies. Razem 125 zł oszczędności.',
+};
 
 @Component({
   selector: 'app-budget-ai-summary',
@@ -15,7 +27,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
         <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
           <div class="flex items-center gap-2 text-purple-400 font-bold text-sm">
             <span class="text-base">✨</span>
-            <span>Podsumowanie AI — {{ state.currentMonth().label.split(' ')[0] }}</span>
+            <span>Podsumowanie AI — {{ state.currentMonthLabel().split(' ')[0] }}</span>
           </div>
           <button
             type="button"
@@ -40,7 +52,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
             <div>
               <h4 class="text-xs font-bold text-rose-400">Największy wydatek</h4>
               <p class="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                {{ state.currentMonth().aiSummary.biggestExpense }}
+                {{ summary.biggestExpense }}
               </p>
             </div>
           </div>
@@ -57,7 +69,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
             <div>
               <h4 class="text-xs font-bold text-amber-400">Potencjalnie zbędne</h4>
               <p class="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                {{ state.currentMonth().aiSummary.potentialWaste }}
+                {{ summary.potentialWaste }}
               </p>
             </div>
           </div>
@@ -74,7 +86,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
             <div>
               <h4 class="text-xs font-bold text-emerald-400">Dobra wiadomość</h4>
               <p class="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                {{ state.currentMonth().aiSummary.goodNews }}
+                {{ summary.goodNews }}
               </p>
             </div>
           </div>
@@ -91,7 +103,7 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
             <div>
               <h4 class="text-xs font-bold text-purple-400">Rekomendacja AI</h4>
               <p class="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                {{ state.currentMonth().aiSummary.recommendation }}
+                {{ summary.recommendation }}
               </p>
             </div>
           </div>
@@ -102,4 +114,5 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 })
 export class BudgetAiSummaryComponent {
   readonly state = inject(BudgetStateService);
+  readonly summary = DEMO_AI_SUMMARY;
 }
