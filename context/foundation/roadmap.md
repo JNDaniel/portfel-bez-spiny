@@ -44,7 +44,7 @@ Portfel Bez Spiny oddziela codzienne wydatki od okazjonalnych (prezent, wyjazd),
 | F-01 | angular-security-upgrade     | (foundation) framework i toolchain bez krytycznych podatności, aplikacja działa jak dziś | —                          | FR-007, Guardrails             | done |
 | F-02 | lint-and-format-checks       | (foundation) lint i formatowanie są deterministyczną bramką przed każdym przekazaniem   | F-01                       | FR-007                         | done        |
 | S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | done |
-| S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard z wykresem według klasyfikacji (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | planning |
+| S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard z wykresem według klasyfikacji (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | in-progress |
 | S-03 | email-password-sign-in       | zarejestrować się, zalogować i wylogować; niezalogowany trafia na ekran logowania       | F-01                       | FR-001, FR-002                 | proposed |
 | S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | proposed |
 | S-05 | private-classified-expenses  | dodać wydatki trzech typów i zobaczyć Safe-to-Spend policzony z własnych, prywatnych danych | S-04                       | US-01, FR-004, FR-005, FR-006, FR-002 | proposed |
@@ -133,7 +133,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Jak mapują się istniejące tagi (np. „Zachcianka”) na nową klasyfikację, przy zachowaniu tagowania wymaganego przez PRD? „Zbędne” i „Zachcianka” praktycznie się dublują. — Owner: user. Block: no.
   - Czy kategorie zostają w modelu (z wyborem przy transakcji), czy wykres kategorii znika na rzecz wykresu klasyfikacji? — Owner: user. Block: no (rozstrzygane w planie tej zmiany).
 - **Risk:** Rozstrzyga główne ryzyko (dwa modele danych) przed powstaniem tabel; po tej zmianie żaden ekran nie zapisuje danych użytkownika do localStorage z pominięciem repozytorium.
-- **Status:** planning
+- **Status:** in-progress
 
 ### S-03: Rejestracja i logowanie email + hasło
 

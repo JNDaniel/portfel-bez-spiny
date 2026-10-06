@@ -637,13 +637,13 @@ There is no data migration (PRD §Constraints). Existing users of the demo see a
 
 #### Automated
 
-- [ ] 1.1 `npm run check` passes
-- [ ] 1.2 `npm run test:e2e` passes on both projects (the suite is unchanged)
-- [ ] 1.3 `rg` for legacy model, service, storage-key and HttpClient references in `src` returns no matches
+- [x] 1.1 `npm run check` passes
+- [x] 1.2 `npm run test:e2e` passes on both projects (the suite is unchanged)
+- [x] 1.3 `rg` for legacy model, service, storage-key and HttpClient references in `src` returns no matches
 
 #### Manual
 
-- [ ] 1.4 Dashboard screenshots are identical to production apart from the known chart flake; `/expenses` lands on the dashboard
+- [x] 1.4 Dashboard screenshots are identical to production apart from the known chart flake; `/expenses` lands on the dashboard
 
 ### Phase 2: Canonical Model, Domain Functions and Local Repositories
 
