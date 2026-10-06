@@ -40,7 +40,7 @@ Pierwotny plan wymagał następujących doprecyzowań:
 - **Testy i zależności:** health check wskazywał niekompilujący się test jednostkowy, nieudany test Mobile Pixel i podatne zależności. Przed wydaniem trzeba sprawdzić bieżący stan, naprawić oba testy i podjąć decyzję o wynikach audytu.
 - **Brak CI:** do czasu dodania CI lokalne testy są obowiązkową bramką przed każdym pushem na `master`.
 - **Konfiguracja npm:** `.npmrc` zawiera `strict-ssl=false`. Usunąć albo zastąpić udokumentowaną konfiguracją zaufanego certyfikatu.
-- **Wersja Node:** repozytorium nie przypina wersji. Ustalić wspieraną wersję (lokalnie Node 22), zapisać ją w `.nvmrc` i ustawić `NODE_VERSION` w Cloudflare. Potwierdzić w logu buildu.
+- **Wersja Node:** Node 24 LTS (Angular 22 wymaga `^24.15.0`), przypięta w `.nvmrc` i ustawiona jako `NODE_VERSION=24` w Cloudflare. Potwierdzić w logu buildu.
 - **SPA i nagłówki:** sprawdzić odświeżanie bezpośrednich tras na Pages. Regułę `/* /index.html 200` w `public/_redirects` dodać tylko wtedy, gdy domyślny fallback nie wystarczy. Nagłówki ustawić przez `public/_headers`.
 
 Docelowe nagłówki dla publicznego demo:
@@ -136,7 +136,7 @@ Przed tym etapem wszystkie commity muszą być na `origin/master`, bo Cloudflare
    - Enable Preview builds: włączone. Protect with Cloudflare Access: na razie wyłączone, bo demo jest publiczne.
    - Path: `/`.
    - API token: utworzyć nowy, nazwany jednoznacznie, np. `workers-builds-portfel-bez-spiny`.
-   - Build variables: `NODE_VERSION=22` i `DATA_BACKEND=local`. Zmienne Supabase dodajemy w Etapie 2.
+   - Build variables: `NODE_VERSION=24` i `DATA_BACKEND=local`. Zmienne Supabase dodajemy w Etapie 2.
 4. Branch produkcyjny ustawia się po utworzeniu projektu: **Settings → Build → Branch control**. Ustawić `master`.
 5. Pierwszy udany build `master` jest wdrożeniem produkcyjnym pod adresem `https://portfel-bez-spiny.<subdomena-konta>.workers.dev`.
 
