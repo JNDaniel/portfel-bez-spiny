@@ -7,7 +7,7 @@ import {
   IonItem, 
   IonItemOptions, 
   IonItemOption
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 import { 

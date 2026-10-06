@@ -35,7 +35,7 @@
     "@capacitor/haptics": "^8.0.2",
     "@capacitor/keyboard": "^8.0.6",
     "@capacitor/status-bar": "^8.0.4",
-    "@ionic/angular": "^8.8.19",
+    "@ionic/angular": "^9.0.6",
     "@supabase/supabase-js": "^2.117.2",
     "chart.js": "^4.5.1",
     "ionicons": "^8.1.0",

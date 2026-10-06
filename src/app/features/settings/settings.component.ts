@@ -1,7 +1,7 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent } from '@ionic/angular/standalone';
+import { IonContent } from '@ionic/angular';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { SettingsService } from '../../core/services/settings.service';
 import { ExpenseService } from '../../core/services/expense.service';

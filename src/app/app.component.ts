@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { IonApp } from '@ionic/angular/standalone';
+import { IonApp } from '@ionic/angular';
 import { ToastComponent } from './shared/components/toast/toast.component';
 
 @Component({

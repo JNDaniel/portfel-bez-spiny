@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, effect, inject, ChangeDetectionStrategy } from '@angular/core';
-import { IonContent } from '@ionic/angular/standalone';
+import { IonContent } from '@ionic/angular';
 import { Chart, registerables } from 'chart.js';
 import { ExpenseService } from '../../core/services/expense.service';
 import { SettingsService } from '../../core/services/settings.service';

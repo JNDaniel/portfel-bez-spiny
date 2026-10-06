@@ -502,36 +502,36 @@ No data migration. Rollback is per phase: each phase is its own commit, so rever
 
 #### Automated
 
-- [x] 4.1 `npm ls @angular/core @angular/cli @angular/build typescript` shows 22.2.x and TypeScript 6.0.x
-- [x] 4.2 `npm ls @ionic/angular` shows 8.8.19 with no peer-dependency errors
-- [x] 4.3 `src/app/app.config.ts` still provides `provideZoneChangeDetection({ eventCoalescing: true })`
-- [x] 4.4 `npm audit` lists no `@angular/*` packages
-- [x] 4.5 `npm run build` passes, including the post-build secret scan
-- [x] 4.6 `npm test -- --watch=false` passes
-- [x] 4.7 `npm run test:e2e` passes on both projects
-- [x] 4.8 `npm run cap:sync` completes without errors
+- [x] 4.1 `npm ls @angular/core @angular/cli @angular/build typescript` shows 22.2.x and TypeScript 6.0.x — aa8f778
+- [x] 4.2 `npm ls @ionic/angular` shows 8.8.19 with no peer-dependency errors — aa8f778
+- [x] 4.3 `src/app/app.config.ts` still provides `provideZoneChangeDetection({ eventCoalescing: true })` — aa8f778
+- [x] 4.4 `npm audit` lists no `@angular/*` packages — aa8f778
+- [x] 4.5 `npm run build` passes, including the post-build secret scan — aa8f778
+- [x] 4.6 `npm test -- --watch=false` passes — aa8f778
+- [x] 4.7 `npm run test:e2e` passes on both projects — aa8f778
+- [x] 4.8 `npm run cap:sync` completes without errors — aa8f778
 
 #### Manual
 
-- [x] 4.9 Dashboard, expense entry, occasion expenses not triggering the daily-budget warning, and Safe-to-Spend visibility without scrolling verified on Pixel 7 viewport
-- [x] 4.10 Ionic components (pull-to-refresh, floating action button, sliding item options, icons) behave as before on Ionic 8.8.19
-- [x] 4.11 Production build output size is within roughly 10% of the Phase 1 build
+- [x] 4.9 Dashboard, expense entry, occasion expenses not triggering the daily-budget warning, and Safe-to-Spend visibility without scrolling verified on Pixel 7 viewport — aa8f778
+- [x] 4.10 Ionic components (pull-to-refresh, floating action button, sliding item options, icons) behave as before on Ionic 8.8.19 — aa8f778
+- [x] 4.11 Production build output size is within roughly 10% of the Phase 1 build — aa8f778
 
 ### Phase 5: Ionic 8 → 9
 
 #### Automated
 
-- [ ] 5.1 `audit-triage.md` contains the Ionic 9 review section
-- [ ] 5.2 `npm ls @ionic/angular` shows 9.x with no peer-dependency errors
-- [ ] 5.3 `npm run build` passes, including the post-build secret scan
-- [ ] 5.4 `npm test -- --watch=false` passes
-- [ ] 5.5 `npm run test:e2e` passes on both projects
-- [ ] 5.6 `npm run cap:sync` completes without errors
+- [x] 5.1 `audit-triage.md` contains the Ionic 9 review section
+- [x] 5.2 `npm ls @ionic/angular` shows 9.x with no peer-dependency errors
+- [x] 5.3 `npm run build` passes, including the post-build secret scan
+- [x] 5.4 `npm test -- --watch=false` passes
+- [x] 5.5 `npm run test:e2e` passes on both projects
+- [x] 5.6 `npm run cap:sync` completes without errors
 
 #### Manual
 
-- [ ] 5.7 Pull-to-refresh, floating action button, sliding item options and icons behave and look as before on Pixel 7 viewport
-- [ ] 5.8 Safe-to-Spend and its warning state are visible without scrolling on Pixel 7 viewport
+- [x] 5.7 Pull-to-refresh, floating action button, sliding item options and icons behave and look as before on Pixel 7 viewport
+- [x] 5.8 Safe-to-Spend and its warning state are visible without scrolling on Pixel 7 viewport
 
 ### Phase 6: Karma → Vitest
 

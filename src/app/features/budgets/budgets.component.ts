@@ -5,7 +5,7 @@ import {
   IonContent, 
   IonRefresher, 
   IonRefresherContent 
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { refreshOutline, createOutline, alertCircleOutline } from 'ionicons/icons';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';

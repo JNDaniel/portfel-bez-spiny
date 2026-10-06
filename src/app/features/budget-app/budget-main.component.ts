@@ -6,7 +6,7 @@ import {
   IonFab, 
   IonFabButton, 
   IonIcon 
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { add, refreshOutline, cameraOutline, micOutline, repeatOutline, alertCircleOutline, folderOutline } from 'ionicons/icons';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
