@@ -1,4 +1,4 @@
-import { formatMinorAmount, formatWholeZloty, parseAmountToMinor } from './money';
+import { formatAxisZloty, formatMinorAmount, formatWholeZloty, parseAmountToMinor } from './money';
 
 describe('parseAmountToMinor', () => {
   it('parses decimals without float drift', () => {
@@ -24,6 +24,21 @@ describe('parseAmountToMinor', () => {
     expect(parseAmountToMinor('1,2,3')).toBeNull();
     expect(parseAmountToMinor('1.2,3')).toBeNull();
     expect(parseAmountToMinor(Number.NaN)).toBeNull();
+  });
+});
+
+describe('formatAxisZloty', () => {
+  it('shows whole zloty below 1000', () => {
+    expect(formatAxisZloty(0)).toBe('0');
+    expect(formatAxisZloty(100)).toBe('100');
+    expect(formatAxisZloty(250)).toBe('250');
+  });
+
+  it('shows thousands with a Polish comma from 1000', () => {
+    expect(formatAxisZloty(1000)).toBe('1k');
+    expect(formatAxisZloty(1500)).toBe('1,5k');
+    expect(formatAxisZloty(12345)).toBe('12,3k');
+    expect(formatAxisZloty(999.6)).toBe('1k');
   });
 });
 

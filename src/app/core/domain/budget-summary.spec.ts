@@ -121,6 +121,25 @@ describe('summarizeMonth', () => {
     expect(past.daysLeft).toBe(1);
     expect(future.daysLeft).toBe(30);
   });
+
+  it('flags past months as closed and gives them no daily allowance', () => {
+    const past = summarizeMonth({
+      expenses: [],
+      period: '2026-09',
+      limitMinor: 30000,
+      today: TODAY,
+    });
+    const current = summarizeMonth({
+      expenses: [expense('2026-10-06', 10000), expense('2026-10-07', 10000, 'occasional')],
+      period: '2026-10',
+      limitMinor: 310000,
+      today: TODAY,
+    });
+    expect(past.isClosed).toBe(true);
+    expect(past.safeToSpendDailyMinor).toBeNull();
+    expect(current.isClosed).toBe(false);
+    expect(current.safeToSpendDailyMinor).toBe(15000);
+  });
 });
 
 describe('classificationBreakdown', () => {
@@ -135,6 +154,25 @@ describe('classificationBreakdown', () => {
     expect(rows.map((row) => row.classification)).toEqual(['everyday', 'want', 'occasional']);
     expect(rows.every((row) => row.percentOfTotal === 0)).toBe(true);
     expect(rows.map((row) => row.countsTowardLimit)).toEqual([true, true, false]);
+  });
+
+  function percentsFor(everyday: number, want: number, occasional: number): number[] {
+    const summary = summarizeMonth({
+      expenses: [
+        expense('2026-10-05', everyday, 'everyday'),
+        expense('2026-10-05', want, 'want'),
+        expense('2026-10-05', occasional, 'occasional'),
+      ],
+      period: '2026-10',
+      limitMinor: null,
+      today: TODAY,
+    });
+    return classificationBreakdown(summary).map((row) => row.percentOfTotal);
+  }
+
+  it('gives leftover points to the largest remainders so shares sum to 100', () => {
+    expect(percentsFor(1, 1, 1)).toEqual([34, 33, 33]);
+    expect(percentsFor(455, 455, 90)).toEqual([46, 45, 9]);
   });
 });
 

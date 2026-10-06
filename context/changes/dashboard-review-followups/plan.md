@@ -280,13 +280,13 @@ None. No stored data changes.
 
 #### Automated
 
-- [ ] 1.1 `npm run check` passes
-- [ ] 1.2 `budget-summary.spec.ts` and `money.spec.ts` contain the cases listed above and pass
-- [ ] 1.3 Deliberate break: switching `classificationBreakdown` back to per-row `Math.round` makes `budget-summary.spec.ts` fail (then reverted)
+- [x] 1.1 `npm run check` passes
+- [x] 1.2 `budget-summary.spec.ts` and `money.spec.ts` contain the cases listed above and pass
+- [x] 1.3 Deliberate break: switching `classificationBreakdown` back to per-row `Math.round` makes `budget-summary.spec.ts` fail (then reverted)
 
 #### Manual
 
-- [ ] 1.4 No `src/app/features/` file changed in this phase except where a type change forced it
+- [x] 1.4 No `src/app/features/` file changed in this phase except where a type change forced it
 
 ### Phase 2: Reactive Clock
 

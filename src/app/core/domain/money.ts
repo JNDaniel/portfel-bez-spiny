@@ -31,6 +31,17 @@ export function formatMinorAmount(minor: number): string {
   return `${sign}${whole},${fraction}`;
 }
 
+export function formatAxisZloty(value: number): string {
+  if (Math.abs(value) < 1000) {
+    const rounded = Math.round(value);
+    if (Math.abs(rounded) < 1000) {
+      return String(rounded);
+    }
+  }
+  const thousands = (Math.round(value / 100) / 10).toFixed(1);
+  return `${thousands.replace(/\.0$/, '').replace('.', ',')}k`;
+}
+
 export function formatWholeZloty(minor: number): string {
   return String(Math.round(minor / 100));
 }

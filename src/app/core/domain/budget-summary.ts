@@ -14,6 +14,7 @@ export interface MonthSummary {
   daysInMonth: number;
   daysLeft: number;
   safeToSpendDailyMinor: number | null;
+  isClosed: boolean;
 }
 
 export interface ClassificationShare {
@@ -88,7 +89,8 @@ export function summarizeMonth(input: {
     limitMinor === null || limitMinor <= 0 ? null : Math.round((inLimitMinor * 100) / limitMinor);
 
   let safeToSpendDailyMinor: number | null = null;
-  if (remainingMinor !== null) {
+  const isClosed = relation < 0;
+  if (remainingMinor !== null && !isClosed) {
     safeToSpendDailyMinor =
       remainingMinor <= 0 ? 0 : Math.round(remainingMinor / daysLeft / 100) * 100;
   }
@@ -106,6 +108,7 @@ export function summarizeMonth(input: {
     daysInMonth,
     daysLeft,
     safeToSpendDailyMinor,
+    isClosed,
   };
 }
 
@@ -115,11 +118,26 @@ export function classificationBreakdown(summary: MonthSummary): ClassificationSh
     ['want', summary.wantMinor],
     ['occasional', summary.occasionalMinor],
   ];
-  return rows.map(([classification, amountMinor]) => ({
+  const percents = rows.map(() => 0);
+  if (summary.totalMinor > 0) {
+    const exact = rows.map(([, amountMinor]) => (amountMinor * 100) / summary.totalMinor);
+    exact.forEach((value, index) => (percents[index] = Math.floor(value)));
+    let leftover = 100 - percents.reduce((sum, value) => sum + value, 0);
+    const byRemainder = exact
+      .map((value, index) => ({ index, remainder: value - Math.floor(value) }))
+      .sort((a, b) => b.remainder - a.remainder || a.index - b.index);
+    for (const { index } of byRemainder) {
+      if (leftover <= 0) {
+        break;
+      }
+      percents[index] += 1;
+      leftover -= 1;
+    }
+  }
+  return rows.map(([classification, amountMinor], index) => ({
     classification,
     amountMinor,
-    percentOfTotal:
-      summary.totalMinor === 0 ? 0 : Math.round((amountMinor * 100) / summary.totalMinor),
+    percentOfTotal: percents[index],
     countsTowardLimit: classification !== 'occasional',
   }));
 }
