@@ -662,27 +662,27 @@ There is no data migration (PRD §Constraints). Existing users of the demo see a
 
 #### Automated
 
-- [x] 3.1 `npm run check` passes
-- [x] 3.2 `npm run test:e2e` passes on both projects (7 tests × 2)
-- [x] 3.3 Only the local repository store touches `localStorage` in `src/app` (spec files excluded)
-- [x] 3.4 No references to `budget-app.model`, `MonthData`, `chartPoints`, `categoriesBreakdown`, private bracket access, `budzetapp_v2_data` or UTC date slicing remain in `src`
-- [x] 3.5 `@capacitor/haptics` is imported only by `haptics.service.ts`
-- [x] 3.6 Deliberate break: `classificationAfterFolderAssign` always returning `current` makes the state-service spec and E2E test 5 fail (then reverted)
+- [x] 3.1 `npm run check` passes — 2702f0f
+- [x] 3.2 `npm run test:e2e` passes on both projects (7 tests × 2) — 2702f0f
+- [x] 3.3 Only the local repository store touches `localStorage` in `src/app` (spec files excluded) — 2702f0f
+- [x] 3.4 No references to `budget-app.model`, `MonthData`, `chartPoints`, `categoriesBreakdown`, private bracket access, `budzetapp_v2_data` or UTC date slicing remain in `src` — 2702f0f
+- [x] 3.5 `@capacitor/haptics` is imported only by `haptics.service.ts` — 2702f0f
+- [x] 3.6 Deliberate break: `classificationAfterFolderAssign` always returning `current` makes the state-service spec and E2E test 5 fail (then reverted) — 2702f0f
 
 #### Manual
 
-- [x] 3.7 Desktop and Pixel 7 screenshots of the empty state, the US-01 state and the add modal look consistent; Safe-to-Spend is above the Pixel 7 fold in both states
-- [x] 3.8 The add flow still takes one modal and one submit, with `Codzienny` preselected
+- [x] 3.7 Desktop and Pixel 7 screenshots of the empty state, the US-01 state and the add modal look consistent; Safe-to-Spend is above the Pixel 7 fold in both states — 2702f0f
+- [x] 3.8 The add flow still takes one modal and one submit, with `Codzienny` preselected — 2702f0f
 
 ### Phase 4: Documentation and Handoff
 
 #### Automated
 
-- [ ] 4.1 `npm run check` passes
-- [ ] 4.2 `npm run test:e2e` passes on both projects
-- [ ] 4.3 `rg -n "prototype references" AGENTS.md` returns no matches
+- [x] 4.1 `npm run check` passes
+- [x] 4.2 `npm run test:e2e` passes on both projects
+- [x] 4.3 `rg -n "prototype references" AGENTS.md` returns no matches
 
 #### Manual
 
-- [ ] 4.4 AGENTS.md and README describe the code as it now is
+- [x] 4.4 AGENTS.md and README describe the code as it now is
 - [ ] 4.5 After the user approves a push to `master`, Cloudflare Workers Builds succeeds and production shows the empty-start dashboard

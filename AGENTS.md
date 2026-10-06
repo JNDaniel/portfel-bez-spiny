@@ -17,7 +17,7 @@ Use the scripts defined in @package.json. Follow @README.md for startup and veri
 
 ## Project Structure and Conventions
 
-Place domain models, repository abstractions, and stateful services under `src/app/core/`. Put lazy-loaded user flows in `src/app/features/` and reusable UI in `src/app/shared/`. Treat `src/app/core/models/budget-app.model.ts` and `src/app/core/services/budget-state.service.ts` as prototype references until the canonical consumer-finance contract is selected.
+Place domain models, repository abstractions, and stateful services under `src/app/core/`. Put lazy-loaded user flows in `src/app/features/` and reusable UI in `src/app/shared/`. The canonical model is `src/app/core/models/finance.model.ts` (money in integer grosze). Persistence goes through the abstract repositories in `src/app/core/repositories/` (local implementations in `local/`, Supabase later). Dashboard rules live in `src/app/core/domain/` with unit tests, and `BudgetStateService` is the UI facade.
 
 Create standalone Angular components. Use Signals for local reactive state and do not introduce NgModules. Follow @tsconfig.json and @.editorconfig. Name source files in kebab case and tests `*.spec.ts`.
 

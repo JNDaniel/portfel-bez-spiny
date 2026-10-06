@@ -4,7 +4,7 @@ Hybrydowa aplikacja webowa i mobilna do zarządzania osobistymi wydatkami. Jej g
 
 ## Status projektu
 
-Obecny kod jest interaktywną makietą opartą na danych lokalnych. Docelowe MVP doda konta użytkowników i trwałe, prywatne dane przez Supabase Auth, Postgres oraz Row Level Security.
+Aplikacja działa na danych lokalnych przez repozytoria i startuje pusta. Użytkownik ustawia miesięczny limit i klasyfikuje wydatki jako codzienny, zachcianka albo okazjonalny; wydatki okazjonalne nie wliczają się do limitu ani do Safe-to-Spend. Docelowe MVP doda konta użytkowników i trwałe, prywatne dane przez Supabase Auth, Postgres oraz Row Level Security.
 
 Aktualne źródła ustaleń:
 
