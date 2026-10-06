@@ -38,10 +38,13 @@ import { SupportedCurrency } from '../../core/models/settings.model';
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+              <label
+                for="settings-company-name"
+                class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
                 >Company / Workspace Name</label
               >
               <input
+                id="settings-company-name"
                 type="text"
                 [ngModel]="settingsService.settings().companyName"
                 (ngModelChange)="settingsService.updateSettings({ companyName: $event })"
@@ -50,10 +53,13 @@ import { SupportedCurrency } from '../../core/models/settings.model';
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+              <label
+                for="settings-currency"
+                class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
                 >Display Currency</label
               >
               <select
+                id="settings-currency"
                 [ngModel]="settingsService.currency()"
                 (ngModelChange)="onCurrencyChange($event)"
                 class="w-full px-3.5 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-brand-500"
@@ -66,7 +72,9 @@ import { SupportedCurrency } from '../../core/models/settings.model';
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+              <label
+                for="settings-overall-monthly-budget"
+                class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
                 >Overall Monthly Budget Target</label
               >
               <div class="relative">
@@ -75,6 +83,7 @@ import { SupportedCurrency } from '../../core/models/settings.model';
                   >{{ settingsService.currencySymbol() }}</span
                 >
                 <input
+                  id="settings-overall-monthly-budget"
                   type="number"
                   step="1000"
                   min="0"
@@ -86,10 +95,13 @@ import { SupportedCurrency } from '../../core/models/settings.model';
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+              <label
+                for="settings-simulate-network-latency-ms"
+                class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
                 >Simulated Network Latency (Mock)</label
               >
               <input
+                id="settings-simulate-network-latency-ms"
                 type="number"
                 step="50"
                 min="0"
@@ -148,10 +160,13 @@ import { SupportedCurrency } from '../../core/models/settings.model';
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+              <label
+                for="settings-api-url"
+                class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
                 >Production REST API Base URL</label
               >
               <input
+                id="settings-api-url"
                 type="text"
                 [disabled]="settingsService.isMockBackend()"
                 [ngModel]="settingsService.apiUrl()"
@@ -239,9 +254,9 @@ export class SettingsComponent {
     this.settingsService.setCurrency(val as SupportedCurrency);
   }
 
-  async toggleMockBackend(e: any) {
+  async toggleMockBackend(e: Event) {
     await Haptics.impact({ style: ImpactStyle.Medium });
-    const isMock = e.target.checked;
+    const isMock = (e.target as HTMLInputElement).checked;
     this.settingsService.updateSettings({ isMockBackend: isMock });
     this.notificationService.info(
       isMock ? 'Mock Backend Enabled' : 'Live REST Backend Enabled',
@@ -264,17 +279,18 @@ export class SettingsComponent {
     }
   }
 
-  onFileImport(event: any) {
-    const file = event.target.files[0];
+  onFileImport(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e: any) => {
+    reader.onload = () => {
       try {
-        const parsed = JSON.parse(e.target.result);
+        const parsed = JSON.parse(reader.result as string);
         this.expenseService.importJson(parsed);
-      } catch (err: any) {
-        this.notificationService.error('Import Failed', 'Invalid JSON format: ' + err.message);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        this.notificationService.error('Import Failed', 'Invalid JSON format: ' + message);
       }
     };
     reader.readAsText(file);

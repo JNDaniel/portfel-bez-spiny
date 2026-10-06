@@ -10,6 +10,8 @@ import { IonContent } from '@ionic/angular';
 import { Chart, registerables } from 'chart.js';
 import { ExpenseService } from '../../core/services/expense.service';
 import { SettingsService } from '../../core/services/settings.service';
+import { CategorySpendBreakdown } from '../../core/models/analytics.model';
+import { Expense } from '../../core/models/expense.model';
 
 Chart.register(...registerables);
 
@@ -184,7 +186,7 @@ export class AnalyticsComponent {
     });
   }
 
-  private renderCategoryBar(cats: any[], symbol: string) {
+  private renderCategoryBar(cats: CategorySpendBreakdown[], symbol: string) {
     if (!this.categoryBarCanvas) return;
     if (this.barChart) this.barChart.destroy();
 
@@ -229,7 +231,7 @@ export class AnalyticsComponent {
     });
   }
 
-  private renderPaymentPie(expenses: any[]) {
+  private renderPaymentPie(expenses: Expense[]) {
     if (!this.paymentPieCanvas) return;
     if (this.pieChart) this.pieChart.destroy();
 

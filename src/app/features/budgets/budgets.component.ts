@@ -1,7 +1,12 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonRefresher, IonRefresherContent } from '@ionic/angular';
+import {
+  IonContent,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherCustomEvent,
+} from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { refreshOutline, createOutline, alertCircleOutline } from 'ionicons/icons';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
@@ -9,6 +14,7 @@ import { BudgetService } from '../../core/services/budget.service';
 import { ExpenseService } from '../../core/services/expense.service';
 import { SettingsService } from '../../core/services/settings.service';
 import { CATEGORY_META, ExpenseCategory } from '../../core/models/expense.model';
+import { BudgetStatus } from '../../core/models/budget.model';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
 
 @Component({
@@ -217,14 +223,17 @@ import { ModalComponent } from '../../shared/components/modal/modal.component';
       [isOpen]="isModalOpen()"
       [title]="'Edit Budget Limit: ' + editingCategory()"
       size="sm"
-      (close)="isModalOpen.set(false)"
+      (closed)="isModalOpen.set(false)"
     >
       <div class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+          <label
+            for="budgets-edit-monthly-limit"
+            class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
             >Monthly Spending Limit ({{ settingsService.currency() }})</label
           >
           <input
+            id="budgets-edit-monthly-limit"
             type="number"
             [(ngModel)]="editMonthlyLimit"
             min="100"
@@ -234,10 +243,13 @@ import { ModalComponent } from '../../shared/components/modal/modal.component';
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+          <label
+            for="budgets-edit-threshold"
+            class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
             >Alert Warning Threshold (%)</label
           >
           <input
+            id="budgets-edit-threshold"
             type="number"
             [(ngModel)]="editThreshold"
             min="50"
@@ -247,10 +259,13 @@ import { ModalComponent } from '../../shared/components/modal/modal.component';
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+          <label
+            for="budgets-edit-notes"
+            class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
             >Notes / Description</label
           >
           <textarea
+            id="budgets-edit-notes"
             [(ngModel)]="editNotes"
             rows="2"
             class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-brand-500"
@@ -288,15 +303,15 @@ export class BudgetsComponent {
   readonly isModalOpen = signal<boolean>(false);
   readonly editingCategory = signal<ExpenseCategory>('Cloud & Infrastructure');
 
-  editMonthlyLimit: number = 5000;
-  editThreshold: number = 80;
-  editNotes: string = '';
+  editMonthlyLimit = 5000;
+  editThreshold = 80;
+  editNotes = '';
 
   constructor() {
     addIcons({ refreshOutline, createOutline, alertCircleOutline });
   }
 
-  async handleRefresh(event: any) {
+  async handleRefresh(event: RefresherCustomEvent) {
     await Haptics.impact({ style: ImpactStyle.Medium });
     this.budgetService.loadBudgets();
     setTimeout(() => {
@@ -304,12 +319,12 @@ export class BudgetsComponent {
     }, 600);
   }
 
-  getCategoryBadgeClass(category: any): string {
-    const meta = CATEGORY_META[category as ExpenseCategory];
+  getCategoryBadgeClass(category: ExpenseCategory): string {
+    const meta = CATEGORY_META[category];
     return meta ? meta.bgColor : 'bg-slate-100 text-slate-700';
   }
 
-  async openEditModal(item: any) {
+  async openEditModal(item: BudgetStatus) {
     await Haptics.impact({ style: ImpactStyle.Light });
     this.editingCategory.set(item.category);
     this.editMonthlyLimit = item.budget.monthlyLimit;

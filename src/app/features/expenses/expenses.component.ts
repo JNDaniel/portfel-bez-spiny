@@ -8,6 +8,7 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
+  RefresherCustomEvent,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -21,7 +22,12 @@ import {
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { ExpenseService } from '../../core/services/expense.service';
 import { SettingsService } from '../../core/services/settings.service';
-import { CATEGORY_META, Expense, ExpenseCategory } from '../../core/models/expense.model';
+import {
+  CATEGORY_META,
+  Expense,
+  ExpenseCategory,
+  ExpenseFilter,
+} from '../../core/models/expense.model';
 import { ExpenseFormModalComponent } from '../../shared/components/expense-form-modal/expense-form-modal.component';
 
 @Component({
@@ -89,10 +95,13 @@ import { ExpenseFormModalComponent } from '../../shared/components/expense-form-
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
             <!-- Search input -->
             <div>
-              <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1"
+              <label
+                for="expenses-search"
+                class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1"
                 >Search</label
               >
               <input
+                id="expenses-search"
                 type="text"
                 [ngModel]="expenseService.filter().search"
                 (ngModelChange)="onFilterChange({ search: $event })"
@@ -103,10 +112,13 @@ import { ExpenseFormModalComponent } from '../../shared/components/expense-form-
 
             <!-- Category filter -->
             <div>
-              <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1"
+              <label
+                for="expenses-category"
+                class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1"
                 >Category</label
               >
               <select
+                id="expenses-category"
                 [ngModel]="expenseService.filter().category"
                 (ngModelChange)="onFilterChange({ category: $event })"
                 class="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-brand-500 transition"
@@ -120,10 +132,13 @@ import { ExpenseFormModalComponent } from '../../shared/components/expense-form-
 
             <!-- Status filter -->
             <div>
-              <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1"
+              <label
+                for="expenses-status"
+                class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1"
                 >Status</label
               >
               <select
+                id="expenses-status"
                 [ngModel]="expenseService.filter().status"
                 (ngModelChange)="onFilterChange({ status: $event })"
                 class="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-brand-500 transition"
@@ -137,10 +152,13 @@ import { ExpenseFormModalComponent } from '../../shared/components/expense-form-
 
             <!-- Payment Method -->
             <div>
-              <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1"
+              <label
+                for="expenses-payment-method"
+                class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1"
                 >Payment Method</label
               >
               <select
+                id="expenses-payment-method"
                 [ngModel]="expenseService.filter().paymentMethod"
                 (ngModelChange)="onFilterChange({ paymentMethod: $event })"
                 class="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-brand-500 transition"
@@ -156,10 +174,13 @@ import { ExpenseFormModalComponent } from '../../shared/components/expense-form-
 
             <!-- Sort By -->
             <div>
-              <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1"
+              <label
+                for="expenses-sort-by"
+                class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1"
                 >Sort By</label
               >
               <select
+                id="expenses-sort-by"
                 [ngModel]="expenseService.filter().sortBy"
                 (ngModelChange)="onFilterChange({ sortBy: $event })"
                 class="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-brand-500 transition"
@@ -377,7 +398,7 @@ import { ExpenseFormModalComponent } from '../../shared/components/expense-form-
     <app-expense-form-modal
       [isOpen]="isModalOpen()"
       [expenseToEdit]="expenseToEdit()"
-      (close)="isModalOpen.set(false)"
+      (closed)="isModalOpen.set(false)"
     ></app-expense-form-modal>
   `,
 })
@@ -405,7 +426,7 @@ export class ExpensesComponent {
     addIcons({ add, downloadOutline, trashOutline, createOutline, refreshOutline, funnelOutline });
   }
 
-  async handleRefresh(event: any) {
+  async handleRefresh(event: RefresherCustomEvent) {
     await Haptics.impact({ style: ImpactStyle.Medium });
     this.expenseService.loadExpenses();
     setTimeout(() => {
@@ -413,12 +434,12 @@ export class ExpensesComponent {
     }, 600);
   }
 
-  getCategoryBadgeClass(category: any): string {
-    const meta = CATEGORY_META[category as ExpenseCategory];
+  getCategoryBadgeClass(category: ExpenseCategory): string {
+    const meta = CATEGORY_META[category];
     return meta ? meta.bgColor : 'bg-slate-100 text-slate-700';
   }
 
-  onFilterChange(partial: any) {
+  onFilterChange(partial: Partial<ExpenseFilter>) {
     this.expenseService.updateFilter(partial);
   }
 

@@ -5,7 +5,7 @@ import { HttpBudgetService } from './http-budget.service';
 import { SettingsService } from './settings.service';
 import { NotificationService } from './notification.service';
 import { ExpenseService } from './expense.service';
-import { Budget, BudgetStatus, CreateBudgetDto, UpdateBudgetDto } from '../models/budget.model';
+import { Budget, BudgetStatus, CreateBudgetDto } from '../models/budget.model';
 import { ExpenseCategory } from '../models/expense.model';
 
 @Injectable({

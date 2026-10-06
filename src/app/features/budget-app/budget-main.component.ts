@@ -6,6 +6,7 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
+  RefresherCustomEvent,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -274,7 +275,7 @@ export class BudgetMainComponent {
     this.state.isWasteRadarOpen.update((v) => !v);
   }
 
-  async handleRefresh(event: any) {
+  async handleRefresh(event: RefresherCustomEvent) {
     await Haptics.impact({ style: ImpactStyle.Medium });
     setTimeout(() => {
       event.target.complete();

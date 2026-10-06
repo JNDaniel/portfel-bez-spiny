@@ -41,10 +41,11 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
           <!-- Form -->
           <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 text-xs">
             <div>
-              <label class="block text-slate-400 font-semibold mb-1"
+              <label for="budget-add-title" class="block text-slate-400 font-semibold mb-1"
                 >Nazwa / Tytuł transakcji *</label
               >
               <input
+                id="budget-add-title"
                 type="text"
                 formControlName="title"
                 placeholder="np. Biedronka, Paliwo, Restauracja"
@@ -54,8 +55,11 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 
             <div class="grid grid-cols-2 gap-3">
               <div>
-                <label class="block text-slate-400 font-semibold mb-1">Kwota (zł) *</label>
+                <label for="budget-add-amount" class="block text-slate-400 font-semibold mb-1"
+                  >Kwota (zł) *</label
+                >
                 <input
+                  id="budget-add-amount"
                   type="number"
                   step="0.01"
                   min="0.01"
@@ -66,8 +70,11 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
               </div>
 
               <div>
-                <label class="block text-slate-400 font-semibold mb-1">Kategoria *</label>
+                <label for="budget-add-category" class="block text-slate-400 font-semibold mb-1"
+                  >Kategoria *</label
+                >
                 <select
+                  id="budget-add-category"
                   formControlName="category"
                   class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-900/90 border border-slate-700 text-white outline-none focus:border-emerald-500"
                 >
@@ -84,8 +91,11 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
             </div>
 
             <div>
-              <label class="block text-slate-400 font-semibold mb-1">Krótki opis / Notatka</label>
+              <label for="budget-add-note" class="block text-slate-400 font-semibold mb-1"
+                >Krótki opis / Notatka</label
+              >
               <input
+                id="budget-add-note"
                 type="text"
                 formControlName="note"
                 placeholder="np. „głodny po treningu”, „farba do salonu”"
@@ -95,10 +105,16 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 
             <!-- Tags Selector -->
             <div>
-              <label class="block text-slate-400 font-semibold mb-1.5"
-                >Charakter zakupu (Tagi)</label
+              <span
+                id="budget-add-tags-label"
+                class="block leading-[normal] text-slate-400 font-semibold mb-1.5"
+                >Charakter zakupu (Tagi)</span
               >
-              <div class="flex flex-wrap gap-2">
+              <div
+                class="flex flex-wrap gap-2"
+                role="group"
+                aria-labelledby="budget-add-tags-label"
+              >
                 @for (tag of availableTags; track tag.name) {
                   <button
                     type="button"

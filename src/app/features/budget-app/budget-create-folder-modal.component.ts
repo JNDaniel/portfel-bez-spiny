@@ -2,7 +2,6 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BudgetStateService } from '../../core/services/budget-state.service';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 @Component({
   selector: 'app-budget-create-folder-modal',
@@ -35,8 +34,11 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
           <!-- Form -->
           <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 text-xs">
             <div>
-              <label class="block text-slate-400 font-semibold mb-1">Nazwa folderu *</label>
+              <label for="budget-create-folder-name" class="block text-slate-400 font-semibold mb-1"
+                >Nazwa folderu *</label
+              >
               <input
+                id="budget-create-folder-name"
                 type="text"
                 formControlName="name"
                 placeholder="np. Wycieczka Japonia 🇯🇵, Remont kuchni 🔨, Ślub"
@@ -46,8 +48,16 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
             <!-- Emoji Picker -->
             <div>
-              <label class="block text-slate-400 font-semibold mb-1.5">Wybierz ikonę (Emoji)</label>
-              <div class="flex flex-wrap gap-2">
+              <span
+                id="budget-create-folder-emoji-label"
+                class="block leading-[normal] text-slate-400 font-semibold mb-1.5"
+                >Wybierz ikonę (Emoji)</span
+              >
+              <div
+                class="flex flex-wrap gap-2"
+                role="group"
+                aria-labelledby="budget-create-folder-emoji-label"
+              >
                 @for (emoji of sampleEmojis; track emoji) {
                   <button
                     type="button"
@@ -104,7 +114,7 @@ export class BudgetCreateFolderModalComponent {
   private readonly fb = inject(FormBuilder);
   readonly state = inject(BudgetStateService);
 
-  selectedEmoji: string = '🇯🇵';
+  selectedEmoji = '🇯🇵';
   readonly sampleEmojis = ['🇯🇵', '🏖️', '🏕️', '✈️', '🔨', '🎉', '🏎️', '🍕', '💻', '🎁'];
 
   readonly form: FormGroup = this.fb.group({

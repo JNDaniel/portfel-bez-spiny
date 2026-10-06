@@ -17,6 +17,7 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
+  RefresherCustomEvent,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -35,6 +36,7 @@ import { SettingsService } from '../../core/services/settings.service';
 import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
 import { ExpenseFormModalComponent } from '../../shared/components/expense-form-modal/expense-form-modal.component';
 import { CATEGORY_META, ExpenseCategory } from '../../core/models/expense.model';
+import { CategorySpendBreakdown, MonthlySpendTrend } from '../../core/models/analytics.model';
 
 Chart.register(...registerables);
 
@@ -399,7 +401,7 @@ Chart.register(...registerables);
     <!-- Expense Modal -->
     <app-expense-form-modal
       [isOpen]="isAddModalOpen()"
-      (close)="isAddModalOpen.set(false)"
+      (closed)="isAddModalOpen.set(false)"
     ></app-expense-form-modal>
   `,
 })
@@ -448,7 +450,7 @@ export class DashboardComponent {
     this.isAddModalOpen.set(true);
   }
 
-  async handleRefresh(event: any) {
+  async handleRefresh(event: RefresherCustomEvent) {
     await Haptics.impact({ style: ImpactStyle.Medium });
     this.expenseService.loadExpenses();
     this.budgetService.loadBudgets();
@@ -457,12 +459,12 @@ export class DashboardComponent {
     }, 600);
   }
 
-  getCategoryBadgeClass(category: any): string {
-    const meta = CATEGORY_META[category as ExpenseCategory];
+  getCategoryBadgeClass(category: ExpenseCategory): string {
+    const meta = CATEGORY_META[category];
     return meta ? meta.bgColor : 'bg-slate-100 text-slate-700';
   }
 
-  private renderTrendChart(trends: any[], symbol: string) {
+  private renderTrendChart(trends: MonthlySpendTrend[], symbol: string) {
     if (!this.trendCanvas) return;
     if (this.trendChart) this.trendChart.destroy();
 
@@ -525,7 +527,7 @@ export class DashboardComponent {
     });
   }
 
-  private renderCategoryChart(categories: any[]) {
+  private renderCategoryChart(categories: CategorySpendBreakdown[]) {
     if (!this.categoryCanvas) return;
     if (this.categoryChart) this.categoryChart.destroy();
 

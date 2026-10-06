@@ -155,13 +155,17 @@ import { BudgetFoldersBarComponent } from './budget-folders-bar.component';
             >
               <div
                 class="w-full py-3.5 transition select-none"
-                (pointerdown)="startLongPress(tx.id, $event)"
+                (pointerdown)="startLongPress(tx.id)"
                 (pointerup)="cancelLongPress()"
                 (pointerleave)="cancelLongPress()"
                 (contextmenu)="onContextMenu(tx.id, $event)"
               >
                 <div
                   (click)="handleRowClick(tx.id)"
+                  (keydown.enter)="onRowKeydown(tx.id, $event)"
+                  (keydown.space)="onRowKeydown(tx.id, $event)"
+                  role="button"
+                  tabindex="0"
                   class="flex items-center justify-between cursor-pointer select-none"
                 >
                   <!-- Left Checkbox & Category Icon & Details -->
@@ -420,7 +424,7 @@ export class BudgetTransactionsComponent {
   readonly availableTags = AVAILABLE_TAGS;
   readonly demoFeaturesEnabled = DEMO_FEATURES_ENABLED;
 
-  private longPressTimer: any = null;
+  private longPressTimer: ReturnType<typeof setTimeout> | null = null;
   private isLongPressTriggered = false;
 
   getCategoryEmoji(category: string): string {
@@ -463,7 +467,7 @@ export class BudgetTransactionsComponent {
     }
   }
 
-  startLongPress(txId: string, event: PointerEvent) {
+  startLongPress(txId: string) {
     this.isLongPressTriggered = false;
     this.longPressTimer = setTimeout(() => {
       this.isLongPressTriggered = true;
@@ -483,6 +487,13 @@ export class BudgetTransactionsComponent {
     event.preventDefault();
     this.cancelLongPress();
     this.state.enableSelectionMode(txId);
+  }
+
+  onRowKeydown(txId: string, event: Event) {
+    // Keys pressed on nested checkboxes and buttons must not also toggle the row.
+    if (event.target !== event.currentTarget) return;
+    event.preventDefault();
+    this.handleRowClick(txId);
   }
 
   handleRowClick(txId: string) {
@@ -519,8 +530,10 @@ export class BudgetTransactionsComponent {
         const m = { ...copy[idx] };
         m.transactions = m.transactions.map((t) => {
           if (t.id === txId) {
-            const { folderId: _, folderName: __, ...rest } = t;
-            return rest as Transaction;
+            const rest: Transaction = { ...t };
+            delete rest.folderId;
+            delete rest.folderName;
+            return rest;
           }
           return t;
         });
@@ -562,8 +575,8 @@ export class BudgetTransactionsComponent {
     }
   }
 
-  onFileSelected(txId: string, event: any) {
-    const file = event.target.files[0];
+  onFileSelected(txId: string, event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       this.state.attachReceiptAndGenerateAi(txId, file.name);
     }

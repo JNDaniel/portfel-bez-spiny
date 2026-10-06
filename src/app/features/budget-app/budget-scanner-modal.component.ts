@@ -43,6 +43,10 @@ interface ScannedReceiptData {
             <div class="space-y-4">
               <div
                 (click)="fileInput.click()"
+                (keydown.enter)="onDropAreaKeydown($event, fileInput)"
+                (keydown.space)="onDropAreaKeydown($event, fileInput)"
+                role="button"
+                tabindex="0"
                 class="p-8 rounded-3xl border-2 border-dashed border-slate-700 hover:border-purple-400 bg-slate-900/60 hover:bg-slate-900 transition cursor-pointer flex flex-col items-center justify-center text-center space-y-3"
               >
                 <div
@@ -183,14 +187,21 @@ export class BudgetScannerModalComponent {
   readonly state = inject(BudgetStateService);
   readonly scannedData = signal<ScannedReceiptData | null>(null);
 
-  onFileUploaded(event: any) {
-    const file = event.target.files[0];
+  onFileUploaded(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
-      this.simulateOcrScan('biedronka', file.name);
+      this.simulateOcrScan('biedronka');
     }
   }
 
-  simulateOcrScan(type: 'biedronka' | 'orlen', customFileName?: string) {
+  onDropAreaKeydown(event: Event, fileInput: HTMLInputElement) {
+    // Keys pressed on the nested button already trigger a click that bubbles to the drop area.
+    if (event.target !== event.currentTarget) return;
+    event.preventDefault();
+    fileInput.click();
+  }
+
+  simulateOcrScan(type: 'biedronka' | 'orlen') {
     Haptics.impact({ style: ImpactStyle.Heavy });
     if (type === 'orlen') {
       this.scannedData.set({

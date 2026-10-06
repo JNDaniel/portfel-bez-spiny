@@ -106,7 +106,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 export class BudgetVoiceModalComponent {
   readonly state = inject(BudgetStateService);
   readonly isListening = signal<boolean>(false);
-  voiceInputText: string = '';
+  voiceInputText = '';
 
   toggleListening() {
     this.isListening.set(!this.isListening());
@@ -132,7 +132,7 @@ export class BudgetVoiceModalComponent {
     const text = this.voiceInputText.toLowerCase();
 
     // Extract amount
-    const amountMatch = text.match(/\d+([,\.]\d+)?/);
+    const amountMatch = text.match(/\d+([,.]\d+)?/);
     const amount = amountMatch ? parseFloat(amountMatch[0].replace(',', '.')) : 25.0;
 
     let category: TransactionCategory = 'Jedzenie';

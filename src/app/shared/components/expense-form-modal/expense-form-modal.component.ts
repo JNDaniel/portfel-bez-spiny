@@ -5,7 +5,6 @@ import {
   inject,
   input,
   output,
-  signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,8 +14,6 @@ import {
   Expense,
   ExpenseCategory,
   PaymentMethod,
-  ExpenseStatus,
-  CATEGORY_META,
 } from '../../../core/models/expense.model';
 import { ExpenseService } from '../../../core/services/expense.service';
 import { SettingsService } from '../../../core/services/settings.service';
@@ -31,16 +28,19 @@ import { SettingsService } from '../../../core/services/settings.service';
       [isOpen]="isOpen()"
       [title]="isEditing() ? 'Edit Expense' : 'Create New Expense'"
       size="lg"
-      (close)="close.emit()"
+      (closed)="closed.emit()"
     >
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
         <!-- Title & Vendor -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+            <label
+              for="expense-form-title"
+              class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
               >Expense Title *</label
             >
             <input
+              id="expense-form-title"
               type="text"
               formControlName="title"
               placeholder="e.g. AWS Cloud Infrastructure - August"
@@ -52,10 +52,13 @@ import { SettingsService } from '../../../core/services/settings.service';
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+            <label
+              for="expense-form-vendor"
+              class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
               >Vendor / Provider *</label
             >
             <input
+              id="expense-form-vendor"
               type="text"
               formControlName="vendor"
               placeholder="e.g. Amazon Web Services EMEA"
@@ -70,7 +73,9 @@ import { SettingsService } from '../../../core/services/settings.service';
         <!-- Amount, Currency, Date -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+            <label
+              for="expense-form-amount"
+              class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
               >Amount ({{ settingsService.currency() }}) *</label
             >
             <div class="relative">
@@ -79,6 +84,7 @@ import { SettingsService } from '../../../core/services/settings.service';
                 >{{ settingsService.currencySymbol() }}</span
               >
               <input
+                id="expense-form-amount"
                 type="number"
                 step="0.01"
                 min="0.01"
@@ -93,10 +99,13 @@ import { SettingsService } from '../../../core/services/settings.service';
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+            <label
+              for="expense-form-category"
+              class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
               >Category *</label
             >
             <select
+              id="expense-form-category"
               formControlName="category"
               class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition"
             >
@@ -107,10 +116,13 @@ import { SettingsService } from '../../../core/services/settings.service';
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+            <label
+              for="expense-form-date"
+              class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
               >Date *</label
             >
             <input
+              id="expense-form-date"
               type="date"
               formControlName="date"
               class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition"
@@ -121,10 +133,13 @@ import { SettingsService } from '../../../core/services/settings.service';
         <!-- Payment Method, Status, Department -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+            <label
+              for="expense-form-payment-method"
+              class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
               >Payment Method</label
             >
             <select
+              id="expense-form-payment-method"
               formControlName="paymentMethod"
               class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition"
             >
@@ -135,10 +150,13 @@ import { SettingsService } from '../../../core/services/settings.service';
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+            <label
+              for="expense-form-status"
+              class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
               >Status</label
             >
             <select
+              id="expense-form-status"
               formControlName="status"
               class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition"
             >
@@ -149,10 +167,13 @@ import { SettingsService } from '../../../core/services/settings.service';
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+            <label
+              for="expense-form-department"
+              class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
               >Department</label
             >
             <input
+              id="expense-form-department"
               type="text"
               formControlName="department"
               placeholder="e.g. Engineering, Marketing"
@@ -163,10 +184,13 @@ import { SettingsService } from '../../../core/services/settings.service';
 
         <!-- Tags -->
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+          <label
+            for="expense-form-tags-input"
+            class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
             >Tags (comma-separated)</label
           >
           <input
+            id="expense-form-tags-input"
             type="text"
             formControlName="tagsInput"
             placeholder="e.g. AWS, Production, DevTools"
@@ -176,10 +200,13 @@ import { SettingsService } from '../../../core/services/settings.service';
 
         <!-- Description -->
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
+          <label
+            for="expense-form-description"
+            class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1"
             >Description / Notes</label
           >
           <textarea
+            id="expense-form-description"
             formControlName="description"
             rows="2"
             placeholder="Optional detailed context or justification..."
@@ -193,7 +220,7 @@ import { SettingsService } from '../../../core/services/settings.service';
         >
           <button
             type="button"
-            (click)="close.emit()"
+            (click)="closed.emit()"
             class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
           >
             Cancel
@@ -232,7 +259,7 @@ export class ExpenseFormModalComponent {
   readonly isOpen = input.required<boolean>();
   readonly expenseToEdit = input<Expense | null>(null);
 
-  readonly close = output<void>();
+  readonly closed = output<void>();
   readonly saved = output<Expense>();
 
   readonly categories: ExpenseCategory[] = [
@@ -329,12 +356,12 @@ export class ExpenseFormModalComponent {
     if (exp) {
       this.expenseService.updateExpense(exp.id, dto, (updated) => {
         this.saved.emit(updated);
-        this.close.emit();
+        this.closed.emit();
       });
     } else {
       this.expenseService.createExpense(dto, (created) => {
         this.saved.emit(created);
-        this.close.emit();
+        this.closed.emit();
       });
     }
   }

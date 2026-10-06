@@ -20,6 +20,8 @@ import { CommonModule } from '@angular/common';
         <div
           class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity"
           (click)="onBackdropClick()"
+          (keydown.escape)="onBackdropClick()"
+          tabindex="-1"
         ></div>
 
         <!-- Modal Box -->
@@ -28,6 +30,7 @@ import { CommonModule } from '@angular/common';
             class="relative w-full rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-2xl transition-all transform animate-in fade-in zoom-in-95 duration-200"
             [ngClass]="maxWidthClass()"
             (click)="$event.stopPropagation()"
+            role="presentation"
           >
             <!-- Header -->
             <div
@@ -36,7 +39,7 @@ import { CommonModule } from '@angular/common';
               <h3 class="text-lg font-bold text-slate-900 dark:text-white">{{ title() }}</h3>
               <button
                 type="button"
-                (click)="close.emit()"
+                (click)="closed.emit()"
                 class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
               >
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -66,7 +69,7 @@ export class ModalComponent {
   readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
   readonly closeOnBackdrop = input<boolean>(true);
 
-  readonly close = output<void>();
+  readonly closed = output<void>();
 
   readonly maxWidthClass = computed(() => {
     switch (this.size()) {
@@ -83,14 +86,14 @@ export class ModalComponent {
 
   onBackdropClick() {
     if (this.closeOnBackdrop()) {
-      this.close.emit();
+      this.closed.emit();
     }
   }
 
   @HostListener('window:keydown.escape')
   onEsc() {
     if (this.isOpen()) {
-      this.close.emit();
+      this.closed.emit();
     }
   }
 }

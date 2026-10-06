@@ -229,31 +229,31 @@ No data migration. Rollback is per phase. Contributors who use `git blame` shoul
 
 #### Automated
 
-- [x] 1.1 `npm run format:check` passes
-- [x] 1.2 `npm run build` passes, including the post-build secret scan
-- [x] 1.3 `npm test -- --watch=false` passes (5 of 5)
-- [x] 1.4 `npm run test:e2e` passes on both projects
+- [x] 1.1 `npm run format:check` passes — 0d04682
+- [x] 1.2 `npm run build` passes, including the post-build secret scan — 0d04682
+- [x] 1.3 `npm test -- --watch=false` passes (5 of 5) — 0d04682
+- [x] 1.4 `npm run test:e2e` passes on both projects — 0d04682
 
 #### Manual
 
-- [x] 1.5 Regression smoke (production configuration) shows no differences and identical screenshots against the current production deployment
+- [x] 1.5 Regression smoke (production configuration) shows no differences and identical screenshots against the current production deployment — 0d04682
 
 ### Phase 2: Angular ESLint and Minimal Fixes
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` reports 0 errors and 0 warnings
-- [ ] 2.2 `eslint.config.js` contains no rule override other than the commented OnPush rule
-- [ ] 2.3 No `eslint-disable` comments exist under `src/` or `e2e/`
-- [ ] 2.4 `npm run format:check` passes
-- [ ] 2.5 `npm run build` passes, including the post-build secret scan
-- [ ] 2.6 `npm test -- --watch=false` passes (5 of 5)
-- [ ] 2.7 `npm run test:e2e` passes on both projects
+- [x] 2.1 `npm run lint` reports 0 errors and 0 warnings
+- [x] 2.2 `eslint.config.js` contains no rule override other than the commented OnPush rule
+- [x] 2.3 No `eslint-disable` comments exist under `src/` or `e2e/`
+- [x] 2.4 `npm run format:check` passes
+- [x] 2.5 `npm run build` passes, including the post-build secret scan
+- [x] 2.6 `npm test -- --watch=false` passes (5 of 5)
+- [x] 2.7 `npm run test:e2e` passes on both projects
 
 #### Manual
 
-- [ ] 2.8 Regression smoke (production configuration) shows no differences and identical screenshots against the current production deployment
-- [ ] 2.9 Adding an expense through the dashboard modal and closing modals (button, backdrop, Escape where added) work on Desktop and Pixel 7
+- [x] 2.8 Regression smoke (production configuration) shows no differences and identical screenshots against the current production deployment
+- [x] 2.9 Adding an expense through the dashboard modal and closing modals (button, backdrop, Escape where added) work on Desktop and Pixel 7
 
 ### Phase 3: Check Script, Docs and Handoff
 

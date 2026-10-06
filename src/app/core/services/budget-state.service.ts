@@ -372,8 +372,6 @@ export class BudgetStateService {
     return list.slice(0, 5);
   });
 
-  constructor() {}
-
   private loadFromStorage(): MonthData[] {
     try {
       const saved = localStorage.getItem(this.STORAGE_KEY);
@@ -486,8 +484,10 @@ export class BudgetStateService {
       m.folders = (m.folders || []).filter((f) => f.id !== folderId);
       m.transactions = m.transactions.map((t) => {
         if (t.folderId === folderId) {
-          const { folderId: _, folderName: __, ...rest } = t;
-          return rest as Transaction;
+          const rest: Transaction = { ...t };
+          delete rest.folderId;
+          delete rest.folderName;
+          return rest;
         }
         return t;
       });
@@ -560,7 +560,7 @@ export class BudgetStateService {
   }
 
   // Simulator for bank push notifications
-  triggerSampleBankNotification(bank: 'mBank' | 'Revolut' | 'PKO BP' = 'mBank') {
+  triggerSampleBankNotification() {
     const samples: BankPushNotification[] = [
       {
         id: 'push-1',
