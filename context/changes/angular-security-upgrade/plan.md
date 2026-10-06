@@ -562,4 +562,4 @@ No data migration. Rollback is per phase: each phase is its own commit, so rever
 
 - [x] 7.7 Triage decisions reviewed and accepted by the user — 8082890
 - [x] 7.8 Roadmap, AGENTS.md and deploy-plan updates reviewed — 8082890
-- [ ] 7.9 Cloudflare Workers Builds succeeds for the final branch state on Node 24
+- [x] 7.9 Cloudflare Workers Builds succeeds for the final branch state on Node 24 — c06fa24
