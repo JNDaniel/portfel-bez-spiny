@@ -44,7 +44,7 @@ Portfel Bez Spiny oddziela codzienne wydatki od okazjonalnych (prezent, wyjazd),
 | F-01 | angular-security-upgrade     | (foundation) framework i toolchain bez krytycznych podatności, aplikacja działa jak dziś | —                          | FR-007, Guardrails             | done |
 | F-02 | lint-and-format-checks       | (foundation) lint i formatowanie są deterministyczną bramką przed każdym przekazaniem   | F-01                       | FR-007                         | done        |
 | S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | done |
-| S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard z wykresem według klasyfikacji (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | in-progress |
+| S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard z wykresem według klasyfikacji (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | done |
 | S-03 | email-password-sign-in       | zarejestrować się, zalogować i wylogować; niezalogowany trafia na ekran logowania       | F-01                       | FR-001, FR-002                 | proposed |
 | S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | proposed |
 | S-05 | private-classified-expenses  | dodać wydatki trzech typów i zobaczyć Safe-to-Spend policzony z własnych, prywatnych danych | S-04                       | US-01, FR-004, FR-005, FR-006, FR-002 | proposed |
@@ -133,7 +133,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Jak mapują się istniejące tagi (np. „Zachcianka”) na nową klasyfikację, przy zachowaniu tagowania wymaganego przez PRD? „Zbędne” i „Zachcianka” praktycznie się dublują. — Owner: user. Block: no.
   - Czy kategorie zostają w modelu (z wyborem przy transakcji), czy wykres kategorii znika na rzecz wykresu klasyfikacji? — Owner: user. Block: no (rozstrzygane w planie tej zmiany).
 - **Risk:** Rozstrzyga główne ryzyko (dwa modele danych) przed powstaniem tabel; po tej zmianie żaden ekran nie zapisuje danych użytkownika do localStorage z pominięciem repozytorium.
-- **Status:** in-progress
+- **Status:** done
 
 ### S-03: Rejestracja i logowanie email + hasło
 
@@ -265,3 +265,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-01: użytkownik otwiera dashboard z samymi akcjami MVP (ręczne dodanie wydatku, foldery, lista transakcji) i Safe-to-Spend widocznym bez przewijania; funkcje demo spoza MVP — test powiadomienia z banku, skaner paragonów, głos AI, subskrypcje, radar zachcianek i podsumowanie AI — są ukryte, a ich kod zostaje do późniejszego przywrócenia.** — Archived 2026-10-05 → `context/archive/2026-10-05-mvp-focused-dashboard/`. Lesson: —.
 - **F-01: (foundation) aplikacja działa na wspieranej wersji frameworka bez krytycznych podatności, a każde pozostałe wysokie ryzyko ma zapisaną decyzję; web i Android zachowują się jak dziś.** — Archived 2026-10-06 → `context/archive/2026-10-05-angular-security-upgrade/`. Lesson: —.
 - **F-02: (foundation) lint i sprawdzanie formatowania przechodzą lokalnie i są częścią walidacji przed każdym przekazaniem zmian.** — Archived 2026-10-06 → `context/archive/2026-10-06-lint-and-format-checks/`. Lesson: —.
+- **S-02: użytkownik może oznaczyć wydatek jako codzienny, okazjonalny albo zachciankę, a dashboard wyklucza okazje z codziennego limitu i Safe-to-Spend, a wykresy dashboardu grupują wydatki według tej klasyfikacji i wyraźnie wyróżniają zachcianki i okazje (zamiast kategorii, których nie da się wybrać przy transakcji) — na danych lokalnych, ale już na jednym docelowym modelu, z którego czyta każdy ekran z wydatkami.** — Archived 2026-10-06 → `context/archive/2026-10-06-canonical-expense-classification/` (follow-ups: `context/archive/2026-10-06-dashboard-review-followups/`). Lesson: —.

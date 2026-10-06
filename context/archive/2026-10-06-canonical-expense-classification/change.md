@@ -1,10 +1,10 @@
 ---
 change_id: canonical-expense-classification
 title: Expense classification on one canonical model
-status: implemented
+status: archived
 created: 2026-10-06
 updated: 2026-10-06
-archived_at: null
+archived_at: 2026-10-06T21:49:41Z
 ---
 
 ## Notes

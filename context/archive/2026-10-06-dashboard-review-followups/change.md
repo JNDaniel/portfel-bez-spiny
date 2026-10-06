@@ -1,10 +1,10 @@
 ---
 change_id: dashboard-review-followups
 title: Fix the minor dashboard findings from the S-02 implementation review
-status: impl_reviewed
+status: archived
 created: 2026-10-06
 updated: 2026-10-06
-archived_at: null
+archived_at: 2026-10-06T21:49:41Z
 ---
 
 ## Notes
