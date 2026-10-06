@@ -25,6 +25,6 @@ Treat `src/` as the shared application source and @capacitor.config.ts as the we
 
 ## Testing and Delivery
 
-Co-locate unit tests with source files. Keep browser flows in `e2e/`; use @e2e/budget-dashboard.spec.ts as the reference suite. Run one unit file with `npm test -- --include <path>` or one browser case with `npx playwright test -g "<title>"`. Do not commit focused Playwright tests because CI mode enables `forbidOnly`.
+Co-locate unit tests with source files. Keep browser flows in `e2e/`; use @e2e/budget-dashboard.spec.ts as the reference suite. Unit tests run on Vitest through `@angular/build:unit-test`; use Vitest `expect` matchers, not Jasmine ones. Run one unit file with `npm test -- --watch=false --include <path>` or one browser case with `npx playwright test -g "<title>"`. Do not commit focused Playwright tests because CI mode enables `forbidOnly`.
 
 No repository CI workflow or lint script is configured. Before handing off changes, run unit tests covering edited files, affected Playwright scenarios, and `npm run build`. Do not report a green baseline until the stale unit assertion and Mobile Pixel expense-entry failure documented in @context/foundation/health-check.md are fixed. Use an imperative commit subject no longer than 72 characters, for example `Plan stabilization and Supabase MVP`.

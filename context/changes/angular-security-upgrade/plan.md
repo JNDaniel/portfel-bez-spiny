@@ -521,31 +521,31 @@ No data migration. Rollback is per phase: each phase is its own commit, so rever
 
 #### Automated
 
-- [x] 5.1 `audit-triage.md` contains the Ionic 9 review section
-- [x] 5.2 `npm ls @ionic/angular` shows 9.x with no peer-dependency errors
-- [x] 5.3 `npm run build` passes, including the post-build secret scan
-- [x] 5.4 `npm test -- --watch=false` passes
-- [x] 5.5 `npm run test:e2e` passes on both projects
-- [x] 5.6 `npm run cap:sync` completes without errors
+- [x] 5.1 `audit-triage.md` contains the Ionic 9 review section — 64ea712
+- [x] 5.2 `npm ls @ionic/angular` shows 9.x with no peer-dependency errors — 64ea712
+- [x] 5.3 `npm run build` passes, including the post-build secret scan — 64ea712
+- [x] 5.4 `npm test -- --watch=false` passes — 64ea712
+- [x] 5.5 `npm run test:e2e` passes on both projects — 64ea712
+- [x] 5.6 `npm run cap:sync` completes without errors — 64ea712
 
 #### Manual
 
-- [x] 5.7 Pull-to-refresh, floating action button, sliding item options and icons behave and look as before on Pixel 7 viewport
-- [x] 5.8 Safe-to-Spend and its warning state are visible without scrolling on Pixel 7 viewport
+- [x] 5.7 Pull-to-refresh, floating action button, sliding item options and icons behave and look as before on Pixel 7 viewport — 64ea712
+- [x] 5.8 Safe-to-Spend and its warning state are visible without scrolling on Pixel 7 viewport — 64ea712
 
 ### Phase 6: Karma → Vitest
 
 #### Automated
 
-- [ ] 6.1 `npm test -- --watch=false` runs under Vitest and passes the same number of tests as before
-- [ ] 6.2 The documented single-file unit command runs only the named spec
-- [ ] 6.3 `npm ls karma jasmine-core @types/jasmine` reports no installed packages
-- [ ] 6.4 `npm audit` lists no `karma`, `engine.io` or `socket.io` findings
-- [ ] 6.5 `npm run build` passes
+- [x] 6.1 `npm test -- --watch=false` runs under Vitest and passes the same number of tests as before
+- [x] 6.2 The documented single-file unit command runs only the named spec
+- [x] 6.3 `npm ls karma jasmine-core @types/jasmine` reports no installed packages
+- [x] 6.4 `npm audit` lists no `karma`, `engine.io` or `socket.io` findings
+- [x] 6.5 `npm run build` passes
 
 #### Manual
 
-- [ ] 6.6 Test commands in AGENTS.md and README match what actually works
+- [x] 6.6 Test commands in AGENTS.md and README match what actually works
 
 ### Phase 7: Audit Triage and Handoff
 

@@ -25,8 +25,8 @@ describe('SupabaseClientService', () => {
   it('is disabled and refuses to create a client when DATA_BACKEND is local', async () => {
     const service = setup({ dataBackend: 'local' });
 
-    expect(service.enabled).toBeFalse();
-    await expectAsync(service.getClient()).toBeRejectedWithError(/DATA_BACKEND is "local"/);
+    expect(service.enabled).toBe(false);
+    await expect(service.getClient()).rejects.toThrowError(/DATA_BACKEND is "local"/);
   });
 
   it('creates one shared client when DATA_BACKEND is supabase', async () => {
@@ -35,7 +35,7 @@ describe('SupabaseClientService', () => {
     const first = await service.getClient();
     const second = await service.getClient();
 
-    expect(service.enabled).toBeTrue();
+    expect(service.enabled).toBe(true);
     expect(first).toBe(second);
   });
 });

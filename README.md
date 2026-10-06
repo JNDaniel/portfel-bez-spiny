@@ -36,6 +36,7 @@ Supabase będzie integrowany wyłącznie przez implementacje kontraktów repozyt
 npm start
 npm run build
 npm test -- --watch=false
+npm test -- --watch=false --include src/app/app.component.spec.ts
 npm run test:e2e
 npm run cap:sync
 npm run cap:build:apk
