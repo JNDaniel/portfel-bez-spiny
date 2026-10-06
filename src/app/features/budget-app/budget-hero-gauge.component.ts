@@ -19,7 +19,12 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 
       <!-- Circular Open-Arc Gauge (250 degree sweep matching Screenshot 1) -->
       <div class="relative w-64 h-56 flex flex-col items-center justify-center">
-        <svg class="w-64 h-64 transform rotate-[145deg]" viewBox="0 0 200 200">
+        <!-- The rotated SVG overflows into the header and would swallow taps on the month arrows -->
+        <svg
+          class="w-64 h-64 transform rotate-[145deg] pointer-events-none"
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+        >
           <!-- Background Inactive Track (250° Arc) -->
           <circle
             cx="100"
@@ -73,20 +78,16 @@ import { BudgetStateService } from '../../core/services/budget-state.service';
 
       <!-- Safe-to-Spend Daily Allowance Pill -->
       <div
-        class="mb-4 -mt-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-emerald-500/30 flex items-center gap-2 shadow-lg backdrop-blur-md"
+        class="mb-4 -mt-2 px-4 py-1.5 rounded-full bg-slate-900/90 border flex items-center gap-2 shadow-lg backdrop-blur-md"
+        [ngClass]="pillBorderClass()"
       >
         <span class="text-xs">🎯</span>
         @if (state.isClosedMonth()) {
-          <span class="text-xs text-slate-300">
+          <!-- Two-line height on narrow screens matches the wrapped current-month text, so the hero keeps its size between months -->
+          <span class="text-xs text-slate-300 flex items-center max-md:min-h-[2lh]">
             <strong
               class="font-bold font-mono"
-              [ngClass]="
-                state.limitAmount() === null
-                  ? 'text-slate-400'
-                  : (state.remainingAmount() ?? 0) >= 0
-                    ? 'text-emerald-400'
-                    : 'text-rose-400'
-              "
+              [ngClass]="monthResultTextClass()"
               data-testid="month-result"
               >{{ monthResult() }}</strong
             >
@@ -176,6 +177,28 @@ export class BudgetHeroGaugeComponent {
     return remaining >= 0
       ? `Zostało z limitu: ${remaining} zł`
       : `Przekroczono o ${Math.abs(remaining)} zł`;
+  });
+
+  private readonly monthResultTone = computed<'none' | 'under' | 'over'>(() => {
+    const remaining = this.state.remainingAmount();
+    if (this.state.limitAmount() === null || remaining === null) return 'none';
+    return remaining >= 0 ? 'under' : 'over';
+  });
+
+  readonly monthResultTextClass = computed(
+    () =>
+      ({ none: 'text-slate-400', under: 'text-emerald-400', over: 'text-rose-400' })[
+        this.monthResultTone()
+      ],
+  );
+
+  readonly pillBorderClass = computed(() => {
+    if (!this.state.isClosedMonth()) return 'border-emerald-500/30';
+    return {
+      none: 'border-slate-600/40',
+      under: 'border-emerald-500/30',
+      over: 'border-rose-500/40',
+    }[this.monthResultTone()];
   });
 
   readonly gaugeColor = computed(() => {

@@ -179,6 +179,9 @@ test.describe('Portfel Bez Spiny — E2E UI & Gesture Flow', () => {
       'Brak limitu w tym miesiącu',
     );
     await expect(page.getByText('Bezpiecznie na dziś:')).toHaveCount(0);
+
+    await page.getByTitle('Poprzedni miesiąc').click();
+    await expect(page.getByText('Sierpień 2026')).toBeVisible();
   });
 
   test('9. A closed month over the limit shows the overspend', async ({ page }) => {
