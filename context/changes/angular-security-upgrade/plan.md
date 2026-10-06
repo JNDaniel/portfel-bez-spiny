@@ -537,29 +537,29 @@ No data migration. Rollback is per phase: each phase is its own commit, so rever
 
 #### Automated
 
-- [x] 6.1 `npm test -- --watch=false` runs under Vitest and passes the same number of tests as before
-- [x] 6.2 The documented single-file unit command runs only the named spec
-- [x] 6.3 `npm ls karma jasmine-core @types/jasmine` reports no installed packages
-- [x] 6.4 `npm audit` lists no `karma`, `engine.io` or `socket.io` findings
-- [x] 6.5 `npm run build` passes
+- [x] 6.1 `npm test -- --watch=false` runs under Vitest and passes the same number of tests as before — b503847
+- [x] 6.2 The documented single-file unit command runs only the named spec — b503847
+- [x] 6.3 `npm ls karma jasmine-core @types/jasmine` reports no installed packages — b503847
+- [x] 6.4 `npm audit` lists no `karma`, `engine.io` or `socket.io` findings — b503847
+- [x] 6.5 `npm run build` passes — b503847
 
 #### Manual
 
-- [x] 6.6 Test commands in AGENTS.md and README match what actually works
+- [x] 6.6 Test commands in AGENTS.md and README match what actually works — b503847
 
 ### Phase 7: Audit Triage and Handoff
 
 #### Automated
 
-- [ ] 7.1 `npm audit` reports 0 critical
-- [ ] 7.2 Every high package in `npm audit --json` appears in the `audit-triage.md` Final table
-- [ ] 7.3 `npm run build` passes, including the post-build secret scan
-- [ ] 7.4 `npm test -- --watch=false` passes
-- [ ] 7.5 `npm run test:e2e` passes on both projects
-- [ ] 7.6 `npm run cap:sync` completes without errors
+- [x] 7.1 `npm audit` reports 0 critical
+- [x] 7.2 Every high package in `npm audit --json` appears in the `audit-triage.md` Final table
+- [x] 7.3 `npm run build` passes, including the post-build secret scan
+- [x] 7.4 `npm test -- --watch=false` passes
+- [x] 7.5 `npm run test:e2e` passes on both projects
+- [x] 7.6 `npm run cap:sync` completes without errors
 
 #### Manual
 
-- [ ] 7.7 Triage decisions reviewed and accepted by the user
-- [ ] 7.8 Roadmap, AGENTS.md and deploy-plan updates reviewed
+- [x] 7.7 Triage decisions reviewed and accepted by the user
+- [x] 7.8 Roadmap, AGENTS.md and deploy-plan updates reviewed
 - [ ] 7.9 Cloudflare Workers Builds succeeds for the final branch state on Node 24

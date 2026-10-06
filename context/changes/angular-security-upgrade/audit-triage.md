@@ -96,3 +96,45 @@ Sources: https://ionicframework.com/docs/updating/9-0 and the Version 9.x sectio
 - **`ionicons`** — stays `^8.1.0`, which satisfies `@ionic/angular` 9.0.6 (`^8.0.13`).
 
 No breaking change requires a visible UI or behaviour change.
+
+## Final (2026-10-06)
+
+Taken after Phase 6 on Node 24.21.0 with Angular 22.2.1, TypeScript 6.0.3, Ionic 9.0.6, Vitest 5.0.3 and Capacitor 8.5.2.
+
+### `npm audit` summary
+
+| Critical | High | Moderate | Low | Total |
+| --- | --- | --- | --- | --- |
+| 0 | 5 | 5 | 0 | 10 |
+
+Baseline was 4 critical, 35 high, 18 moderate, 2 low (59 total).
+
+### Remaining high findings
+
+All five are dev-only and sit in the Tailwind 3 toolchain. Tailwind 3.4.19 is the last 3.x release and `braces` has no patched version (GHSA-vfj7-8cjw-p6xm affects every version), so the only fix is the Tailwind 4 migration. None of these packages is in the shipped web bundle or the Android app.
+
+| Package | Version | Dependency path | Runtime vs build-time | Decision | Reason / follow-up |
+| --- | --- | --- | --- | --- | --- |
+| `tailwindcss` | 3.4.19 | direct devDependency | build-time | follow-up | Flagged through `chokidar`, `fast-glob`, `micromatch`, `postcss-nested`; fixed by Tailwind 4 (roadmap Parked: Tailwind 4 migration) |
+| `braces` | 3.0.3 | `tailwindcss` → `micromatch` → `braces`; `tailwindcss` → `fast-glob` → `micromatch` → `braces` | build-time | follow-up | Stack-exhaustion DoS on deeply nested glob patterns; patterns come from the repo's own Tailwind config, not user input. Tailwind 4 follow-up |
+| `chokidar` | 3.6.0 | `tailwindcss` → `chokidar` | build-time | follow-up | Only via `braces`; Tailwind 4 follow-up |
+| `fast-glob` | 3.3.3 | `tailwindcss` → `fast-glob` | build-time | follow-up | Only via `micromatch` → `braces`; Tailwind 4 follow-up |
+| `micromatch` | 4.0.8 | `tailwindcss` → `micromatch`; `tailwindcss` → `fast-glob` → `micromatch` | build-time | follow-up | Only via `braces`; Tailwind 4 follow-up |
+
+### Remaining moderate findings (informational)
+
+| Package | Version | Dependency path | Runtime vs build-time | Decision | Reason |
+| --- | --- | --- | --- | --- | --- |
+| `postcss-nested` | 6.2.0 | `tailwindcss` → `postcss-nested` | build-time | follow-up | Tailwind 4 follow-up |
+| `postcss-selector-parser` | 6.1.4 | `tailwindcss` (→ `postcss-nested`) → `postcss-selector-parser` | build-time | follow-up | Tailwind 4 follow-up |
+| `@capacitor/cli` | 8.5.2 | direct devDependency | build-time | accepted | Flagged only through `xcode` → `uuid`; npm's suggested fix is a downgrade to 8.4.3. Used for iOS project tooling; the app ships Android only |
+| `xcode` | 3.0.1 | `@capacitor/cli` → `xcode` | build-time | accepted | Same as above |
+| `uuid` | 7.0.3 | `@capacitor/cli` → `xcode` → `uuid` | build-time | accepted | Missing bounds check only when a caller passes `buf`; same as above |
+
+### Fixed since the baseline
+
+- All 4 critical: `@capacitor/android` (8.5.2), `piscina` and `tar` (Angular CLI/build 20+), `proxy-addr` (`webpack-dev-server` removed with `@angular-devkit/build-angular`).
+- Angular framework advisories (`@angular/common`, `compiler`, `core`, `router`, `cli`, `build`): fixed by Angular 22.2.1.
+- Webpack toolchain (`@angular-devkit/build-angular`, `webpack-dev-server`, `copy-webpack-plugin`, `compression`, `http-proxy-middleware`, `node-forge`, `selfsigned`, `serialize-javascript`, ...): removed by the `@angular/build` switch.
+- Karma chain (`karma`, `karma-jasmine`, `karma-jasmine-html-reporter`, `engine.io`, `socket.io`): removed by the Vitest switch.
+- `@xmldom/xmldom`: now 0.9.12 via `@capacitor/cli` → `plist`, no longer flagged, so the planned `accepted` entry is not needed.

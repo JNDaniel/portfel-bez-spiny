@@ -1,6 +1,6 @@
 # Repository Guidelines
 
-Portfel Bez Spiny is an Angular 19/Ionic 8 personal-finance dashboard for web and Capacitor. It separates routine spending from planned occasions.
+Portfel Bez Spiny is an Angular 22/Ionic 9 personal-finance dashboard for web and Capacitor. It separates routine spending from planned occasions. It requires Node 24 (see `.nvmrc`).
 
 ## Non-negotiable Product Rules
 

@@ -26,7 +26,7 @@ Automatyczny import powiadomień bankowych, produkcyjny OCR, funkcje głosowe i 
 
 ## Architektura
 
-Frontend używa Angulara 19, Ionic 8, TypeScriptu, Tailwinda i Capacitor 8. Kod domenowy oraz kontrakty repozytoriów znajdują się w `src/app/core/`, przepływy użytkownika w `src/app/features/`, a współdzielone komponenty w `src/app/shared/`.
+Frontend używa Angulara 22, Ionic 9, TypeScriptu 6, Tailwinda i Capacitor 8. Wymagany Node 24 (`.nvmrc`). Kod domenowy oraz kontrakty repozytoriów znajdują się w `src/app/core/`, przepływy użytkownika w `src/app/features/`, a współdzielone komponenty w `src/app/shared/`.
 
 Supabase będzie integrowany wyłącznie przez implementacje kontraktów repozytoriów. Komponenty nie powinny wywoływać klienta Supabase bezpośrednio. Klient webowy i mobilny może używać tylko publicznego URL projektu oraz publishable key, nigdy service-role key.
 

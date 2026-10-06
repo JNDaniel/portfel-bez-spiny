@@ -191,7 +191,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **PRD refs:** FR-007, US-01
 - **Prerequisites:** S-06, Android SDK (platform 36) zainstalowany
 - **Parallel with:** S-08, S-09
-- **Blockers:** Brak Android SDK lokalnie; `npm run cap:build:apk` nigdy nie przeszedł na tej maszynie. Pełny JDK 21 już jest (`~/workspace/jdks/jdk-21-temurin`). Pierwszy krok tej zmiany: instalacja SDK i zielony build APK, w tym zaległy krok 2.3 z S-01 (`mvp-focused-dashboard`).
+- **Blockers:** Brak Android SDK lokalnie; `npm run cap:build:apk` nigdy nie przeszedł na tej maszynie. Pełny JDK 21 już jest (`~/workspace/jdks/jdk-21-temurin`). Pierwszy krok tej zmiany: instalacja SDK i zielony build APK, w tym zaległy krok 2.3 z S-01 (`mvp-focused-dashboard`) oraz zaległa weryfikacja APK po upgradzie do Angular 22 / Ionic 9 z F-01 (`angular-security-upgrade`).
 - **Unknowns:**
   - Jak sesja i przekierowania Auth zachowują się w natywnej powłoce mobilnej? — Owner: team. Block: no.
 - **Risk:** Po pełnym CRUD, żeby walidować kompletny przepływ raz; ryzyko to różnice sesji i przekierowań między webem a powłoką natywną.
@@ -256,6 +256,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Migracja lokalnych danych demonstracyjnych do kont** — Why parked: PRD §Constraints; nowe konta zaczynają od pustych danych.
 - **Funkcje serwerowe z zaufanym sekretem** — Why parked: PRD §Approved Implementation Decisions; brak zidentyfikowanego przypadku użycia.
 - **CI/CD na pull requestach i monitoring błędów** — Why parked: `change.md` §Excluded; wdrożenie z GitHuba już działa, CI w osobnym zakresie.
+- **Migracja Tailwind 3 → 4** — Why parked: wyłączona z F-01 (`angular-security-upgrade`); jedyna droga do usunięcia 5 pozostałych wysokich podatności `npm audit` (`tailwindcss`, `braces`, `chokidar`, `fast-glob`, `micromatch`), wszystkie tylko w toolchainie buildu. Decyzje: `context/changes/angular-security-upgrade/audit-triage.md` §Final. Wraca przed S-08 albo jako osobna zmiana, jeśli Tailwind 4 wymaga zmian wyglądu.
 
 ## Milestone History
 
