@@ -474,29 +474,29 @@ No data migration. Rollback is per phase: each phase is its own commit, so rever
 
 #### Automated
 
-- [x] 2.1 `npm ls @angular/core @angular/cli typescript` shows 20.3.x and TypeScript 5.8.x
-- [x] 2.2 `angular.json` contains no `@angular-devkit/build-angular` builder names
-- [x] 2.3 `npm run build` passes, including the post-build secret scan
-- [x] 2.4 `npm test -- --watch=false` passes
-- [x] 2.5 `npm run test:e2e` passes on both projects
+- [x] 2.1 `npm ls @angular/core @angular/cli typescript` shows 20.3.x and TypeScript 5.8.x — 799a3ee
+- [x] 2.2 `angular.json` contains no `@angular-devkit/build-angular` builder names — 799a3ee
+- [x] 2.3 `npm run build` passes, including the post-build secret scan — 799a3ee
+- [x] 2.4 `npm test -- --watch=false` passes — 799a3ee
+- [x] 2.5 `npm run test:e2e` passes on both projects — 799a3ee
 
 #### Manual
 
-- [x] 2.6 `npm start` serves the app; dashboard, expense entry and Safe-to-Spend warning behave as before on Desktop and Pixel 7 viewport
+- [x] 2.6 `npm start` serves the app; dashboard, expense entry and Safe-to-Spend warning behave as before on Desktop and Pixel 7 viewport — 799a3ee
 
 ### Phase 3: Angular 20 → 21
 
 #### Automated
 
-- [ ] 3.1 `npm ls @angular/core @angular/cli @angular/build typescript` shows 21.2.x and TypeScript 5.9.x
-- [ ] 3.2 `src/app/app.config.ts` still provides `provideZoneChangeDetection({ eventCoalescing: true })`
-- [ ] 3.3 `npm run build` passes, including the post-build secret scan
-- [ ] 3.4 `npm test -- --watch=false` passes
-- [ ] 3.5 `npm run test:e2e` passes on both projects
+- [x] 3.1 `npm ls @angular/core @angular/cli @angular/build typescript` shows 21.2.x and TypeScript 5.9.x
+- [x] 3.2 `src/app/app.config.ts` still provides `provideZoneChangeDetection({ eventCoalescing: true })`
+- [x] 3.3 `npm run build` passes, including the post-build secret scan
+- [x] 3.4 `npm test -- --watch=false` passes
+- [x] 3.5 `npm run test:e2e` passes on both projects
 
 #### Manual
 
-- [ ] 3.6 Dashboard and expense entry behave as before on Pixel 7 viewport
+- [x] 3.6 Dashboard and expense entry behave as before on Pixel 7 viewport
 
 ### Phase 4: Angular 21 → 22.2 and TypeScript 6
 

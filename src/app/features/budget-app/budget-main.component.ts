@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { 
   IonContent, 
   IonRefresher, 
@@ -30,7 +29,6 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
   selector: 'app-budget-main',
   standalone: true,
   imports: [
-    CommonModule,
     IonContent,
     IonRefresher,
     IonRefresherContent,

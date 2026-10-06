@@ -1,11 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
 @Component({
   selector: 'app-budget-bank-simulator',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <!-- Top Floating Bank Notification Card (Matching Android / iOS Push) -->
     @if (state.activeBankNotification(); as notif) {

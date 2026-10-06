@@ -1,5 +1,4 @@
 import { Component, ElementRef, ViewChild, effect, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { IonContent } from '@ionic/angular/standalone';
 import { Chart, registerables } from 'chart.js';
 import { ExpenseService } from '../../core/services/expense.service';
@@ -10,7 +9,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, IonContent],
+  imports: [IonContent],
   template: `
     <ion-content [fullscreen]="true" class="ion-padding-bottom">
       <div class="space-y-6">

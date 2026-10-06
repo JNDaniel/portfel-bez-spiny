@@ -1,11 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
 @Component({
   selector: 'app-budget-categories',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="h-full w-full rounded-3xl bg-[#111827]/90 border border-slate-800/80 p-5 md:p-6 flex flex-col justify-between shadow-2xl backdrop-blur-xl">
       <!-- Header -->

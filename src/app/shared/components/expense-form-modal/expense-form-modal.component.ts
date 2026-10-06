@@ -1,5 +1,4 @@
 import { Component, computed, effect, inject, input, output, signal } from "@angular/core";
-import { CommonModule } from "@angular/common";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ModalComponent } from "../modal/modal.component";
 import { CreateExpenseDto, Expense, ExpenseCategory, PaymentMethod, ExpenseStatus, CATEGORY_META } from "../../../core/models/expense.model";
@@ -9,7 +8,7 @@ import { SettingsService } from "../../../core/services/settings.service";
 @Component({
   selector: "app-expense-form-modal",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ModalComponent],
+  imports: [ReactiveFormsModule, ModalComponent],
   template: `
     <app-modal 
       [isOpen]="isOpen()" 

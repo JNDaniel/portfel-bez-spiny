@@ -1,5 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
@@ -14,7 +13,7 @@ interface ScannedReceiptData {
 @Component({
   selector: 'app-budget-scanner-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (state.isScannerModalOpen()) {
       <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in">

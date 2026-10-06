@@ -1,11 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 
 @Component({
   selector: 'app-budget-radar-waste',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (state.isWasteRadarOpen()) {
       <div class="w-full rounded-3xl bg-[#111827]/95 border border-amber-500/30 p-5 md:p-6 shadow-2xl backdrop-blur-xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
