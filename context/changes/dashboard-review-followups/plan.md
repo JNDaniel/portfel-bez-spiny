@@ -305,12 +305,12 @@ None. No stored data changes.
 
 #### Automated
 
-- [x] 3.1 `npm run check` passes
-- [x] 3.2 `npm run test:e2e` passes on both projects (existing 7 tests plus the 3 new ones, × 2)
-- [x] 3.3 Deliberate break: making `isClosed` always false makes the closed-month E2E tests fail (then reverted)
+- [x] 3.1 `npm run check` passes — d099e48
+- [x] 3.2 `npm run test:e2e` passes on both projects (existing 7 tests plus the 3 new ones, × 2) — d099e48
+- [x] 3.3 Deliberate break: making `isClosed` always false makes the closed-month E2E tests fail (then reverted) — d099e48
 
 #### Manual
 
 - [x] 3.4 Pixel 7 screenshots (production configuration, fixed clock): empty month shows distinct y-axis labels (`0` … `100`); a month with a few hundred złoty shows distinct whole-złoty labels; a month above 1000 zł shows `k` labels with a comma
-- [x] 3.5 Pixel 7 screenshots of a closed month in all three pill variants; the pill does not wrap differently from the current month, and "Bezpiecznie na dziś:" is still above the fold on the current month
-- [x] 3.6 KLASYFIKACJA percentages visibly add up to 100 in the US-01 state (three expenses, one per classification)
+- [x] 3.5 Pixel 7 screenshots of a closed month in all three pill variants; the pill does not wrap differently from the current month, and "Bezpiecznie na dziś:" is still above the fold on the current month — d099e48
+- [x] 3.6 KLASYFIKACJA percentages visibly add up to 100 in the US-01 state (three expenses, one per classification) — d099e48
