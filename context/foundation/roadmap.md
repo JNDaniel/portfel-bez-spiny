@@ -41,7 +41,7 @@ Portfel Bez Spiny oddziela codzienne wydatki od okazjonalnych (prezent, wyjazd),
 
 | ID   | Change ID                    | Outcome (user can …)                                                                 | Prerequisites              | PRD refs                       | Status   |
 | ---- | ---------------------------- | ------------------------------------------------------------------------------------ | -------------------------- | ------------------------------ | -------- |
-| F-01 | angular-security-upgrade     | (foundation) framework i toolchain bez krytycznych podatności, aplikacja działa jak dziś | —                          | FR-007, Guardrails             | in-progress |
+| F-01 | angular-security-upgrade     | (foundation) framework i toolchain bez krytycznych podatności, aplikacja działa jak dziś | —                          | FR-007, Guardrails             | done |
 | F-02 | lint-and-format-checks       | (foundation) lint i formatowanie są deterministyczną bramką przed każdym przekazaniem   | F-01                       | FR-007                         | proposed |
 | S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | done |
 | S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard z wykresem według klasyfikacji (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | proposed |
@@ -91,7 +91,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Czy upgrade po jednej wersji głównej zachowuje zgodność z Ionic i Capacitor? — Owner: team. Block: no.
 - **Risk:** Pierwszy, bo każdy późniejszy kod powstaje na nowej wersji; ryzyko to regresje UI i natywne, wyłapywane pełną walidacją web i Android po każdym kroku.
-- **Status:** in-progress
+- **Status:** done
 
 ### F-02: Bramka lint i formatowania
 
@@ -256,10 +256,11 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Migracja lokalnych danych demonstracyjnych do kont** — Why parked: PRD §Constraints; nowe konta zaczynają od pustych danych.
 - **Funkcje serwerowe z zaufanym sekretem** — Why parked: PRD §Approved Implementation Decisions; brak zidentyfikowanego przypadku użycia.
 - **CI/CD na pull requestach i monitoring błędów** — Why parked: `change.md` §Excluded; wdrożenie z GitHuba już działa, CI w osobnym zakresie.
-- **Migracja Tailwind 3 → 4** — Why parked: wyłączona z F-01 (`angular-security-upgrade`); jedyna droga do usunięcia 5 pozostałych wysokich podatności `npm audit` (`tailwindcss`, `braces`, `chokidar`, `fast-glob`, `micromatch`), wszystkie tylko w toolchainie buildu. Decyzje: `context/changes/angular-security-upgrade/audit-triage.md` §Final. Wraca przed S-08 albo jako osobna zmiana, jeśli Tailwind 4 wymaga zmian wyglądu.
+- **Migracja Tailwind 3 → 4** — Why parked: wyłączona z F-01 (`angular-security-upgrade`); jedyna droga do usunięcia 5 pozostałych wysokich podatności `npm audit` (`tailwindcss`, `braces`, `chokidar`, `fast-glob`, `micromatch`), wszystkie tylko w toolchainie buildu. Decyzje: `context/archive/2026-10-05-angular-security-upgrade/audit-triage.md` §Final. Wraca przed S-08 albo jako osobna zmiana, jeśli Tailwind 4 wymaga zmian wyglądu.
 
 ## Milestone History
 
 ## Done
 
 - **S-01: użytkownik otwiera dashboard z samymi akcjami MVP (ręczne dodanie wydatku, foldery, lista transakcji) i Safe-to-Spend widocznym bez przewijania; funkcje demo spoza MVP — test powiadomienia z banku, skaner paragonów, głos AI, subskrypcje, radar zachcianek i podsumowanie AI — są ukryte, a ich kod zostaje do późniejszego przywrócenia.** — Archived 2026-10-05 → `context/archive/2026-10-05-mvp-focused-dashboard/`. Lesson: —.
+- **F-01: (foundation) aplikacja działa na wspieranej wersji frameworka bez krytycznych podatności, a każde pozostałe wysokie ryzyko ma zapisaną decyzję; web i Android zachowują się jak dziś.** — Archived 2026-10-06 → `context/archive/2026-10-05-angular-security-upgrade/`. Lesson: —.
