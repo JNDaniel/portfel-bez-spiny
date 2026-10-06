@@ -454,35 +454,35 @@ No data migration. Rollback is per phase: each phase is its own commit, so rever
 
 #### Automated
 
-- [x] 1.1 Baseline section exists in `audit-triage.md` with counts matching `npm audit` before changes
-- [x] 1.2 `node -v` reports v24.15.0 or newer and `.nvmrc` contains `24`
-- [x] 1.3 `npm ls lucide-angular @lucide/angular` reports no installed packages
-- [x] 1.4 `npm outdated` shows no remaining in-range ("Wanted" newer than "Current") updates
-- [x] 1.5 `npm audit` no longer lists `@capacitor/android`
-- [x] 1.6 `npm run build` passes, including the post-build secret scan
-- [x] 1.7 `npm test -- --watch=false` passes
-- [x] 1.8 `npm run test:e2e` passes on both projects
-- [x] 1.9 `npm run cap:sync` completes without errors
+- [x] 1.1 Baseline section exists in `audit-triage.md` with counts matching `npm audit` before changes — 35fd743
+- [x] 1.2 `node -v` reports v24.15.0 or newer and `.nvmrc` contains `24` — 35fd743
+- [x] 1.3 `npm ls lucide-angular @lucide/angular` reports no installed packages — 35fd743
+- [x] 1.4 `npm outdated` shows no remaining in-range ("Wanted" newer than "Current") updates — 35fd743
+- [x] 1.5 `npm audit` no longer lists `@capacitor/android` — 35fd743
+- [x] 1.6 `npm run build` passes, including the post-build secret scan — 35fd743
+- [x] 1.7 `npm test -- --watch=false` passes — 35fd743
+- [x] 1.8 `npm run test:e2e` passes on both projects — 35fd743
+- [x] 1.9 `npm run cap:sync` completes without errors — 35fd743
 
 #### Manual
 
-- [ ] 1.10 Cloudflare Workers Builds log for this branch shows Node 24.x and a successful build
-- [ ] 1.11 `android/` diff after sync contains only expected Capacitor version updates
-- [ ] 1.12 Dashboard renders unchanged in the browser on Desktop and Pixel 7 viewport
+- [x] 1.10 Cloudflare Workers Builds log for this branch shows Node 24.x and a successful build — 35fd743
+- [x] 1.11 `android/` diff after sync contains only expected Capacitor version updates — 35fd743
+- [x] 1.12 Dashboard renders unchanged in the browser on Desktop and Pixel 7 viewport — 35fd743
 
 ### Phase 2: Angular 19 → 20
 
 #### Automated
 
-- [ ] 2.1 `npm ls @angular/core @angular/cli typescript` shows 20.3.x and TypeScript 5.8.x
-- [ ] 2.2 `angular.json` contains no `@angular-devkit/build-angular` builder names
-- [ ] 2.3 `npm run build` passes, including the post-build secret scan
-- [ ] 2.4 `npm test -- --watch=false` passes
-- [ ] 2.5 `npm run test:e2e` passes on both projects
+- [x] 2.1 `npm ls @angular/core @angular/cli typescript` shows 20.3.x and TypeScript 5.8.x
+- [x] 2.2 `angular.json` contains no `@angular-devkit/build-angular` builder names
+- [x] 2.3 `npm run build` passes, including the post-build secret scan
+- [x] 2.4 `npm test -- --watch=false` passes
+- [x] 2.5 `npm run test:e2e` passes on both projects
 
 #### Manual
 
-- [ ] 2.6 `npm start` serves the app; dashboard, expense entry and Safe-to-Spend warning behave as before on Desktop and Pixel 7 viewport
+- [x] 2.6 `npm start` serves the app; dashboard, expense entry and Safe-to-Spend warning behave as before on Desktop and Pixel 7 viewport
 
 ### Phase 3: Angular 20 → 21
 
