@@ -11,6 +11,16 @@ Portfel Bez Spiny is an Angular 22/Ionic 9 personal-finance dashboard for web an
 - Read @context/foundation/prd.md for product decisions and @context/changes/stabilize-and-supabase-mvp/change.md for the current delivery plan.
 - Use only the Supabase URL and publishable key in clients. Never bundle a service-role key.
 
+## Project State (`context/`)
+
+`context/` is the source of truth for project state. Check it before planning or changing direction:
+
+- `context/foundation/roadmap.md`: milestones and slices (F-xx, S-xx) with their status. This is the order of work.
+- `context/foundation/`: PRD, shape notes, stack assessment, health check, infrastructure decisions; `lessons.md` when it exists.
+- `context/changes/<change-id>/`: the active change. `change.md` holds the status, and `plan.md` has a `## Progress` checklist that marks the current phase. Reviews are in `reviews/`.
+- `context/archive/`: closed changes; read only for history.
+- `context/deployment/deploy-plan.md`: Supabase projects, environments and deployment stages.
+
 ## Essential Commands
 
 Use the scripts defined in @package.json. Follow @README.md for startup and verification commands. The required validation scope is defined under Testing and Delivery below.

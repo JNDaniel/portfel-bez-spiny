@@ -72,3 +72,6 @@ Thumbs.db
 
 # Wrangler local dev state
 /.wrangler/
+
+# Local MCP config (may contain API keys)
+.factory/mcp.json

@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+// APK file name: portfel-bez-spiny-<buildType>.apk instead of app-<buildType>.apk
+base.archivesName = "portfel-bez-spiny"
+
 android {
     namespace = "io.costflow.app"
     compileSdk = rootProject.ext.compileSdkVersion
