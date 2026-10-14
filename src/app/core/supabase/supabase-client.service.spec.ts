@@ -38,4 +38,13 @@ describe('SupabaseClientService', () => {
     expect(service.enabled).toBe(true);
     expect(first).toBe(second);
   });
+
+  it('retries after a failed client creation instead of caching the failure', async () => {
+    const service = setup({ dataBackend: 'supabase', supabaseUrl: 'not a url' });
+
+    await expect(service.getClient()).rejects.toThrowError();
+    TestBed.inject(RUNTIME_CONFIG).supabaseUrl = 'http://127.0.0.1:54321';
+
+    await expect(service.getClient()).resolves.toBeDefined();
+  });
 });

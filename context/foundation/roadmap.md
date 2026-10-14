@@ -3,7 +3,7 @@ project: Portfel Bez Spiny
 version: 1
 status: draft
 created: 2026-10-04
-updated: 2026-10-06
+updated: 2026-10-14
 prd_version: 2
 main_goal: quality
 top_blocker: decisions
@@ -45,7 +45,7 @@ Portfel Bez Spiny oddziela codzienne wydatki od okazjonalnych (prezent, wyjazd),
 | F-02 | lint-and-format-checks       | (foundation) lint i formatowanie są deterministyczną bramką przed każdym przekazaniem   | F-01                       | FR-007                         | done        |
 | S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | done |
 | S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard z wykresem według klasyfikacji (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | done |
-| S-03 | email-password-sign-in       | zarejestrować się, zalogować i wylogować; niezalogowany trafia na ekran logowania       | F-01                       | FR-001, FR-002                 | proposed |
+| S-03 | email-password-sign-in       | zarejestrować się, zalogować i wylogować; niezalogowany trafia na ekran logowania       | F-01                       | FR-001, FR-002                 | in-progress |
 | S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | proposed |
 | S-05 | private-classified-expenses  | dodać wydatki trzech typów i zobaczyć Safe-to-Spend policzony z własnych, prywatnych danych | S-04                       | US-01, FR-004, FR-005, FR-006, FR-002 | proposed |
 | S-06 | edit-delete-own-expenses     | poprawić, usunąć i przypisać do folderu własne wydatki, z zachowaniem tagów                   | S-05                       | FR-004, FR-002                 | proposed |
@@ -146,7 +146,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Czy rejestracja wymaga potwierdzenia adresu email i jak zachowuje się ono na stagingu i lokalnie? — Owner: user. Block: no.
 - **Risk:** Niezależne od modelu danych, więc równolegle do S-02; ryzyko to błędne przekierowania Auth między hostami, weryfikowane na stagingu.
-- **Status:** proposed
+- **Status:** in-progress
 
 ### S-04: Prywatny budżet miesięczny
 

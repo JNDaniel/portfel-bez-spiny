@@ -4,7 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { RUNTIME_CONFIG } from '../config/runtime-config';
 
 /**
- * Single access point to the Supabase client. Only repository implementations may use it.
+ * Single access point to the Supabase client. Only core repository implementations and AuthService may use it.
  * The library is loaded with a dynamic import so `DATA_BACKEND=local` builds never download
  * it or contact Supabase.
  */
@@ -21,9 +21,15 @@ export class SupabaseClientService {
     if (!this.enabled) {
       return Promise.reject(new Error('Supabase is disabled: DATA_BACKEND is "local".'));
     }
-    this.clientPromise ??= import('@supabase/supabase-js').then(({ createClient }) =>
-      createClient(this.config.supabaseUrl, this.config.supabasePublishableKey),
-    );
+    this.clientPromise ??= import('@supabase/supabase-js')
+      .then(({ createClient }) =>
+        createClient(this.config.supabaseUrl, this.config.supabasePublishableKey),
+      )
+      .catch((error: unknown) => {
+        // Do not cache a failed load (e.g. a missing chunk after a deploy); retry next time.
+        this.clientPromise = null;
+        throw error;
+      });
     return this.clientPromise;
   }
 }
