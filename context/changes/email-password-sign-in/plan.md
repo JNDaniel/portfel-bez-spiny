@@ -385,28 +385,28 @@ Brak migracji danych i schematu. Przełącznik `DATA_BACKEND` pozostaje `local` 
 
 #### Automated
 
-- [x] 2.1 Testy jednostkowe komponentów Auth przechodzą: `npm test -- --watch=false --include src/app/features/auth`
-- [x] 2.2 Pełna bramka przechodzi: `npm run check`
-- [x] 2.3 Wszystkie E2E w trybie local przechodzą (10 istniejących + test 11): `npm run test:e2e`
-- [x] 2.4 Build APK przechodzi: `npm run cap:build:apk`
+- [x] 2.1 Testy jednostkowe komponentów Auth przechodzą: `npm test -- --watch=false --include src/app/features/auth` — fb5c4f5
+- [x] 2.2 Pełna bramka przechodzi: `npm run check` — fb5c4f5
+- [x] 2.3 Wszystkie E2E w trybie local przechodzą (10 istniejących + test 11): `npm run test:e2e` — fb5c4f5
+- [x] 2.4 Build APK przechodzi: `npm run cap:build:apk` — fb5c4f5
 
 #### Manual
 
-- [x] 2.5 Przepływ rejestracja → odświeżenie → wylogowanie działa przy `DATA_BACKEND=supabase` z lokalnym stackiem
-- [x] 2.6 Na Pixel 7 przycisk „Wyloguj” mieści się w nagłówku, Safe-to-Spend widoczny bez przewijania
-- [x] 2.7 `.env` przywrócony do `DATA_BACKEND=local`
+- [x] 2.5 Przepływ rejestracja → odświeżenie → wylogowanie działa przy `DATA_BACKEND=supabase` z lokalnym stackiem — fb5c4f5
+- [x] 2.6 Na Pixel 7 przycisk „Wyloguj” mieści się w nagłówku, Safe-to-Spend widoczny bez przewijania — fb5c4f5
+- [x] 2.7 `.env` przywrócony do `DATA_BACKEND=local` — fb5c4f5
 
 ### Phase 3: Pakiet E2E Auth na lokalnym Supabase
 
 #### Automated
 
-- [x] 3.1 Pakiet Auth przechodzi na obu projektach: `npm run test:e2e:auth`
-- [x] 3.2 Domyślne E2E nie uruchamia testów z `e2e/auth` i przechodzi: `npm run test:e2e`
-- [x] 3.3 Pełna bramka przechodzi: `npm run check`
-- [x] 3.4 Wygenerowany config pakietu Auth jest ignorowany przez Git
-- [x] 3.5 Skan bundla w postbuild kończy się sukcesem
+- [x] 3.1 Pakiet Auth przechodzi na obu projektach: `npm run test:e2e:auth` — 31c7761
+- [x] 3.2 Domyślne E2E nie uruchamia testów z `e2e/auth` i przechodzi: `npm run test:e2e` — 31c7761
+- [x] 3.3 Pełna bramka przechodzi: `npm run check` — 31c7761
+- [x] 3.4 Wygenerowany config pakietu Auth jest ignorowany przez Git — 31c7761
+- [x] 3.5 Skan bundla w postbuild kończy się sukcesem — 31c7761
 
 #### Manual
 
-- [x] 3.6 Równoległe serwery 4200 (local) i 4300 (supabase) nie kolidują
-- [x] 3.7 Opcjonalnie: rejestracja na stagingu z panelem potwierdzenia i linkiem z maila
+- [x] 3.6 Równoległe serwery 4200 (local) i 4300 (supabase) nie kolidują — 31c7761
+- [x] 3.7 Opcjonalnie: rejestracja na stagingu z panelem potwierdzenia i linkiem z maila — 31c7761
