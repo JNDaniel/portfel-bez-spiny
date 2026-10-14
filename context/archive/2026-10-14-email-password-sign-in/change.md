@@ -1,9 +1,10 @@
 ---
 change_id: email-password-sign-in
 title: Email and password sign-in with protected routes
-status: impl_reviewed
+status: archived
 created: 2026-10-14
 updated: 2026-10-14
+archived_at: 2026-10-14T18:19:16Z
 ---
 
 ## Notes
