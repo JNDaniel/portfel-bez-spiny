@@ -101,6 +101,19 @@ describe('AuthService', () => {
     });
   });
 
+  it('reports an existing account hidden behind a user without identities', async () => {
+    const { service, fakeClient } = setup();
+    fakeClient.auth.signUp.mockResolvedValueOnce({
+      data: { session: null, user: { ...session.user, identities: [] } },
+      error: null,
+    });
+
+    expect(await service.signUp('jan@example.test', 'haslo1')).toEqual({
+      status: 'error',
+      message: 'Konto z tym adresem już istnieje.',
+    });
+  });
+
   it('treats an unrequested SIGNED_OUT as an expired session', async () => {
     const { service, router, notifications, emit } = setup();
     await service.whenReady();
@@ -110,7 +123,7 @@ describe('AuthService', () => {
     expect(service.isAuthenticated()).toBe(false);
     expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
     expect(notifications.show).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'warning', title: 'Sesja wygasła' }),
+      expect.objectContaining({ type: 'warning', title: 'Wylogowano' }),
     );
   });
 

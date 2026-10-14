@@ -27,6 +27,8 @@ key.properties
 # Test artifacts
 /playwright-report/
 /test-results/
+/playwright-report-auth/
+/test-results-auth/
 /blob-report/
 /playwright/.cache/
 

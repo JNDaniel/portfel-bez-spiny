@@ -1,7 +1,7 @@
 ---
 change_id: email-password-sign-in
 title: Email and password sign-in with protected routes
-status: implemented
+status: impl_reviewed
 created: 2026-10-14
 updated: 2026-10-14
 ---

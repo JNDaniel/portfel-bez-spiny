@@ -62,6 +62,11 @@ export class AuthService {
         this._session.set(data.session);
         return { status: 'signed-in' };
       }
+      // With email confirmation on, Supabase hides an existing account behind a user
+      // without identities instead of an error; the product wants to say so explicitly.
+      if (data.user?.identities?.length === 0) {
+        return { status: 'error', message: authErrorMessage({ code: 'user_already_exists' }) };
+      }
       return { status: 'confirmation-required' };
     } catch (error) {
       return { status: 'error', message: authErrorMessage(error) };
@@ -109,7 +114,7 @@ export class AuthService {
       if (!this.signingOut) {
         this.notifications.show({
           type: 'warning',
-          title: 'Sesja wygasła',
+          title: 'Wylogowano',
           message: 'Zaloguj się ponownie.',
         });
       }

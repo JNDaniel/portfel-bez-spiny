@@ -161,6 +161,22 @@ Wykonać po utworzeniu projektu Workers, gdy znany jest host produkcyjny. Dla st
 
 6. Nie tworzyć tabel ani polityk ręcznie w panelu. Każda zmiana schematu przechodzi przez migracje w repozytorium.
 
+### Stan ustawień Auth (sprawdzony 2026-10-14)
+
+Odczytane przez `npx supabase config diff --project-ref <ref>` (tylko odczyt).
+
+| Ustawienie | Lokalnie (`supabase/config.toml`) | Staging `portfel-bez-spiny-test` (`zkiopvcinvhzsqemypev`, eu-west-1) | Prod `portfel-bez-spiny` (`ziscthkrauzpadcznuaq`, eu-central-1) |
+|---|---|---|---|
+| Confirm email | wyłączone | włączone | włączone |
+| `sign_in_sign_ups` (na 5 min na IP) | 300 | 30 | 30 |
+| Minimalny odstęp między mailami | 1 s | 1 min | 1 min |
+| MFA TOTP | wyłączone | włączone | włączone |
+
+- **Potwierdzanie maila zostaje włączone na stagingu i prodzie.** Po rejestracji użytkownik widzi panel „Sprawdź skrzynkę” i loguje się dopiero po kliknięciu linku. Zajęty adres zwraca komunikat „Konto z tym adresem już istnieje.”. Aplikacja rozpoznaje go po użytkowniku bez `identities`. To świadoma decyzja produktowa: ułatwia użytkownikowi orientację, ale ujawnia, że dany adres ma konto.
+- **Przed S-08 sprawdzić wysyłkę maili.** `config diff` nie pokazuje `email_sent` ani SMTP. W panelu (Authentication → Emails → SMTP Settings) potwierdzić, czy domyślny mailer dociera do obcych adresów i jaki ma limit. Jeśli nie, podpiąć własny SMTP. Bez tego nowe osoby nie potwierdzą konta.
+- **Nie uruchamiać `npx supabase config push` na staging ani prod.** Lokalny `config.toml` celowo różni się od zdalnych projektów: ma wyłączone potwierdzanie, podniesiony limit dla E2E i Site URL `localhost`. Push nadpisałby te ustawienia na zdalnym projekcie.
+- Projekty są w różnych regionach (eu-west-1 i eu-central-1), wbrew założeniu „wspólny region” z kroku 1. Do rozważenia przed S-08.
+
 ## Etap 3: Supabase w repozytorium
 
 1. Dodać Supabase CLI jako zależność deweloperską i zainicjować projekt:

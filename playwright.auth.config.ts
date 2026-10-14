@@ -37,7 +37,8 @@ export default defineConfig({
   testDir: './e2e/auth',
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 2 : 0,
-  reporter: 'html',
+  outputDir: 'test-results-auth',
+  reporter: [['html', { outputFolder: 'playwright-report-auth' }]],
   use: {
     baseURL: 'http://localhost:4300',
     trace: 'on-first-retry',
@@ -57,7 +58,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run serve:e2e-auth',
     url: 'http://localhost:4300',
-    reuseExistingServer: !process.env['CI'],
+    reuseExistingServer: false,
     timeout: 120_000,
     env: {
       DATA_BACKEND: 'supabase',

@@ -144,7 +144,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Parallel with:** S-02, F-02
 - **Blockers:** —
 - **Unknowns:**
-  - Czy rejestracja wymaga potwierdzenia adresu email i jak zachowuje się ono na stagingu i lokalnie? — Owner: user. Block: no.
+  - ~~Czy rejestracja wymaga potwierdzenia adresu email i jak zachowuje się ono na stagingu i lokalnie?~~ Rozstrzygnięte 2026-10-14: staging i prod wymagają potwierdzenia, lokalnie wyłączone; szczegóły w `context/deployment/deploy-plan.md` (Etap 2, „Stan ustawień Auth”).
 - **Risk:** Niezależne od modelu danych, więc równolegle do S-02; ryzyko to błędne przekierowania Auth między hostami, weryfikowane na stagingu.
 - **Status:** in-progress
 
@@ -207,6 +207,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:**
   - Który plan Supabase i jaka polityka kopii zapasowych są wymagane przed zapisem prawdziwych danych (plan Free wstrzymuje nieaktywne projekty i nie daje kopii odpowiednich dla produkcji)? — Owner: user. Block: yes.
+  - Czy domyślny mailer Supabase wysyła maile aktywacyjne na obce adresy i z jakim limitem, czy trzeba podpiąć własny SMTP? Bez tego nowe osoby nie potwierdzą konta na prod. — Owner: user. Block: yes.
 - **Risk:** Ostatni krok, bo jest najtrudniej odwracalny: dane zapisane w produkcji nie wrócą do trybu lokalnego.
 - **Status:** blocked
 
