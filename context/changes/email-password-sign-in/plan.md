@@ -400,13 +400,13 @@ Brak migracji danych i schematu. Przełącznik `DATA_BACKEND` pozostaje `local` 
 
 #### Automated
 
-- [ ] 3.1 Pakiet Auth przechodzi na obu projektach: `npm run test:e2e:auth`
-- [ ] 3.2 Domyślne E2E nie uruchamia testów z `e2e/auth` i przechodzi: `npm run test:e2e`
-- [ ] 3.3 Pełna bramka przechodzi: `npm run check`
-- [ ] 3.4 Wygenerowany config pakietu Auth jest ignorowany przez Git
-- [ ] 3.5 Skan bundla w postbuild kończy się sukcesem
+- [x] 3.1 Pakiet Auth przechodzi na obu projektach: `npm run test:e2e:auth`
+- [x] 3.2 Domyślne E2E nie uruchamia testów z `e2e/auth` i przechodzi: `npm run test:e2e`
+- [x] 3.3 Pełna bramka przechodzi: `npm run check`
+- [x] 3.4 Wygenerowany config pakietu Auth jest ignorowany przez Git
+- [x] 3.5 Skan bundla w postbuild kończy się sukcesem
 
 #### Manual
 
-- [ ] 3.6 Równoległe serwery 4200 (local) i 4300 (supabase) nie kolidują
-- [ ] 3.7 Opcjonalnie: rejestracja na stagingu z panelem potwierdzenia i linkiem z maila
+- [x] 3.6 Równoległe serwery 4200 (local) i 4300 (supabase) nie kolidują
+- [x] 3.7 Opcjonalnie: rejestracja na stagingu z panelem potwierdzenia i linkiem z maila

@@ -4,7 +4,7 @@ Hybrydowa aplikacja webowa i mobilna do zarządzania osobistymi wydatkami. Jej g
 
 ## Status projektu
 
-Aplikacja działa na danych lokalnych przez repozytoria i startuje pusta. Użytkownik ustawia miesięczny limit i klasyfikuje wydatki jako codzienny, zachcianka albo okazjonalny; wydatki okazjonalne nie wliczają się do limitu ani do Safe-to-Spend. Docelowe MVP doda konta użytkowników i trwałe, prywatne dane przez Supabase Auth, Postgres oraz Row Level Security.
+Aplikacja działa na danych lokalnych przez repozytoria i startuje pusta. Użytkownik ustawia miesięczny limit i klasyfikuje wydatki jako codzienny, zachcianka albo okazjonalny; wydatki okazjonalne nie wliczają się do limitu ani do Safe-to-Spend. Docelowe MVP doda konta użytkowników i trwałe, prywatne dane przez Supabase Auth, Postgres oraz Row Level Security. Przy `DATA_BACKEND=supabase` działa już logowanie, ale dane nadal są lokalne dla przeglądarki do czasu prywatnych repozytoriów (S-04).
 
 Aktualne źródła ustaleń:
 
@@ -42,11 +42,12 @@ npm run format
 npm run format:check
 npm run check
 npm run test:e2e
+npm run test:e2e:auth
 npm run cap:sync
 npm run cap:build:apk
 ```
 
-`npm run check` uruchamia kolejno sprawdzenie formatowania (Prettier), lint (Angular ESLint), testy jednostkowe i build; zatrzymuje się na pierwszym błędzie. Testy Playwright (`npm run test:e2e`) uruchamiaj osobno. `npm run format` poprawia formatowanie wszystkich plików.
+`npm run check` uruchamia kolejno sprawdzenie formatowania (Prettier), lint (Angular ESLint), testy jednostkowe i build; zatrzymuje się na pierwszym błędzie. Testy Playwright (`npm run test:e2e`) uruchamiaj osobno. Pakiet `npm run test:e2e:auth` wymaga `npx supabase start` i sam pobiera URL oraz publishable key lokalnego stacka. `npm run format` poprawia formatowanie wszystkich plików.
 
 Jednorazowy commit formatujący jest pomijany przez `git blame` po ustawieniu:
 

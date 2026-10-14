@@ -69,6 +69,7 @@ Thumbs.db
 
 # Generated at build time by scripts/generate-runtime-config.mjs
 /src/environments/runtime-config.generated.ts
+/src/environments/runtime-config.e2e-auth.generated.ts
 
 # Wrangler local dev state
 /.wrangler/

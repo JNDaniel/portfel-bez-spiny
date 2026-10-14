@@ -52,6 +52,17 @@
               "extractLicenses": false,
               "sourceMap": true
             },
+            "e2e-auth": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/runtime-config.generated.ts",
+                  "with": "src/environments/runtime-config.e2e-auth.generated.ts"
+                }
+              ]
+            },
             "testing": {
               "aot": false,
               "optimization": false,
@@ -69,6 +80,9 @@
             },
             "development": {
               "buildTarget": "cost-management-app:build:development"
+            },
+            "e2e-auth": {
+              "buildTarget": "cost-management-app:build:e2e-auth"
             }
           },
           "defaultConfiguration": "development"
