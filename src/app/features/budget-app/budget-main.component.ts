@@ -17,8 +17,10 @@ import {
   repeatOutline,
   alertCircleOutline,
   folderOutline,
+  logOutOutline,
 } from 'ionicons/icons';
 
+import { AuthService } from '../../core/auth/auth.service';
 import { DEMO_FEATURES_ENABLED } from '../../core/config/demo-features';
 import { BudgetStateService } from '../../core/services/budget-state.service';
 import { HapticsService } from '../../core/services/haptics.service';
@@ -121,15 +123,32 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
               </button>
             </div>
 
-            <!-- Right Add Action Button -->
-            <button
-              type="button"
-              (click)="openAddModal()"
-              class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition"
+            <!-- Right: Add Action Button + Sign out -->
+            <div
+              class="items-center gap-2 sm:flex"
+              [class.flex]="auth.enabled"
+              [class.hidden]="!auth.enabled"
             >
-              <span>+</span>
-              <span>Dodaj wydatek</span>
-            </button>
+              <button
+                type="button"
+                (click)="openAddModal()"
+                class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition"
+              >
+                <span>+</span>
+                <span>Dodaj wydatek</span>
+              </button>
+              @if (auth.enabled) {
+                <button
+                  type="button"
+                  (click)="auth.signOut()"
+                  title="Wyloguj"
+                  class="flex items-center gap-1.5 min-h-11 -my-1 px-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 text-xs font-semibold transition"
+                >
+                  <ion-icon name="log-out-outline" class="text-lg" aria-hidden="true"></ion-icon>
+                  <span>Wyloguj</span>
+                </button>
+              }
+            </div>
           </header>
 
           @if (demoFeaturesEnabled) {
@@ -242,6 +261,7 @@ import { BudgetCreateFolderModalComponent } from './budget-create-folder-modal.c
 })
 export class BudgetMainComponent {
   readonly state = inject(BudgetStateService);
+  readonly auth = inject(AuthService);
   private readonly haptics = inject(HapticsService);
   readonly demoFeaturesEnabled = DEMO_FEATURES_ENABLED;
 
@@ -254,6 +274,7 @@ export class BudgetMainComponent {
       repeatOutline,
       alertCircleOutline,
       folderOutline,
+      logOutOutline,
     });
   }
 

@@ -373,28 +373,28 @@ Brak migracji danych i schematu. Przełącznik `DATA_BACKEND` pozostaje `local` 
 
 #### Automated
 
-- [x] 1.1 Testy jednostkowe Auth przechodzą: `npm test -- --watch=false --include src/app/core/auth`
-- [x] 1.2 Pełna bramka przechodzi: `npm run check`
-- [x] 1.3 Istniejące E2E przechodzą bez zmian (tryb local): `npm run test:e2e`
+- [x] 1.1 Testy jednostkowe Auth przechodzą: `npm test -- --watch=false --include src/app/core/auth` — 0a43c42
+- [x] 1.2 Pełna bramka przechodzi: `npm run check` — 0a43c42
+- [x] 1.3 Istniejące E2E przechodzą bez zmian (tryb local): `npm run test:e2e` — 0a43c42
 
 #### Manual
 
-- [x] 1.4 Przy `DATA_BACKEND=local` brak żądań do Supabase w zakładce Network
+- [x] 1.4 Przy `DATA_BACKEND=local` brak żądań do Supabase w zakładce Network — 0a43c42
 
 ### Phase 2: Ekrany logowania, rejestracji i wylogowanie
 
 #### Automated
 
-- [ ] 2.1 Testy jednostkowe komponentów Auth przechodzą: `npm test -- --watch=false --include src/app/features/auth`
-- [ ] 2.2 Pełna bramka przechodzi: `npm run check`
-- [ ] 2.3 Wszystkie E2E w trybie local przechodzą (10 istniejących + test 11): `npm run test:e2e`
-- [ ] 2.4 Build APK przechodzi: `npm run cap:build:apk`
+- [x] 2.1 Testy jednostkowe komponentów Auth przechodzą: `npm test -- --watch=false --include src/app/features/auth`
+- [x] 2.2 Pełna bramka przechodzi: `npm run check`
+- [x] 2.3 Wszystkie E2E w trybie local przechodzą (10 istniejących + test 11): `npm run test:e2e`
+- [x] 2.4 Build APK przechodzi: `npm run cap:build:apk`
 
 #### Manual
 
-- [ ] 2.5 Przepływ rejestracja → odświeżenie → wylogowanie działa przy `DATA_BACKEND=supabase` z lokalnym stackiem
-- [ ] 2.6 Na Pixel 7 przycisk „Wyloguj” mieści się w nagłówku, Safe-to-Spend widoczny bez przewijania
-- [ ] 2.7 `.env` przywrócony do `DATA_BACKEND=local`
+- [x] 2.5 Przepływ rejestracja → odświeżenie → wylogowanie działa przy `DATA_BACKEND=supabase` z lokalnym stackiem
+- [x] 2.6 Na Pixel 7 przycisk „Wyloguj” mieści się w nagłówku, Safe-to-Spend widoczny bez przewijania
+- [x] 2.7 `.env` przywrócony do `DATA_BACKEND=local`
 
 ### Phase 3: Pakiet E2E Auth na lokalnym Supabase
 
