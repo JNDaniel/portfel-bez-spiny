@@ -10,7 +10,7 @@ Aplikacja nadal zapisuje dane w LocalStorage, dopóki przełącznik `DATA_BACKEN
 
 Ten dokument rozwija rekomendację z [oceny infrastruktury](../foundation/infrastructure.md) i opiera się na stosie opisanym w [ocenie stacku](../foundation/stack-assessment.md). Nie ma osobnego `tech-stack.md`; wersje zależności i komendy należy sprawdzać w `package.json` oraz `package-lock.json`. Fazy implementacyjne odnoszą się do planu [stabilize-and-supabase-mvp](../changes/stabilize-and-supabase-mvp/change.md). Termin MVP to 2026-11-04, dlatego problemy z konfiguracją, środowiskami i przekierowaniami Auth mają wyjść na jaw teraz, a nie w ostatnim tygodniu.
 
-Plan nie obejmuje własnej domeny, wydania aplikacji mobilnej ani CI. Połączenie GitHub–Cloudflare uruchamia automatyczne wdrożenia, ale nie uruchamia testów.
+Plan nie obejmuje wydania aplikacji mobilnej ani CI. (Aktualizacja 2026-10-14: domena `portfelbezspiny.pl` istnieje; rejestrator to SEOHOST, a strefą DNS zarządza Cloudflare. Poczty w domenie nie ma.) Połączenie GitHub–Cloudflare uruchamia automatyczne wdrożenia, ale nie uruchamia testów.
 
 ## Co znaczy „przygotowane”, a co „przełączone”
 
@@ -173,7 +173,7 @@ Odczytane przez `npx supabase config diff --project-ref <ref>` (tylko odczyt).
 | MFA TOTP | wyłączone | włączone | włączone |
 
 - **Potwierdzanie maila zostaje włączone na stagingu i prodzie.** Po rejestracji użytkownik widzi panel „Sprawdź skrzynkę” i loguje się dopiero po kliknięciu linku. Zajęty adres zwraca komunikat „Konto z tym adresem już istnieje.”. Aplikacja rozpoznaje go po użytkowniku bez `identities`. To świadoma decyzja produktowa: ułatwia użytkownikowi orientację, ale ujawnia, że dany adres ma konto.
-- **Przed S-08 sprawdzić wysyłkę maili.** `config diff` nie pokazuje `email_sent` ani SMTP. W panelu (Authentication → Emails → SMTP Settings) potwierdzić, czy domyślny mailer dociera do obcych adresów i jaki ma limit. Jeśli nie, podpiąć własny SMTP. Bez tego nowe osoby nie potwierdzą konta.
+- **Decyzja 2026-10-14: MVP bez maili. W S-08 wyłączyć „Confirm email” na prod.** Domyślny mailer Supabase wysyła tylko do członków zespołu organizacji (2 maile/h), więc przy włączonym potwierdzaniu obce osoby nie założyłyby konta. Bez potwierdzania konto działa od razu po rejestracji i żaden mail nie wychodzi. Koszt: brak weryfikacji adresu i brak resetu hasła (reset i tak nie jest zaimplementowany). Staging może zostać z włączonym potwierdzaniem dla członków zespołu albo dostać to samo ustawienie co prod, żeby testy odzwierciedlały prod; do ustalenia w S-08. Własny SMTP (Resend na `auth.portfelbezspiny.pl`) jest w sekcji Parked roadmapy.
 - **Nie uruchamiać `npx supabase config push` na staging ani prod.** Lokalny `config.toml` celowo różni się od zdalnych projektów: ma wyłączone potwierdzanie, podniesiony limit dla E2E i Site URL `localhost`. Push nadpisałby te ustawienia na zdalnym projekcie.
 - Projekty są w różnych regionach (eu-west-1 i eu-central-1), wbrew założeniu „wspólny region” z kroku 1. Do rozważenia przed S-08.
 

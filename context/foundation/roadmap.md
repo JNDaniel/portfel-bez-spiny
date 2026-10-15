@@ -3,7 +3,7 @@ project: Portfel Bez Spiny
 version: 1
 status: draft
 created: 2026-10-04
-updated: 2026-10-14
+updated: 2026-10-15
 prd_version: 2
 main_goal: quality
 top_blocker: decisions
@@ -46,7 +46,7 @@ Portfel Bez Spiny oddziela codzienne wydatki od okazjonalnych (prezent, wyjazd),
 | S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | done |
 | S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard z wykresem według klasyfikacji (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | done |
 | S-03 | email-password-sign-in       | zarejestrować się, zalogować i wylogować; niezalogowany trafia na ekran logowania       | F-01                       | FR-001, FR-002                 | done |
-| S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | proposed |
+| S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | planning |
 | S-05 | private-classified-expenses  | dodać wydatki trzech typów i zobaczyć Safe-to-Spend policzony z własnych, prywatnych danych | S-04                       | US-01, FR-004, FR-005, FR-006, FR-002 | proposed |
 | S-06 | edit-delete-own-expenses     | poprawić, usunąć i przypisać do folderu własne wydatki, z zachowaniem tagów                   | S-05                       | FR-004, FR-002                 | proposed |
 | S-07 | android-authenticated-flow   | przejść cały zalogowany przepływ w aplikacji Android                                   | S-06, Android SDK          | FR-007, US-01                  | proposed |
@@ -158,7 +158,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Pierwsza tabela użytkownika, więc tu po raz pierwszy powstaje izolacja w bazie i test dwóch użytkowników; mały zakres ogranicza koszt pomyłki we wzorcu, który powielą S-05 i S-06.
-- **Status:** proposed
+- **Status:** planning
 
 ### S-05: Prywatne wydatki trzech typów i Safe-to-Spend
 
@@ -207,7 +207,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:**
   - Który plan Supabase i jaka polityka kopii zapasowych są wymagane przed zapisem prawdziwych danych (plan Free wstrzymuje nieaktywne projekty i nie daje kopii odpowiednich dla produkcji)? — Owner: user. Block: yes.
-  - Czy domyślny mailer Supabase wysyła maile aktywacyjne na obce adresy i z jakim limitem, czy trzeba podpiąć własny SMTP? Bez tego nowe osoby nie potwierdzą konta na prod. — Owner: user. Block: yes.
+  - ~~Czy domyślny mailer Supabase wysyła maile aktywacyjne na obce adresy i z jakim limitem, czy trzeba podpiąć własny SMTP? Bez tego nowe osoby nie potwierdzą konta na prod.~~ Rozstrzygnięte 2026-10-14: domyślny mailer wysyła tylko do członków zespołu organizacji (2/h), więc się nie nadaje. Decyzja dla MVP: wyłączyć „Confirm email” na prod; aplikacja nie wysyła żadnych maili. Własny SMTP jest w sekcji Parked. Do sprawdzenia w S-08: komunikat dla zajętego adresu przy wyłączonym potwierdzaniu (`auth.service.ts` rozpoznaje go dziś po użytkowniku bez `identities`). Szczegóły: `context/changes/private-monthly-budget/research.md` §12.
 - **Risk:** Ostatni krok, bo jest najtrudniej odwracalny: dane zapisane w produkcji nie wrócą do trybu lokalnego.
 - **Status:** blocked
 
@@ -258,6 +258,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Funkcje serwerowe z zaufanym sekretem** — Why parked: PRD §Approved Implementation Decisions; brak zidentyfikowanego przypadku użycia.
 - **CI/CD na pull requestach i monitoring błędów** — Why parked: `change.md` §Excluded; wdrożenie z GitHuba już działa, CI w osobnym zakresie.
 - **Migracja Tailwind 3 → 4** — Why parked: wyłączona z F-01 (`angular-security-upgrade`); jedyna droga do usunięcia 5 pozostałych wysokich podatności `npm audit` (`tailwindcss`, `braces`, `chokidar`, `fast-glob`, `micromatch`), wszystkie tylko w toolchainie buildu. Decyzje: `context/archive/2026-10-05-angular-security-upgrade/audit-triage.md` §Final. Wraca przed S-08 albo jako osobna zmiana, jeśli Tailwind 4 wymaga zmian wyglądu.
+- **Wysyłka maili Auth: własny SMTP (Resend) na `auth.portfelbezspiny.pl`, ponowne włączenie potwierdzania adresu i reset hasła** — Why parked: decyzja 2026-10-14, MVP idzie najprostszą drogą, bez maili („Confirm email” wyłączone na prod). Wraca, gdy produkt otworzy się dla użytkowników spoza grona testerów. Plan wdrożenia (Resend, rekordy DNS w Cloudflare, ustawienia SMTP w Supabase): `context/changes/private-monthly-budget/research.md` §10 i §12.
 
 ## Milestone History
 
