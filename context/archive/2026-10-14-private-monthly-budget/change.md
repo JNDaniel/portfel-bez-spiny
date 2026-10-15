@@ -1,9 +1,10 @@
 ---
 change_id: private-monthly-budget
 title: Private monthly budget persisted in Supabase
-status: impl_reviewed
+status: archived
 created: 2026-10-14
-updated: 2026-10-16
+updated: 2026-10-15
+archived_at: 2026-10-15T23:21:04Z
 ---
 
 ## Notes

@@ -46,7 +46,7 @@ Portfel Bez Spiny oddziela codzienne wydatki od okazjonalnych (prezent, wyjazd),
 | S-01 | mvp-focused-dashboard        | otworzyć dashboard z samymi akcjami MVP i Safe-to-Spend widocznym bez przewijania; funkcje demo są ukryte | —                          | FR-006, US-01                  | done |
 | S-02 | canonical-expense-classification | sklasyfikować wydatek jako codzienny, okazjonalny albo zachciankę i zobaczyć poprawny dashboard z wykresem według klasyfikacji (dane lokalne, jeden model) | F-01, S-01                 | US-01, FR-005, FR-006          | done |
 | S-03 | email-password-sign-in       | zarejestrować się, zalogować i wylogować; niezalogowany trafia na ekran logowania       | F-01                       | FR-001, FR-002                 | done |
-| S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | planning |
+| S-04 | private-monthly-budget       | ustawić miesięczny budżet, który przetrwa ponowne otwarcie i jest widoczny tylko dla niego | S-02, S-03                 | FR-003, FR-002                 | done |
 | S-05 | private-classified-expenses  | dodać wydatki trzech typów i zobaczyć Safe-to-Spend policzony z własnych, prywatnych danych | S-04                       | US-01, FR-004, FR-005, FR-006, FR-002 | proposed |
 | S-06 | edit-delete-own-expenses     | poprawić, usunąć i przypisać do folderu własne wydatki, z zachowaniem tagów                   | S-05                       | FR-004, FR-002                 | proposed |
 | S-07 | android-authenticated-flow   | przejść cały zalogowany przepływ w aplikacji Android                                   | S-06, Android SDK          | FR-007, US-01                  | proposed |
@@ -158,7 +158,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Pierwsza tabela użytkownika, więc tu po raz pierwszy powstaje izolacja w bazie i test dwóch użytkowników; mały zakres ogranicza koszt pomyłki we wzorcu, który powielą S-05 i S-06.
-- **Status:** planning
+- **Status:** done
 
 ### S-05: Prywatne wydatki trzech typów i Safe-to-Spend
 
@@ -269,3 +269,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **F-02: (foundation) lint i sprawdzanie formatowania przechodzą lokalnie i są częścią walidacji przed każdym przekazaniem zmian.** — Archived 2026-10-06 → `context/archive/2026-10-06-lint-and-format-checks/`. Lesson: —.
 - **S-02: użytkownik może oznaczyć wydatek jako codzienny, okazjonalny albo zachciankę, a dashboard wyklucza okazje z codziennego limitu i Safe-to-Spend, a wykresy dashboardu grupują wydatki według tej klasyfikacji i wyraźnie wyróżniają zachcianki i okazje (zamiast kategorii, których nie da się wybrać przy transakcji) — na danych lokalnych, ale już na jednym docelowym modelu, z którego czyta każdy ekran z wydatkami.** — Archived 2026-10-06 → `context/archive/2026-10-06-canonical-expense-classification/` (follow-ups: `context/archive/2026-10-06-dashboard-review-followups/`). Lesson: —.
 - **S-03: niezalogowana osoba może założyć konto, zalogować się, wrócić do zalogowanej sesji i wylogować się; próba wejścia do chronionej części kończy się przekierowaniem do logowania.** — Archived 2026-10-14 → `context/archive/2026-10-14-email-password-sign-in/`. Lesson: Per-tab auth state vs cross-tab Supabase events.
+- **S-04: zalogowany użytkownik może ustawić miesięczny budżet, który jest widoczny po ponownym otwarciu aplikacji i wyłącznie na jego koncie.** — Archived 2026-10-15 → `context/archive/2026-10-14-private-monthly-budget/`. Lesson: —.
