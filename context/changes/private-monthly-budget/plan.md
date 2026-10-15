@@ -392,9 +392,9 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Automated
 
-- [x] 1.1 `npx supabase db reset` stosuje obie migracje od zera bez błędów
-- [x] 1.2 `npm run test:db` przechodzi, a każda polityka SELECT/INSERT/UPDATE/DELETE ma co najmniej jedną asercję dwóch użytkowników
-- [x] 1.3 `npm run check` przechodzi
+- [x] 1.1 `npx supabase db reset` stosuje obie migracje od zera bez błędów — 5fbd4aa
+- [x] 1.2 `npm run test:db` przechodzi, a każda polityka SELECT/INSERT/UPDATE/DELETE ma co najmniej jedną asercję dwóch użytkowników — 5fbd4aa
+- [x] 1.3 `npm run check` przechodzi — 5fbd4aa
 
 #### Manual
 
@@ -404,9 +404,9 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Automated
 
-- [ ] 2.1 Nowe testy jednostkowe repozytoriów przechodzą
-- [ ] 2.2 `npm run check` przechodzi (build `local` bez `@supabase/supabase-js` w głównym chunku, skan sekretów zielony)
-- [ ] 2.3 `npm run test:e2e` przechodzi bez zmian w testach
+- [x] 2.1 Nowe testy jednostkowe repozytoriów przechodzą
+- [x] 2.2 `npm run check` przechodzi (build `local` bez `@supabase/supabase-js` w głównym chunku, skan sekretów zielony)
+- [x] 2.3 `npm run test:e2e` przechodzi bez zmian w testach
 
 #### Manual
 
