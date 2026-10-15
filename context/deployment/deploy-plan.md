@@ -286,6 +286,8 @@ Infrastruktura i podpięcie z Etapów 2–4 pozostają bez zmian. Przełączenie
 5. Wznowienie projektu prod, jeśli był wstrzymany, oraz decyzja o kopiach zapasowych przed zapisem prawdziwych danych.
 6. `DATA_BACKEND=supabase` w Production, nowe wdrożenie i smoke test logowania na produkcji.
 
+Stan na 2026-10-16: migracja `monthly_budgets` (tabela z RLS) jest zastosowana na stagingu (`zkiopvcinvhzsqemypev`), a nie na prod. Prod dostaje ją dopiero w S-08, po akceptacji właściciela.
+
 Powrót do `local` jest możliwy przez zmianę zmiennej i ponowne wdrożenie, ale dane zapisane w Supabase nie wrócą do LocalStorage. To awaryjne wyłączenie, a nie migracja danych.
 
 ## Kolejne wdrożenia i bramki

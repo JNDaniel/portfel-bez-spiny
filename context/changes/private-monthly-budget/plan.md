@@ -398,7 +398,7 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Manual
 
-- [ ] 1.4 W Studio tabela `monthly_budgets` ma włączone RLS i cztery polityki, a Security Advisor nie zgłasza dla niej ostrzeżeń
+- [x] 1.4 W Studio tabela `monthly_budgets` ma włączone RLS i cztery polityki, a Security Advisor nie zgłasza dla niej ostrzeżeń — owner checked Studio policies (4); `supabase db advisors --local --type security`: no issues (2026-10-16)
 
 ### Phase 2: Adapter Supabase i wybór providerów
 
@@ -410,8 +410,8 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Manual
 
-- [ ] 2.4 Przy `DATA_BACKEND=supabase` limit pojawia się w `monthly_budgets` z `user_id` konta i `effective_from` = 1. dzień miesiąca
-- [ ] 2.5 Po teście ręcznym `.env` wraca do `DATA_BACKEND=local`
+- [x] 2.4 Przy `DATA_BACKEND=supabase` limit pojawia się w `monthly_budgets` z `user_id` konta i `effective_from` = 1. dzień miesiąca — row for themantax@gmail.com: effective_from 2026-10-01, limit_minor 300000, user_id matches auth.users (2026-10-16)
+- [x] 2.5 Po teście ręcznym `.env` wraca do `DATA_BACKEND=local` — `.env` has DATA_BACKEND=local (2026-10-16)
 
 ### Phase 3: Cykl życia stanu powiązany z tożsamością
 
@@ -423,7 +423,7 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Manual
 
-- [ ] 3.4 Wylogowanie w karcie 1 przenosi kartę 2 na `/login`, a po zalogowaniu innym kontem karta 2 nie pokazuje poprzedniego limitu
+- [x] 3.4 Wylogowanie w karcie 1 przenosi kartę 2 na `/login`, a po zalogowaniu innym kontem karta 2 nie pokazuje poprzedniego limitu — checked in Chrome on serve:e2e-auth: logout in tab 1 sent tab 2 to /login without an expiry message; account B in tab 2 saw no limit, DB confirms B has no row (2026-10-16)
 
 ### Phase 4: E2E dwóch kont, dokumentacja i staging
 
@@ -436,6 +436,6 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Manual
 
-- [ ] 4.5 `npx supabase migration list --linked` pokazuje migrację `monthly_budgets` na stagingu; prod nietknięty
-- [ ] 4.6 Security Advisor na stagingu nie zgłasza ostrzeżeń dla `monthly_budgets`
-- [ ] 4.7 README, AGENTS.md i `deploy-plan.md` opisują stan przejściowy i komendy
+- [x] 4.5 `npx supabase migration list --linked` pokazuje migrację `monthly_budgets` na stagingu; prod nietknięty — owner ran `db push` to zkiopvcinvhzsqemypev; `migration list --linked` shows both migrations local+remote; prod not linked or pushed (2026-10-16)
+- [x] 4.6 Security Advisor na stagingu nie zgłasza ostrzeżeń dla `monthly_budgets` — `supabase db advisors --linked --type security --level info`: no issues (2026-10-16)
+- [x] 4.7 README, AGENTS.md i `deploy-plan.md` opisują stan przejściowy i komendy — README status, AGENTS.md migration rule (b1b9aa5) and deploy-plan staging note
