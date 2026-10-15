@@ -392,9 +392,9 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Automated
 
-- [ ] 1.1 `npx supabase db reset` stosuje obie migracje od zera bez błędów
-- [ ] 1.2 `npm run test:db` przechodzi, a każda polityka SELECT/INSERT/UPDATE/DELETE ma co najmniej jedną asercję dwóch użytkowników
-- [ ] 1.3 `npm run check` przechodzi
+- [x] 1.1 `npx supabase db reset` stosuje obie migracje od zera bez błędów
+- [x] 1.2 `npm run test:db` przechodzi, a każda polityka SELECT/INSERT/UPDATE/DELETE ma co najmniej jedną asercję dwóch użytkowników
+- [x] 1.3 `npm run check` przechodzi
 
 #### Manual
 

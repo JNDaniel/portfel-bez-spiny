@@ -43,11 +43,12 @@ npm run format:check
 npm run check
 npm run test:e2e
 npm run test:e2e:auth
+npm run test:db
 npm run cap:sync
 npm run cap:build:apk
 ```
 
-`npm run check` uruchamia kolejno sprawdzenie formatowania (Prettier), lint (Angular ESLint), testy jednostkowe i build; zatrzymuje się na pierwszym błędzie. Testy Playwright (`npm run test:e2e`) uruchamiaj osobno. Pakiet `npm run test:e2e:auth` wymaga `npx supabase start` i sam pobiera URL oraz publishable key lokalnego stacka. `npm run format` poprawia formatowanie wszystkich plików.
+`npm run check` uruchamia kolejno sprawdzenie formatowania (Prettier), lint (Angular ESLint), testy jednostkowe i build; zatrzymuje się na pierwszym błędzie. Testy Playwright (`npm run test:e2e`) uruchamiaj osobno. Pakiet `npm run test:e2e:auth` wymaga `npx supabase start` i sam pobiera URL oraz publishable key lokalnego stacka. `npm run test:db` uruchamia testy pgTAP polityk RLS i wymaga działającego `npx supabase start`; po dodaniu nowej migracji wykonaj najpierw `npx supabase db reset`. `npm run format` poprawia formatowanie wszystkich plików.
 
 Jednorazowy commit formatujący jest pomijany przez `git blame` po ustawieniu:
 
