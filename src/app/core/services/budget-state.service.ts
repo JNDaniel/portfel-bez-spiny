@@ -1,7 +1,6 @@
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 
 import { AuthService } from '../auth/auth.service';
-
 import {
   classificationAfterFolderAssign,
   classificationBreakdown,
@@ -70,6 +69,9 @@ export class BudgetStateService {
   private readonly folderList = signal<ExpenseFolder[]>([]);
   // Bumped on every identity change; async work started for a previous user is discarded.
   private generation = 0;
+  // Newest-started reload wins; a reload that raced a mutation is retried instead of applied.
+  private reloadSeq = 0;
+  private mutationSeq = 0;
 
   public readonly loaded = signal<boolean>(false);
   public readonly currentPeriod = signal<Period>(periodOf(this.clock.today()));
@@ -261,22 +263,27 @@ export class BudgetStateService {
       return;
     }
     const generation = this.generation;
+    const seq = ++this.reloadSeq;
+    const mutations = this.mutationSeq;
     try {
       const [expenses, budgets, folders] = await Promise.all([
         this.expenseRepo.list(),
         this.budgetRepo.list(),
         this.folderRepo.list(),
       ]);
-      if (generation !== this.generation) return;
+      if (generation !== this.generation || seq !== this.reloadSeq) return;
+      if (this.mutationSeq !== mutations) {
+        // The snapshot may predate a mutation: fetch again instead of overwriting it.
+        void this.reload();
+        return;
+      }
       this.expenses.set(expenses);
       this.budgets.set(budgets);
       this.folderList.set(folders);
+      this.loaded.set(true);
     } catch (err) {
-      if (generation === this.generation) {
-        this.reportError(err);
-      }
-    } finally {
-      if (generation === this.generation) {
+      if (generation === this.generation && seq === this.reloadSeq) {
+        this.reportError(err, 'Nie udało się wczytać danych');
         this.loaded.set(true);
       }
     }
@@ -309,24 +316,29 @@ export class BudgetStateService {
     }
   }
 
-  private reportError(err: unknown) {
+  private reportError(err: unknown, title = 'Nie udało się zapisać zmian') {
     const message = err instanceof Error ? err.message : String(err);
-    this.notification.error('Nie udało się zapisać zmian', message);
+    this.notification.error(title, message);
   }
 
-  private async run(action: () => Promise<void>): Promise<void> {
+  private async run(action: (isCurrent: () => boolean) => Promise<void>): Promise<void> {
     const generation = this.generation;
+    const isCurrent = () => generation === this.generation;
+    let failed = false;
+    this.mutationSeq++;
     try {
-      await action();
+      await action(isCurrent);
     } catch (err) {
-      if (generation === this.generation) {
+      // An error from a previous account's action is neither reported nor reloaded.
+      if (isCurrent()) {
         this.reportError(err);
-        await this.reload();
+        failed = true;
       }
+    } finally {
+      this.mutationSeq++;
     }
-    if (generation !== this.generation) {
-      // The account changed mid-action: its result belongs to the previous user.
-      this.applyIdentity(this.auth.userId());
+    if (failed) {
+      await this.reload();
     }
   }
 
@@ -351,11 +363,13 @@ export class BudgetStateService {
 
   async createFolder(name: string, emoji: string, color: string, assignIds: string[] = []) {
     await this.haptics.impact('medium');
-    await this.run(async () => {
+    await this.run(async (isCurrent) => {
       const folder = await this.folderRepo.create({ name, emoji, color });
+      if (!isCurrent()) return;
       this.folderList.update((list) => [...list, folder]);
       if (assignIds.length > 0) {
-        await this.applyFolder(assignIds, folder.id);
+        await this.applyFolder(assignIds, folder.id, isCurrent);
+        if (!isCurrent()) return;
       }
       this.clearSelection();
       this.selectedFolderId.set(folder.id);
@@ -365,13 +379,14 @@ export class BudgetStateService {
 
   async assignToFolder(ids: string[], folderId: string | null) {
     await this.haptics.impact('medium');
-    await this.run(async () => {
-      await this.applyFolder(ids, folderId);
+    await this.run(async (isCurrent) => {
+      await this.applyFolder(ids, folderId, isCurrent);
+      if (!isCurrent()) return;
       this.clearSelection();
     });
   }
 
-  private async applyFolder(ids: string[], folderId: string | null) {
+  private async applyFolder(ids: string[], folderId: string | null, isCurrent: () => boolean) {
     const updates = ids
       .map((id) => this.expenses().find((expense) => expense.id === id))
       .filter((expense): expense is Expense => !!expense)
@@ -382,6 +397,7 @@ export class BudgetStateService {
         }),
       );
     const updated = await Promise.all(updates);
+    if (!isCurrent()) return;
     this.replaceExpenses(updated);
   }
 
@@ -393,10 +409,13 @@ export class BudgetStateService {
 
   async deleteFolder(folderId: string) {
     await this.haptics.impact('heavy');
-    await this.run(async () => {
+    await this.run(async (isCurrent) => {
       await this.folderRepo.delete(folderId);
+      if (!isCurrent()) return;
       this.folderList.update((list) => list.filter((folder) => folder.id !== folderId));
-      this.expenses.set(await this.expenseRepo.list());
+      const expenses = await this.expenseRepo.list();
+      if (!isCurrent()) return;
+      this.expenses.set(expenses);
       if (this.selectedFolderId() === folderId) {
         this.selectedFolderId.set(null);
       }
@@ -429,8 +448,9 @@ export class BudgetStateService {
 
   async deleteTransaction(id: string) {
     await this.haptics.impact('heavy');
-    await this.run(async () => {
+    await this.run(async (isCurrent) => {
       await this.expenseRepo.delete([id]);
+      if (!isCurrent()) return;
       this.expenses.update((list) => list.filter((expense) => expense.id !== id));
     });
   }
@@ -440,8 +460,9 @@ export class BudgetStateService {
     if (ids.length === 0) return;
 
     await this.haptics.impact('heavy');
-    await this.run(async () => {
+    await this.run(async (isCurrent) => {
       await this.expenseRepo.delete(ids);
+      if (!isCurrent()) return;
       this.expenses.update((list) => list.filter((expense) => !ids.includes(expense.id)));
       this.clearSelection();
     });
@@ -529,8 +550,9 @@ export class BudgetStateService {
   ): Promise<void> {
     const current = this.expenses().find((expense) => expense.id === id);
     if (!current) return;
-    await this.run(async () => {
+    await this.run(async (isCurrent) => {
       const updated = await this.expenseRepo.update(id, patch(current));
+      if (!isCurrent()) return;
       this.replaceExpenses([updated]);
     });
   }
@@ -586,7 +608,7 @@ export class BudgetStateService {
     await this.haptics.impact('medium');
     this.clock.refresh();
     const now = this.clock.now();
-    await this.run(async () => {
+    await this.run(async (isCurrent) => {
       const created = await this.expenseRepo.create({
         ...input,
         currency: 'PLN',
@@ -594,6 +616,7 @@ export class BudgetStateService {
         createdAt: now.toISOString(),
         folderId: null,
       });
+      if (!isCurrent()) return;
       this.expenses.update((list) => [...list, created]);
       this.currentPeriod.set(periodOf(now));
       this.isAddModalOpen.set(false);
@@ -602,8 +625,9 @@ export class BudgetStateService {
 
   async setMonthlyLimit(limitMinor: number) {
     await this.haptics.impact('medium');
-    await this.run(async () => {
+    await this.run(async (isCurrent) => {
       const record = await this.budgetRepo.setLimit(this.currentPeriod(), limitMinor);
+      if (!isCurrent()) return;
       this.budgets.update((list) => [
         ...list.filter((budget) => budget.effectiveFrom !== record.effectiveFrom),
         record,

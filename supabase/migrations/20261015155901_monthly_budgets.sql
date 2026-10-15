@@ -1,13 +1,14 @@
 -- Monthly budget limits, one row per user and month.
--- effective_from is the day the limit starts to apply; the app always stores the 1st day of a month.
+-- effective_from is the day the limit starts to apply; the DB enforces the 1st day of a month.
+-- currency is PLN-only for now (the domain cannot represent others); multi-currency needs a new migration.
 -- Ownership is enforced by RLS on user_id. The unique (user_id, effective_from) index starts with
 -- user_id, so it also serves the RLS predicate (no separate user_id index needed).
 create table public.monthly_budgets (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
-  effective_from date not null,
+  effective_from date not null check (extract(day from effective_from) = 1),
   limit_minor integer not null check (limit_minor > 0),
-  currency text not null default 'PLN' check (currency ~ '^[A-Z]{3}$'),
+  currency text not null default 'PLN' check (currency = 'PLN'),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique (user_id, effective_from)

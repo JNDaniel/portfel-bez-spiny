@@ -1,7 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(20);
+select plan(27);
 
 -- Fixtures as postgres: two users, one budget row each (A has an old updated_at on purpose,
 -- because now() is constant inside a transaction).
@@ -78,6 +78,15 @@ select throws_ok(
   '23505', null, 'CONSTRAINT: duplicate month without on conflict is rejected'
 );
 
+select throws_ok(
+  $$insert into public.monthly_budgets (effective_from, limit_minor) values ('2026-10-15', 5000)$$,
+  '23514', null, 'CONSTRAINT: effective_from must be the 1st day of a month'
+);
+select throws_ok(
+  $$insert into public.monthly_budgets (effective_from, limit_minor, currency) values ('2027-01-01', 5000, 'EUR')$$,
+  '23514', null, 'CONSTRAINT: currency other than PLN is rejected'
+);
+
 with d as (delete from public.monthly_budgets where effective_from = '2026-11-01' returning 1)
 select is((select count(*)::int from d), 1, 'DELETE: A deletes own row');
 
@@ -92,6 +101,19 @@ select is(
 );
 select is((select count(*)::int from public.monthly_budgets), 1, 'SELECT: B sees only own row');
 
+with u as (update public.monthly_budgets set limit_minor = 1 where id = 'aaaaaaaa-0000-0000-0000-000000000001' returning 1)
+select is((select count(*)::int from u), 0, 'UPDATE: B updates 0 rows of A');
+with d as (delete from public.monthly_budgets where id = 'aaaaaaaa-0000-0000-0000-000000000001' returning 1)
+select is((select count(*)::int from d), 0, 'DELETE: B deletes 0 rows of A');
+
+reset role;
+select is(
+  (select count(*)::int from public.monthly_budgets where id = 'aaaaaaaa-0000-0000-0000-000000000001' and limit_minor = 120000 and user_id = '00000000-0000-0000-0000-00000000000a'),
+  1, 'A row is untouched by B (update and delete)'
+);
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000000b","role":"authenticated"}', true);
+
 -- ===== anon =====
 reset role;
 set local role anon;
@@ -102,6 +124,8 @@ select throws_ok(
   $$insert into public.monthly_budgets (user_id, effective_from, limit_minor) values ('00000000-0000-0000-0000-00000000000a', '2027-02-01', 1000)$$,
   '42501', null, 'anon: INSERT is denied'
 );
+select throws_ok($$update public.monthly_budgets set limit_minor = 1$$, '42501', null, 'anon: UPDATE is denied');
+select throws_ok($$delete from public.monthly_budgets$$, '42501', null, 'anon: DELETE is denied');
 
 reset role;
 select * from finish();

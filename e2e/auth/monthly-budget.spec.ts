@@ -3,6 +3,12 @@ import { PASSWORD, register, setLimit, signIn, signOut, uniqueEmail } from './au
 
 const heroLimit = (page: Page) => page.locator('[data-testid=hero-limit]');
 
+// The empty state is also true right after the identity wipe; wait for the account's own load.
+const budgetsLoaded = (page: Page) =>
+  page.waitForResponse(
+    (r) => r.url().includes('/rest/v1/monthly_budgets') && r.request().method() === 'GET' && r.ok(),
+  );
+
 test.describe('Portfel Bez Spiny — prywatny limit miesięczny', () => {
   test('1. Limit is persistent and belongs to the account', async ({ page, browser }) => {
     const email = uniqueEmail();
@@ -36,7 +42,9 @@ test.describe('Portfel Bez Spiny — prywatny limit miesięczny', () => {
     await setLimit(page, '3100');
     await signOut(page);
 
+    const loadedB = budgetsLoaded(page);
     await register(page, emailB);
+    await loadedB;
     await expect(page.getByRole('button', { name: 'Ustaw limit miesięczny' })).toBeVisible();
     await expect(page.locator('[data-testid=safe-to-spend]')).toHaveText('—');
     await setLimit(page, '2000');
@@ -73,7 +81,9 @@ test.describe('Portfel Bez Spiny — prywatny limit miesięczny', () => {
     await signOut(page1);
     await expect(page2).toHaveURL(/\/login$/);
 
+    const loadedB = budgetsLoaded(page2);
     await signIn(page2, emailB, PASSWORD);
+    await loadedB;
     await expect(page2).toHaveURL(/\/dashboard$/);
     await expect(page2.getByRole('button', { name: 'Ustaw limit miesięczny' })).toBeVisible();
     await expect(page2.locator('[data-testid=safe-to-spend]')).toHaveText('—');

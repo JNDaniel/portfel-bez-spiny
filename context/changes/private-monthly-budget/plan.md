@@ -429,10 +429,10 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Automated
 
-- [x] 4.1 `npm run test:e2e:auth` przechodzi na obu projektach, łącznie z dotychczasowymi testami logowania
-- [x] 4.2 `npm run test:e2e` przechodzi
-- [x] 4.3 `npm run test:db` przechodzi
-- [x] 4.4 `npm run check` przechodzi
+- [x] 4.1 `npm run test:e2e:auth` przechodzi na obu projektach, łącznie z dotychczasowymi testami logowania — b1b9aa5
+- [x] 4.2 `npm run test:e2e` przechodzi — b1b9aa5
+- [x] 4.3 `npm run test:db` przechodzi — b1b9aa5
+- [x] 4.4 `npm run check` przechodzi — b1b9aa5
 
 #### Manual
 

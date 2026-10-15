@@ -12,6 +12,7 @@ import { MonthlyBudgetRepository } from '../repositories/monthly-budget.reposito
 import { BudgetStateService } from './budget-state.service';
 import { ClockService } from './clock.service';
 import { FakeClockService } from './clock.service.testing';
+import { NotificationService } from './notification.service';
 
 let fake: FakeClockService;
 
@@ -315,5 +316,76 @@ describe('BudgetStateService identity lifecycle', () => {
     await settle();
 
     expect(service.limitAmount()).toBe(2000);
+  });
+
+  it('keeps a limit saved while the first list() is still pending', async () => {
+    const { service, userId, budgetRepo, budgetLists, hold } = setupAuth(null);
+    hold('A');
+    userId.set('A');
+    await settle();
+    expect(budgetLists).toHaveLength(1);
+
+    const saved = budgetOf('A', 555500);
+    budgetRepo.setLimit.mockResolvedValue(saved);
+    await service.setMonthlyLimit(555500);
+    expect(service.limitAmount()).toBe(5555);
+
+    hold(null);
+    budgetRepo.list.mockImplementation(() => Promise.resolve([saved]));
+    budgetLists[0].resolve([]);
+    await settle();
+
+    expect(service.limitAmount()).toBe(5555);
+    expect(service.loaded()).toBe(true);
+  });
+
+  it('does not touch the new user modal or state with a late mutation of the previous user', async () => {
+    const { service, userId, budgetRepo } = setupAuth('A');
+    await settle();
+    let release: () => void = () => undefined;
+    budgetRepo.setLimit.mockImplementation(
+      () =>
+        new Promise<MonthlyBudget>((resolve) => {
+          release = () => resolve(budgetOf('A', 999900));
+        }),
+    );
+    const pending = service.setMonthlyLimit(999900);
+    await settle();
+
+    userId.set('B');
+    await settle();
+    service.isLimitModalOpen.set(true);
+    budgetRepo.list.mockClear();
+    release();
+    await pending;
+    await settle();
+
+    expect(service.isLimitModalOpen()).toBe(true);
+    expect(service.limitAmount()).toBe(2000);
+    expect(budgetRepo.list).not.toHaveBeenCalled();
+  });
+
+  it('reports an error of an action started by the new user', async () => {
+    const { service, userId, budgetRepo } = setupAuth('A');
+    const notification = TestBed.inject(NotificationService);
+    const error = vi.spyOn(notification, 'error').mockReturnValue('');
+    await settle();
+
+    userId.set('B');
+    await settle();
+    budgetRepo.setLimit.mockRejectedValue(new Error('offline'));
+    await service.setMonthlyLimit(1);
+
+    expect(error).toHaveBeenCalledWith('Nie udało się zapisać zmian', 'offline');
+  });
+
+  it('reports a failed load with a load-specific title', async () => {
+    const { budgetRepo } = setupAuth('A');
+    const notification = TestBed.inject(NotificationService);
+    const error = vi.spyOn(notification, 'error').mockReturnValue('');
+    budgetRepo.list.mockImplementation(() => Promise.reject(new Error('boom')));
+    await settle();
+
+    expect(error).toHaveBeenCalledWith('Nie udało się wczytać danych', 'boom');
   });
 });
