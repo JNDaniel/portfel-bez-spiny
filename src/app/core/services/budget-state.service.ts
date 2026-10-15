@@ -1,4 +1,6 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
+
+import { AuthService } from '../auth/auth.service';
 
 import {
   classificationAfterFolderAssign,
@@ -58,6 +60,7 @@ export class BudgetStateService {
   private readonly expenseRepo = inject(ExpenseRepository);
   private readonly budgetRepo = inject(MonthlyBudgetRepository);
   private readonly folderRepo = inject(ExpenseFolderRepository);
+  private readonly auth = inject(AuthService);
   private readonly clock = inject(ClockService);
   private readonly haptics = inject(HapticsService);
   private readonly notification = inject(NotificationService);
@@ -65,6 +68,8 @@ export class BudgetStateService {
   private readonly expenses = signal<Expense[]>([]);
   private readonly budgets = signal<MonthlyBudget[]>([]);
   private readonly folderList = signal<ExpenseFolder[]>([]);
+  // Bumped on every identity change; async work started for a previous user is discarded.
+  private generation = 0;
 
   public readonly loaded = signal<boolean>(false);
   public readonly currentPeriod = signal<Period>(periodOf(this.clock.today()));
@@ -241,23 +246,66 @@ export class BudgetStateService {
   );
 
   constructor() {
-    void this.reload();
+    if (!this.auth.enabled) {
+      void this.reload();
+      return;
+    }
+    effect(() => {
+      const userId = this.auth.userId();
+      untracked(() => this.applyIdentity(userId));
+    });
   }
 
   async reload(): Promise<void> {
+    if (this.auth.enabled && this.auth.userId() === null) {
+      return;
+    }
+    const generation = this.generation;
     try {
       const [expenses, budgets, folders] = await Promise.all([
         this.expenseRepo.list(),
         this.budgetRepo.list(),
         this.folderRepo.list(),
       ]);
+      if (generation !== this.generation) return;
       this.expenses.set(expenses);
       this.budgets.set(budgets);
       this.folderList.set(folders);
     } catch (err) {
-      this.reportError(err);
+      if (generation === this.generation) {
+        this.reportError(err);
+      }
     } finally {
-      this.loaded.set(true);
+      if (generation === this.generation) {
+        this.loaded.set(true);
+      }
+    }
+  }
+
+  // Drops everything that belongs to the previous account, then loads the new one.
+  private applyIdentity(userId: string | null): void {
+    this.generation++;
+    this.expenses.set([]);
+    this.budgets.set([]);
+    this.folderList.set([]);
+    this.currentPeriod.set(periodOf(this.clock.today()));
+    this.selectedFolderId.set(null);
+    this.isSelectionMode.set(false);
+    this.selectedTxIds.set([]);
+    this.expandedIds.set([]);
+    this.isAiSummaryOpen.set(false);
+    this.isAddModalOpen.set(false);
+    this.isLimitModalOpen.set(false);
+    this.isCreateFolderModalOpen.set(false);
+    this.isScannerModalOpen.set(false);
+    this.isVoiceModalOpen.set(false);
+    this.isSubscriptionsOpen.set(false);
+    this.isWasteRadarOpen.set(false);
+    this.showAllTransactions.set(false);
+    this.activeBankNotification.set(null);
+    this.loaded.set(false);
+    if (userId !== null) {
+      void this.reload();
     }
   }
 
@@ -267,11 +315,18 @@ export class BudgetStateService {
   }
 
   private async run(action: () => Promise<void>): Promise<void> {
+    const generation = this.generation;
     try {
       await action();
     } catch (err) {
-      this.reportError(err);
-      await this.reload();
+      if (generation === this.generation) {
+        this.reportError(err);
+        await this.reload();
+      }
+    }
+    if (generation !== this.generation) {
+      // The account changed mid-action: its result belongs to the previous user.
+      this.applyIdentity(this.auth.userId());
     }
   }
 

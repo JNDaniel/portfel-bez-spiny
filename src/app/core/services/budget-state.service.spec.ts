@@ -1,6 +1,8 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { ExpenseClassification } from '../models/finance.model';
+import { AuthService } from '../auth/auth.service';
+import { Expense, ExpenseClassification, MonthlyBudget } from '../models/finance.model';
 import { ExpenseFolderRepository } from '../repositories/expense-folder.repository';
 import { ExpenseRepository } from '../repositories/expense.repository';
 import { LocalExpenseFolderRepository } from '../repositories/local/local-expense-folder.repository';
@@ -142,5 +144,176 @@ describe('BudgetStateService', () => {
     await service.nextMonth();
 
     expect(service.currentPeriod()).toBe('2026-11');
+  });
+});
+
+describe('BudgetStateService identity lifecycle', () => {
+  const budgetOf = (user: string, limitMinor: number): MonthlyBudget => ({
+    id: `b-${user}`,
+    effectiveFrom: '2026-10',
+    limitMinor,
+    currency: 'PLN',
+  });
+  const expenseOf = (user: string): Expense => ({
+    id: `e-${user}`,
+    title: `Wydatek ${user}`,
+    amountMinor: 1000,
+    currency: 'PLN',
+    category: 'Inne',
+    classification: 'everyday',
+    tags: [],
+    spentOn: '2026-10-12',
+    createdAt: '2026-10-12T10:00:00.000Z',
+    folderId: null,
+  });
+
+  function setupAuth(initial: string | null) {
+    const userId = signal<string | null>(initial);
+    const budgetLists: { user: string | null; resolve: (v: MonthlyBudget[]) => void }[] = [];
+    let holdFor: string | null = null;
+    const listed: (string | null)[] = [];
+    const budgetRepo = {
+      list: vi.fn(() => {
+        const user = userId();
+        listed.push(user);
+        if (user !== null && user === holdFor) {
+          return new Promise<MonthlyBudget[]>((resolve) => budgetLists.push({ user, resolve }));
+        }
+        return Promise.resolve(user ? [budgetOf(user, user === 'A' ? 100000 : 200000)] : []);
+      }),
+      setLimit: vi.fn(),
+    };
+    const expenseRepo = {
+      list: vi.fn(() => Promise.resolve(userId() ? [expenseOf(userId() as string)] : [])),
+    };
+    const folderRepo = { list: vi.fn(() => Promise.resolve([])) };
+    fake = new FakeClockService(new Date(2026, 9, 12, 10, 0));
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: AuthService, useValue: { enabled: true, userId } },
+        { provide: ExpenseRepository, useValue: expenseRepo },
+        { provide: MonthlyBudgetRepository, useValue: budgetRepo },
+        { provide: ExpenseFolderRepository, useValue: folderRepo },
+        { provide: ClockService, useValue: fake },
+      ],
+    });
+    const service = TestBed.inject(BudgetStateService);
+    return {
+      service,
+      userId,
+      budgetRepo,
+      budgetLists,
+      listed,
+      hold: (user: string | null) => (holdFor = user),
+    };
+  }
+
+  const settle = async () => {
+    TestBed.tick();
+    await new Promise((resolve) => setTimeout(resolve));
+  };
+
+  it('does not query repositories without a user', async () => {
+    const { service, budgetRepo } = setupAuth(null);
+    await settle();
+
+    expect(budgetRepo.list).not.toHaveBeenCalled();
+    expect(service.limitAmount()).toBeNull();
+    expect(service.monthExpenses()).toEqual([]);
+    expect(service.loaded()).toBe(false);
+  });
+
+  it('empties the state when the user signs out', async () => {
+    const { service, userId, budgetRepo } = setupAuth('A');
+    await settle();
+    expect(service.limitAmount()).toBe(1000);
+    budgetRepo.list.mockClear();
+
+    userId.set(null);
+    await settle();
+
+    expect(budgetRepo.list).not.toHaveBeenCalled();
+    expect(service.limitAmount()).toBeNull();
+    expect(service.monthExpenses()).toEqual([]);
+  });
+
+  it('shows only the budget of the new user after A -> B', async () => {
+    const { service, userId } = setupAuth('A');
+    await settle();
+    expect(service.limitAmount()).toBe(1000);
+    expect(service.monthExpenses().map((e) => e.title)).toEqual(['Wydatek A']);
+
+    userId.set('B');
+    await settle();
+
+    expect(service.limitAmount()).toBe(2000);
+    expect(service.monthExpenses().map((e) => e.title)).toEqual(['Wydatek B']);
+  });
+
+  it('discards a late list() of the previous user', async () => {
+    const { service, userId, budgetLists, hold } = setupAuth(null);
+    hold('A');
+    userId.set('A');
+    await settle();
+    expect(budgetLists).toHaveLength(1);
+
+    userId.set('B');
+    await settle();
+    expect(service.limitAmount()).toBe(2000);
+
+    budgetLists[0].resolve([budgetOf('A', 100000)]);
+    await settle();
+
+    expect(service.limitAmount()).toBe(2000);
+    expect(service.loaded()).toBe(true);
+  });
+
+  it('does not reload when the user id stays the same', async () => {
+    const { userId, budgetRepo } = setupAuth('A');
+    await settle();
+    expect(budgetRepo.list).toHaveBeenCalledTimes(1);
+
+    userId.set('A');
+    await settle();
+
+    expect(budgetRepo.list).toHaveBeenCalledTimes(1);
+  });
+
+  it('closes modals and clears folder selection on account change', async () => {
+    const { service, userId } = setupAuth('A');
+    await settle();
+    service.isLimitModalOpen.set(true);
+    service.selectedFolderId.set('folder-a');
+    service.enableSelectionMode('e-A');
+
+    userId.set('B');
+    await settle();
+
+    expect(service.isLimitModalOpen()).toBe(false);
+    expect(service.selectedFolderId()).toBeNull();
+    expect(service.isSelectionMode()).toBe(false);
+    expect(service.selectedTxIds()).toEqual([]);
+  });
+
+  it('does not keep a mutation result of the previous user', async () => {
+    const { service, userId, budgetRepo } = setupAuth('A');
+    await settle();
+    let release: () => void = () => undefined;
+    budgetRepo.setLimit.mockImplementation(
+      () =>
+        new Promise<MonthlyBudget>((resolve) => {
+          release = () => resolve(budgetOf('A', 999900));
+        }),
+    );
+    const pending = service.setMonthlyLimit(999900);
+    await settle();
+
+    userId.set('B');
+    await settle();
+    release();
+    await pending;
+    await settle();
+
+    expect(service.limitAmount()).toBe(2000);
   });
 });

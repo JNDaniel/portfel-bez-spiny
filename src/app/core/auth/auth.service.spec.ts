@@ -165,4 +165,23 @@ describe('AuthService', () => {
       expect.objectContaining({ type: 'error', title: 'Nie udało się wylogować' }),
     );
   });
+
+  it('follows the user id across tabs and ignores token refreshes', async () => {
+    const { service, emit } = setup();
+    await service.whenReady();
+    const first = { user: { id: 'user-a', email: 'a@example.test' } };
+    const other = { user: { id: 'user-b', email: 'b@example.test' } };
+
+    emit('SIGNED_IN', first);
+    expect(service.userId()).toBe('user-a');
+
+    emit('SIGNED_OUT', null);
+    expect(service.userId()).toBeNull();
+
+    emit('SIGNED_IN', other);
+    expect(service.userId()).toBe('user-b');
+
+    emit('TOKEN_REFRESHED', { user: { ...other.user } });
+    expect(service.userId()).toBe('user-b');
+  });
 });

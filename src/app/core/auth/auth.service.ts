@@ -25,6 +25,7 @@ export class AuthService {
 
   readonly enabled = this.supabase.enabled;
   readonly session = this._session.asReadonly();
+  readonly userId = computed(() => this._session()?.user.id ?? null);
   readonly userEmail = computed(() => this._session()?.user.email ?? null);
   readonly isAuthenticated = computed(() => this._session() !== null);
 

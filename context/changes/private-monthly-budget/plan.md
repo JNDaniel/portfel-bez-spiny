@@ -404,9 +404,9 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Automated
 
-- [x] 2.1 Nowe testy jednostkowe repozytoriów przechodzą
-- [x] 2.2 `npm run check` przechodzi (build `local` bez `@supabase/supabase-js` w głównym chunku, skan sekretów zielony)
-- [x] 2.3 `npm run test:e2e` przechodzi bez zmian w testach
+- [x] 2.1 Nowe testy jednostkowe repozytoriów przechodzą — a9c8556
+- [x] 2.2 `npm run check` przechodzi (build `local` bez `@supabase/supabase-js` w głównym chunku, skan sekretów zielony) — a9c8556
+- [x] 2.3 `npm run test:e2e` przechodzi bez zmian w testach — a9c8556
 
 #### Manual
 
@@ -417,9 +417,9 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Automated
 
-- [ ] 3.1 Testy `budget-state.service.spec.ts` i `auth.service.spec.ts` przechodzą
-- [ ] 3.2 `npm run check` przechodzi
-- [ ] 3.3 `npm run test:e2e` przechodzi bez zmian w testach
+- [x] 3.1 Testy `budget-state.service.spec.ts` i `auth.service.spec.ts` przechodzą
+- [x] 3.2 `npm run check` przechodzi
+- [x] 3.3 `npm run test:e2e` przechodzi bez zmian w testach
 
 #### Manual
 
