@@ -417,9 +417,9 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Automated
 
-- [x] 3.1 Testy `budget-state.service.spec.ts` i `auth.service.spec.ts` przechodzą
-- [x] 3.2 `npm run check` przechodzi
-- [x] 3.3 `npm run test:e2e` przechodzi bez zmian w testach
+- [x] 3.1 Testy `budget-state.service.spec.ts` i `auth.service.spec.ts` przechodzą — a830bf7
+- [x] 3.2 `npm run check` przechodzi — a830bf7
+- [x] 3.3 `npm run test:e2e` przechodzi bez zmian w testach — a830bf7
 
 #### Manual
 
@@ -429,10 +429,10 @@ Jeden wiersz na zmianę limitu, czyli kilka wierszy na użytkownika. `list()` po
 
 #### Automated
 
-- [ ] 4.1 `npm run test:e2e:auth` przechodzi na obu projektach, łącznie z dotychczasowymi testami logowania
-- [ ] 4.2 `npm run test:e2e` przechodzi
-- [ ] 4.3 `npm run test:db` przechodzi
-- [ ] 4.4 `npm run check` przechodzi
+- [x] 4.1 `npm run test:e2e:auth` przechodzi na obu projektach, łącznie z dotychczasowymi testami logowania
+- [x] 4.2 `npm run test:e2e` przechodzi
+- [x] 4.3 `npm run test:db` przechodzi
+- [x] 4.4 `npm run check` przechodzi
 
 #### Manual
 

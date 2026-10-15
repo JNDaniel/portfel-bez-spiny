@@ -4,7 +4,7 @@ Hybrydowa aplikacja webowa i mobilna do zarządzania osobistymi wydatkami. Jej g
 
 ## Status projektu
 
-Aplikacja działa na danych lokalnych przez repozytoria i startuje pusta. Użytkownik ustawia miesięczny limit i klasyfikuje wydatki jako codzienny, zachcianka albo okazjonalny; wydatki okazjonalne nie wliczają się do limitu ani do Safe-to-Spend. Docelowe MVP doda konta użytkowników i trwałe, prywatne dane przez Supabase Auth, Postgres oraz Row Level Security. Przy `DATA_BACKEND=supabase` działa już logowanie, ale dane nadal są lokalne dla przeglądarki do czasu prywatnych repozytoriów (S-04).
+Aplikacja działa na danych lokalnych przez repozytoria i startuje pusta. Użytkownik ustawia miesięczny limit i klasyfikuje wydatki jako codzienny, zachcianka albo okazjonalny; wydatki okazjonalne nie wliczają się do limitu ani do Safe-to-Spend. Docelowe MVP doda konta użytkowników i trwałe, prywatne dane przez Supabase Auth, Postgres oraz Row Level Security. Przy `DATA_BACKEND=supabase` działa już logowanie, a miesięczny limit jest prywatny i zapisany w Supabase, natomiast wydatki i foldery pozostają lokalne dla przeglądarki do czasu S-05/S-06.
 
 Aktualne źródła ustaleń:
 

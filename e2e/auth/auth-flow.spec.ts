@@ -1,28 +1,5 @@
-import { test, expect, Page } from '@playwright/test';
-
-const PASSWORD = 'Haslo-testowe-123';
-
-const uniqueEmail = () =>
-  `e2e-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.test`;
-
-async function register(page: Page, email: string) {
-  await page.goto('/register');
-  await page.locator('#auth-email').fill(email);
-  await page.locator('#auth-password').fill(PASSWORD);
-  await page.getByRole('button', { name: 'Załóż konto' }).click();
-  await expect(page).toHaveURL(/\/dashboard$/);
-}
-
-async function signOut(page: Page) {
-  await page.getByRole('button', { name: 'Wyloguj' }).click();
-  await expect(page).toHaveURL(/\/login$/);
-}
-
-async function signIn(page: Page, email: string, password: string) {
-  await page.locator('#auth-email').fill(email);
-  await page.locator('#auth-password').fill(password);
-  await page.getByRole('button', { name: 'Zaloguj się' }).click();
-}
+import { test, expect } from '@playwright/test';
+import { PASSWORD, register, signIn, signOut, uniqueEmail } from './auth-helpers';
 
 test.describe('Portfel Bez Spiny — logowanie', () => {
   test('Unauthenticated visitor is redirected to login', async ({ page }) => {
